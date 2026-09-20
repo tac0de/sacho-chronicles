@@ -6,7 +6,6 @@ export class ObservationView {
   private container: HTMLElement;
   private engine: Engine;
   private onCommitSacho: (choices: PendingSachoChoice[]) => void;
-  // infoId -> PendingSachoChoice
   private currentChoices: Map<string, PendingSachoChoice> = new Map();
 
   constructor(container: HTMLElement, engine: Engine, onCommitSacho: (choices: PendingSachoChoice[]) => void) {
@@ -23,12 +22,12 @@ export class ObservationView {
       this.container.innerHTML = `
         <div class="stage-content">
           <div class="observation-banner">
-            <h3>오늘의 관찰 장소: ${loc.name} (${loc.hanja})</h3>
-            <p>${loc.atmosphere} — 좌측 목록에서 원하는 전각을 선택한 후 상단의 <strong>[당일 정무 관찰 시작]</strong>을 누르십시오.</p>
+            <h3>오늘의 관찰 처소: ${loc.name} <span style="font-size:13px; font-weight:normal; color:var(--text-gold);">[${loc.hanja}]</span></h3>
+            <p>${loc.atmosphere} — 좌측 궁궐 전각 중 한 곳을 택한 후, 상단의 <strong>[당일 정무 관찰 시작]</strong>을 누르십시오.</p>
           </div>
           <div class="empty-observation">
-            <h4>아직 오늘의 정무가 시작되지 않았습니다</h4>
-            <p>사관은 선택한 장소에서 들려오는 목소리와 오가는 눈짓을 묵묵히 지켜볼 것입니다.</p>
+            <h4>사관이 붓을 적시며 입조를 대기하고 있습니다</h4>
+            <p>춘추관 사관은 군주의 처소와 신하들의 회랑을 묵묵히 오가며 오늘의 사초(史草)를 남길 준비를 합니다.</p>
           </div>
         </div>
       `;
@@ -41,12 +40,12 @@ export class ObservationView {
       this.container.innerHTML = `
         <div class="stage-content">
           <div class="observation-banner">
-            <h3>오늘의 관찰 장소: ${loc.name} (${loc.hanja})</h3>
-            <p>오늘은 이 전각에서 사관의 눈에 띌 만한 특별한 소란이나 전언이 포착되지 않았습니다.</p>
+            <h3>오늘의 관찰 처소: ${loc.name} <span style="font-size:13px; font-weight:normal; color:var(--text-gold);">[${loc.hanja}]</span></h3>
+            <p>오늘 이 처소에서는 사관의 귀와 눈에 띌 만한 공개 설전이나 은밀한 풍문이 감지되지 않았습니다.</p>
           </div>
           <div class="empty-observation">
-            <h4>궐내가 고요합니다</h4>
-            <p>다른 전각에서는 격렬한 암투가 벌어졌을지도 모르나, 이곳까지 소식이 닿지 않았습니다.</p>
+            <h4>처소가 고요하여 적막이 흐릅니다</h4>
+            <p>다른 전각에서는 피 튀기는 탄핵이나 밀담이 벌어졌을지 모르나, 사관이 머문 이곳에는 소식이 닿지 않았습니다.</p>
           </div>
         </div>
       `;
@@ -78,17 +77,17 @@ export class ObservationView {
           info.witnessType === 'DIRECT' ? 'direct' : info.witnessType === 'HEARSAY' ? 'hearsay' : 'rumor';
         const witnessText =
           info.witnessType === 'DIRECT'
-            ? '직접 목격'
+            ? '親見 · 직접 목격'
             : info.witnessType === 'HEARSAY'
-            ? `${this.engine.agentMap.get(info.originalCreatorId)?.name || '관원'}의 전언`
-            : '궁중 풍문';
+            ? `傳聞 · ${this.engine.agentMap.get(info.originalCreatorId)?.name || '관원'}의 전언`
+            : '風聞 · 궁중 풍문';
 
         return `
           <div class="info-card" data-info-id="${info.id}">
             <div class="info-card-header">
               <span class="witness-badge ${witnessBadgeClass}">[${witnessText}]</span>
               <div class="credibility-meter">
-                <span>신뢰도 ${info.credibility}%</span>
+                <span>첩보 신빙도 ${info.credibility}%</span>
                 <div class="credibility-bar">
                   <div class="credibility-fill" style="width: ${info.credibility}%"></div>
                 </div>
@@ -101,32 +100,32 @@ export class ObservationView {
 
             <div class="sacho-form">
               <div class="sacho-form-title">
-                <span>📜 사초(史草) 집필 선택</span>
-                ${!isEditable ? '<span style="color:var(--text-muted); font-size:11px;">(기록 완료됨)</span>' : ''}
+                <span>📜 사초(史草) 필법 선택 — 춘추관 기록</span>
+                ${!isEditable ? '<span style="color:var(--text-gold); font-size:11px; margin-left:auto;">[서책 봉인 완료]</span>' : ''}
               </div>
 
               <div class="sacho-options">
                 <label class="sacho-option ${!choice.recordIt ? 'active' : ''}">
                   <input type="radio" name="opt_${info.id}" value="IGNORE" ${!choice.recordIt ? 'checked' : ''} ${!isEditable ? 'disabled' : ''} />
-                  <span class="option-badge badge-ignore">묵살</span>
-                  <span class="option-text">기록하지 않는다 (역사의 장막 뒤로 묻어둠)</span>
+                  <span class="option-badge badge-ignore">묵살 (闕文)</span>
+                  <span class="option-text">사초에 기록하지 않는다 (불확실하거나 사소한 일로 치부하여 누락)</span>
                 </label>
 
                 <label class="sacho-option ${choice.recordIt && choice.certainty === 'CAUTIOUS' ? 'active' : ''}">
                   <input type="radio" name="opt_${info.id}" value="CAUTIOUS" ${choice.recordIt && choice.certainty === 'CAUTIOUS' ? 'checked' : ''} ${!isEditable ? 'disabled' : ''} />
-                  <span class="option-badge badge-cautious">신중한 기록</span>
+                  <span class="option-badge badge-cautious">신중 직필 (直筆)</span>
                   <span class="option-text">"${info.expressionOptions.cautious}"</span>
                 </label>
 
                 <label class="sacho-option ${choice.recordIt && choice.certainty === 'MODERATE' ? 'active' : ''}">
                   <input type="radio" name="opt_${info.id}" value="MODERATE" ${choice.recordIt && choice.certainty === 'MODERATE' ? 'checked' : ''} ${!isEditable ? 'disabled' : ''} />
-                  <span class="option-badge badge-moderate">비교적 강함</span>
+                  <span class="option-badge badge-moderate">정황 추단 (推斷)</span>
                   <span class="option-text">"${info.expressionOptions.moderate}"</span>
                 </label>
 
                 <label class="sacho-option ${choice.recordIt && choice.certainty === 'ASSERTIVE' ? 'active' : ''}">
                   <input type="radio" name="opt_${info.id}" value="ASSERTIVE" ${choice.recordIt && choice.certainty === 'ASSERTIVE' ? 'checked' : ''} ${!isEditable ? 'disabled' : ''} />
-                  <span class="option-badge badge-assertive">단정적 기록</span>
+                  <span class="option-badge badge-assertive">단정 극필 (極筆)</span>
                   <span class="option-text">"${info.expressionOptions.assertive}"</span>
                 </label>
               </div>
@@ -139,8 +138,8 @@ export class ObservationView {
     this.container.innerHTML = `
       <div class="stage-content">
         <div class="observation-banner">
-          <h3>오늘 [${loc.name}]에서 포착한 사실과 소문 (${observedInfos.length}건)</h3>
-          <p>사관은 주관적 판단에 따라 신중하게 전언을 기록하거나, 단정적인 필치로 역사를 규정할 수 있습니다.</p>
+          <h3>오늘 [${loc.name}]에서 입수한 사초 전언 (${observedInfos.length}건)</h3>
+          <p>사관의 붓끝(直筆과 曲筆)에 따라 훗날 실록의 성격이 결정됩니다. 신중하게 전언을 적거나, 엄한 필치로 인물을 평가하십시오.</p>
         </div>
 
         <div class="info-card-list">
@@ -152,7 +151,7 @@ export class ObservationView {
             ? `
           <div style="margin-top:24px; text-align:right;">
             <button id="btn-save-sacho" class="btn btn-primary" style="padding:10px 24px; font-size:15px;">
-              🖋️ 선택한 내용으로 오늘 사초 집필 완료
+              🖋️ 붓을 거두고 오늘의 사초(史草) 봉인하기
             </button>
           </div>
         `
@@ -183,7 +182,6 @@ export class ObservationView {
             });
           }
 
-          // Update active css class on options
           const card = this.container.querySelector(`.info-card[data-info-id="${infoId}"]`);
           card?.querySelectorAll('.sacho-option').forEach((opt) => opt.classList.remove('active'));
           target.closest('.sacho-option')?.classList.add('active');

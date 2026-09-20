@@ -1,16 +1,17 @@
 import type { PositionId } from './positions.js';
 
 export type LocationId =
-  | 'ROYAL_HALL'           // 편전 (便殿)
-  | 'ROYAL_SECRETARIAT'   // 승정원 (承政院)
-  | 'OFFICE_OF_INSPECTOR'  // 사헌부 (司憲府)
-  | 'OFFICE_OF_CENSORS'    // 사간원 (司諫院)
-  | 'PALACE_CORRIDOR';     // 궐내 회랑 (闕內 回廊)
+  | 'ROYAL_HALL'           // 사정전 (思政殿 · 편전)
+  | 'ROYAL_SECRETARIAT'   // 은대 (銀臺 · 승정원)
+  | 'OFFICE_OF_INSPECTOR'  // 백부 (柏府 · 사헌부)
+  | 'OFFICE_OF_CENSORS'    // 미원 (薇垣 · 사간원)
+  | 'PALACE_CORRIDOR';     // 궐내 천랑 (闕內 千廊 · 회랑)
 
 export interface LocationDef {
   id: LocationId;
   name: string;
   hanja: string;
+  alias: string;
   atmosphere: string;
   description: string;
   primaryVisitors: PositionId[];
@@ -19,42 +20,47 @@ export interface LocationDef {
 export const LOCATIONS: Record<LocationId, LocationDef> = {
   ROYAL_HALL: {
     id: 'ROYAL_HALL',
-    name: '편전',
-    hanja: '便殿',
-    atmosphere: '조정 대신들의 엄숙한 입조와 어좌 앞 팽팽한 설전',
-    description: '국왕이 신하들과 조참을 열고 국정을 논하는 대청. 공개 논쟁, 어명, 탄핵 상소가 공식적으로 울려 퍼지는 장소.',
+    name: '사정전 (편전)',
+    hanja: '思政殿',
+    alias: '상참 편전',
+    atmosphere: '어좌 앞 촛불 아래 삼공육경의 서슬 퍼런 조참과 상참',
+    description: '국왕이 신하들과 경연(經筵)을 열고 정사를 논하는 편전. 공개적인 탄핵 상소와 격렬한 대신들의 설전, 국왕의 질책이 공식적으로 하달되는 장소.',
     primaryVisitors: ['KING', 'CHIEF_STATE_COUNCILLOR', 'LEFT_STATE_COUNCILLOR', 'RIGHT_STATE_COUNCILLOR', 'MINISTER_OF_PERSONNEL', 'MINISTER_OF_WAR', 'CHIEF_SECRETARY'],
   },
   ROYAL_SECRETARIAT: {
     id: 'ROYAL_SECRETARIAT',
-    name: '승정원',
-    hanja: '承政院',
-    atmosphere: '분주한 붓 놀림과 급박하게 오가는 상소문 궤짝들',
-    description: '왕의 비서실. 왕에게 올라가는 모든 상소와 어명이 출납되며, 도승지와 내관, 서리들이 궐내 주요 소식을 가장 먼저 접하는 곳.',
+    name: '은대 (승정원)',
+    hanja: '銀臺 承政院',
+    alias: '후설(喉舌)의 관',
+    atmosphere: '도승지의 급박한 전령과 쉴 새 없이 오가는 상소문 궤짝',
+    description: '왕의 비서 관청. 어명과 사방에서 올라온 상소가 거쳐가는 대궐의 목구멍(喉舌)으로, 궐내의 가장 내밀한 소식과 문서가 가장 먼저 집약되는 곳.',
     primaryVisitors: ['CHIEF_SECRETARY', 'ROYAL_EUNUCH', 'COURT_CLERK', 'ACADEMY_DRAFTER'],
   },
   OFFICE_OF_INSPECTOR: {
     id: 'OFFICE_OF_INSPECTOR',
-    name: '사헌부',
-    hanja: '司憲府',
-    atmosphere: '차갑게 내려앉은 긴장감과 관원들의 비리 혐의 수첩',
-    description: '백관의 풍기와 비리를 감찰하는 풍헌의 관청. 대사헌과 지평들이 관리들의 뒷조사, 뇌물 첩보를 입수하고 탄핵안을 검토하는 곳.',
+    name: '백부 (사헌부)',
+    hanja: '柏府 司憲府',
+    alias: '풍헌(風憲) 감찰청',
+    atmosphere: '잣나무 숲처럼 차가운 침묵과 백관의 혐의를 적은 첩보 장부',
+    description: '풍속을 바로잡고 백관의 비리를 규찰하는 사헌부. 대사헌과 감찰들이 관리들의 뇌물, 부당한 천거, 월권 행위를 엄밀히 내사하고 탄핵을 기안하는 곳.',
     primaryVisitors: ['INSPECTOR_GENERAL', 'COURT_CLERK', 'CENSOR_GENERAL'],
   },
   OFFICE_OF_CENSORS: {
     id: 'OFFICE_OF_CENSORS',
-    name: '사간원',
-    hanja: '司諫院',
-    atmosphere: '피를 토하듯 격앙된 간관들의 상소 토론과 촛불',
-    description: '임금의 과오를 간하고 권신의 전횡을 공박하는 언론 관청. 대사간과 정언들이 모여 인사 비리와 권력 남용에 대한 연명 상소를 작성하는 곳.',
+    name: '미원 (사간원)',
+    hanja: '薇垣 司諫院',
+    alias: '언관(諫官) 간쟁청',
+    atmosphere: '피를 토하듯 결연한 간관들의 연명 차자(箚子) 작성과 붓소리',
+    description: '임금의 그릇된 정사를 바로잡고 권신의 전횡을 공박하는 사간원. 대사간과 정언들이 촛불을 밝히고 죽음을 무릅쓴 간쟁과 탄핵을 모의하는 언론의 총부.',
     primaryVisitors: ['CENSOR_GENERAL', 'ACADEMY_DRAFTER', 'INSPECTOR_GENERAL'],
   },
   PALACE_CORRIDOR: {
     id: 'PALACE_CORRIDOR',
-    name: '궐내 회랑',
-    hanja: '闕內 回廊',
-    atmosphere: '기둥 뒤에 어리는 그림자와 낮게 속삭이는 음모의 기운',
-    description: '궁궐 전각 사이를 잇는 미로 같은 긴 회랑. 관리들이 은밀한 비밀 회동을 갖거나, 서리와 내관이 뒷돈과 뜬소문을 주고받는 장소.',
+    name: '궐내 천랑 (회랑)',
+    hanja: '闕內 千廊',
+    alias: '처마 밑 밀담 회랑',
+    atmosphere: '회랑 기둥 뒤 드리운 긴 그림자와 낮게 귓속말하는 모의의 숨결',
+    description: '전각과 전각 사이를 미로처럼 연결하는 깊은 행랑. 관원들이 은밀한 야간 비밀 회동을 갖거나, 서리와 내관이 뒷돈과 뜬소문을 주고받는 은밀한 공간.',
     primaryVisitors: ['LEFT_STATE_COUNCILLOR', 'MINISTER_OF_PERSONNEL', 'MINISTER_OF_WAR', 'ROYAL_EUNUCH', 'COURT_CLERK'],
   },
 };
