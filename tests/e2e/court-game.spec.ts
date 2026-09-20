@@ -262,6 +262,20 @@ test.describe('조선 사관 시뮬레이션: 사초: 춘추필법 E2E 테스트
     await obsTopTab.click();
     await expect(page.locator('.mobile-nav-btn[data-mview="STAGE"]')).toHaveClass(/active/);
     await expect(page.locator('.mobile-nav-btn[data-mview="ARCHIVE"]')).not.toHaveClass(/active/);
+
+    // 8) 모바일에서 감찰록(디버그 패널) 열기 및 모바일 뷰 캡처
+    const debugToggleBtn = page.locator('#btn-debug-toggle');
+    await debugToggleBtn.click();
+    const debugPanel = page.locator('.debug-panel');
+    await expect(debugPanel).toBeVisible();
+    await page.screenshot({ path: 'screenshots/11-mobile-debug-panel.png' });
+
+    // 9) 2번째 탭 [백관 심성] 클릭 및 12명 관원 능력치/원한 칩 렌더링 검증
+    const agentsTabBtn = page.locator('.debug-tab[data-tab="AGENTS"]');
+    await agentsTabBtn.click();
+    await expect(page.locator('.debug-table')).toBeVisible();
+    await expect(page.locator('.debug-table tbody tr')).toHaveCount(12);
+    await page.screenshot({ path: 'screenshots/12-mobile-debug-agents.png' });
   });
 });
 
