@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60">
+  <!-- Haechi Inspector Insignia (사헌부 대사헌 해치 獬豸 흉배) -->
+  <rect width="60" height="60" rx="6" fill="#142c26" stroke="#52b788" stroke-width="1.8"/>
+  <!-- Scales Pattern -->
+  <path d="M18 40 Q26 24 38 28 Q44 34 42 46 Z" fill="#2d6a4f"/>
+  <!-- Single Horn of Justice (외뿔) -->
+  <polygon points="34,16 38,24 32,24" fill="#ffd700"/>
+  <!-- Head of Haechi -->
+  <circle cx="36" cy="26" r="7" fill="#2d6a4f"/>
+  <circle cx="34" cy="25" r="1.5" fill="#f4eedb"/>
+  <!-- Bell / Collar around neck -->
+  <circle cx="32" cy="34" r="3" fill="#e5c178"/>
+  <!-- Flashing flame scales -->
+  <path d="M42 36 Q48 34 46 40" stroke="#f59e0b" stroke-width="2" fill="none"/>
+</svg>

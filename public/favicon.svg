@@ -1,34 +1,35 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <defs>
-    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0f172a"/>
-      <stop offset="100%" stop-color="#020617"/>
+    <linearGradient id="sealGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#cf3c3c"/>
+      <stop offset="100%" stop-color="#8a1818"/>
     </linearGradient>
-    <linearGradient id="coreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#38bdf8"/>
-      <stop offset="100%" stop-color="#2563eb"/>
-    </linearGradient>
-    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="2" result="blur"/>
-      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    <filter id="sealShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.6"/>
     </filter>
   </defs>
-  
-  <!-- Outer Shield Hexagon -->
-  <polygon points="32,4 58,18 58,46 32,60 6,46 6,18" fill="url(#bgGrad)" stroke="#38bdf8" stroke-width="2.5" stroke-linejoin="round"/>
-  
-  <!-- Tactical Grid Diamonds -->
-  <polygon points="32,14 44,22 32,30 20,22" fill="none" stroke="#1e3a8a" stroke-width="1.5"/>
-  <polygon points="44,24 54,30 44,38 34,32" fill="none" stroke="#1e3a8a" stroke-width="1.5"/>
-  <polygon points="20,24 30,32 20,38 10,30" fill="none" stroke="#1e3a8a" stroke-width="1.5"/>
-  <polygon points="32,32 44,40 32,48 20,40" fill="none" stroke="#1e3a8a" stroke-width="1.5"/>
-  
-  <!-- Central Mech Core / Breach Chevron -->
-  <polygon points="32,18 42,28 32,38 22,28" fill="url(#coreGrad)" filter="url(#glow)"/>
-  <circle cx="32" cy="28" r="4" fill="#ffffff"/>
-  
-  <!-- Danger Accent Indicators -->
-  <circle cx="58" cy="18" r="2.5" fill="#f43f5e"/>
-  <circle cx="6" cy="18" r="2.5" fill="#f43f5e"/>
-  <circle cx="32" cy="56" r="2.5" fill="#38ef7d"/>
+
+  <!-- Deep ink background circle for contrast in browser tabs -->
+  <rect width="64" height="64" rx="14" fill="#14161d" />
+
+  <!-- Joseon Royal Historiographer Red Seal (사관 수결 인장) -->
+  <rect x="8" y="8" width="48" height="48" rx="8" fill="url(#sealGrad)" stroke="#e5c178" stroke-width="2" filter="url(#sealShadow)"/>
+
+  <!-- Inner Seal Inset Border -->
+  <rect x="12" y="12" width="40" height="40" rx="5" fill="none" stroke="#f4eedb" stroke-width="1.2" stroke-opacity="0.6" stroke-dasharray="3,1"/>
+
+  <!-- Calligraphic Hanja '史' (History / Historiographer) -->
+  <!-- Top Horizontal Bar -->
+  <rect x="20" y="19" width="24" height="3.5" rx="1.5" fill="#f4eedb"/>
+  <!-- Middle Box (口) -->
+  <rect x="22" y="25" width="20" height="11" rx="1.5" fill="none" stroke="#f4eedb" stroke-width="3"/>
+  <!-- Central Vertical Stroke passing through -->
+  <path d="M32 17 L32 47" stroke="#f4eedb" stroke-width="3.2" stroke-linecap="round"/>
+  <!-- Left downward flare (丿) -->
+  <path d="M28 38 Q22 44 17 48" stroke="#f4eedb" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <!-- Right downward flare (乀) -->
+  <path d="M36 38 Q42 44 47 48" stroke="#f4eedb" stroke-width="3" stroke-linecap="round" fill="none"/>
+
+  <!-- Tiny Gold Vermilion Seal Dot -->
+  <circle cx="46" cy="18" r="1.5" fill="#ffd700"/>
 </svg>

@@ -1,6 +1,31 @@
 import type { Engine } from '../core/simulation/Engine.js';
 import type { Agent } from '../core/agents/Agent.js';
 import { POSITIONS } from '../data/positions.js';
+import { SoundManager } from '../core/audio/SoundManager.js';
+
+function getInsigniaIcon(posId: string): string {
+  switch (posId) {
+    case 'KING':
+      return './assets/insignia/dragon_gold.svg';
+    case 'CHIEF_STATE_COUNCILLOR':
+    case 'LEFT_STATE_COUNCILLOR':
+    case 'RIGHT_STATE_COUNCILLOR':
+    case 'MINISTER_OF_PERSONNEL':
+      return './assets/insignia/crane_double.svg';
+    case 'MINISTER_OF_WAR':
+      return './assets/insignia/tiger_double.svg';
+    case 'INSPECTOR_GENERAL':
+      return './assets/insignia/haechi.svg';
+    case 'ROYAL_EUNUCH':
+      return './assets/insignia/silver_pheasant.svg';
+    case 'CENSOR_GENERAL':
+    case 'CHIEF_SECRETARY':
+    case 'ACADEMY_DRAFTER':
+    case 'COURT_CLERK':
+    default:
+      return './assets/insignia/crane_single.svg';
+  }
+}
 
 export class CourtRosterView {
   private container: HTMLElement;
@@ -21,19 +46,25 @@ export class CourtRosterView {
         const isAlert = a.currentStatus.includes('위기') || a.currentStatus.includes('근신');
         const isCompete = a.currentStatus.includes('경쟁');
         const pos = POSITIONS[a.positionId];
+        const insigniaIcon = getInsigniaIcon(a.positionId);
 
         const statusClass = isAlert ? 'alert' : isCompete ? 'compete' : '';
 
         return `
           <div class="official-card ${isSelected ? 'selected' : ''}" data-agent-id="${a.id}">
-            <div class="official-header">
-              <span class="official-name">${a.name} <span style="font-size:11px; color:var(--text-muted); font-weight:normal;">(${a.age}세)</span></span>
-              <span class="official-rank">${pos?.officialRankName || a.rank}</span>
+            <div class="official-card-layout">
+              <img class="official-insignia-badge" src="${insigniaIcon}" alt="흉배" width="38" height="38" />
+              <div class="official-main-info">
+                <div class="official-header">
+                  <span class="official-name">${a.name} <span class="official-age">(${a.age}세)</span></span>
+                  <span class="official-rank">${pos?.officialRankName || a.rank}</span>
+                </div>
+                <div class="official-pos">${a.positionTitle} (${pos?.hanjaTitle || ''}) · ${pos?.department || a.department}</div>
+              </div>
             </div>
-            <div class="official-pos">${a.positionTitle} (${pos?.hanjaTitle || ''}) · ${pos?.department || a.department}</div>
             <div class="official-insignia">복제: ${pos?.insignia || '관복'}</div>
             <div class="official-status-row">
-              <span style="color:var(--text-muted); font-size:10px;">지향: ${a.goal.description.slice(0, 15)}...</span>
+              <span class="official-goal-snippet">지향: ${a.goal.description.slice(0, 16)}...</span>
               <span class="status-badge ${statusClass}">${a.currentStatus}</span>
             </div>
           </div>
@@ -90,6 +121,7 @@ export class CourtRosterView {
       card.addEventListener('click', () => {
         const id = card.getAttribute('data-agent-id');
         this.selectedAgentId = this.selectedAgentId === id ? null : id;
+        SoundManager.getInstance().playScroll();
         this.render();
       });
     });
@@ -97,6 +129,7 @@ export class CourtRosterView {
     this.container.querySelector('#btn-close-official-detail')?.addEventListener('click', (e) => {
       e.stopPropagation();
       this.selectedAgentId = null;
+      SoundManager.getInstance().playScroll();
       this.render();
     });
   }

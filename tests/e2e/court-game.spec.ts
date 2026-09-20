@@ -155,4 +155,41 @@ test.describe('조선 사관 시뮬레이션: 사초: 춘추필법 E2E 테스트
     await page.locator('#btn-ending-close-x').click();
     await expect(scrollModal).not.toBeVisible();
   });
+
+  test('6. SEO 메타태그, 파비콘, 음향(Sound) 토글 및 비주얼 에셋 렌더링 검증', async ({ page }) => {
+    await page.goto('/?seed=12345');
+
+    // 1) 파비콘 및 SEO 메타 태그 검증
+    const favicon = page.locator('link[rel="icon"]');
+    await expect(favicon).toHaveAttribute('href', /favicon\.svg/);
+
+    const ogTitle = page.locator('meta[property="og:title"]');
+    await expect(ogTitle).toHaveAttribute('content', /사초: 춘추필법/);
+
+    const ogImage = page.locator('meta[property="og:image"]');
+    await expect(ogImage).toHaveAttribute('content', /og-image\.jpg/);
+
+    // 2) 효과음(사운드) 토글 버튼 검증
+    const soundToggle = page.locator('#btn-sound-toggle');
+    await expect(soundToggle).toBeVisible();
+    await expect(soundToggle).toContainText('🔊 음향');
+
+    // 클릭 시 무음으로 전환
+    await soundToggle.click();
+    await expect(soundToggle).toContainText('🔇 무음');
+
+    // 다시 클릭 시 음향 복원
+    await soundToggle.click();
+    await expect(soundToggle).toContainText('🔊 음향');
+
+    // 3) 처소 썸네일 이미지 및 관원 흉배 아이콘 렌더링 검증
+    const locationThumbs = page.locator('.location-thumbnail');
+    await expect(locationThumbs).toHaveCount(5);
+
+    const officialInsignias = page.locator('.official-insignia-badge');
+    await expect(officialInsignias).toHaveCount(12);
+
+    // 4) 스크린샷 저장
+    await page.screenshot({ path: 'screenshots/06-seo-assets-sound.png', fullPage: true });
+  });
 });

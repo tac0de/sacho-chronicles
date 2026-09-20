@@ -1,6 +1,8 @@
 import type { Engine, PendingSachoChoice } from '../core/simulation/Engine.js';
 import { LOCATIONS } from '../data/locations.js';
 import type { RecordCertainty } from '../core/records/SachoRecord.js';
+import { SoundManager } from '../core/audio/SoundManager.js';
+import { LOCATION_IMAGES } from './LocationView.js';
 
 export class ObservationView {
   private container: HTMLElement;
@@ -17,16 +19,24 @@ export class ObservationView {
   public render(): void {
     const phase = this.engine.timeManager.currentPhase;
     const loc = LOCATIONS[this.engine.playerLocation];
+    const locImg = LOCATION_IMAGES[loc.id] || './assets/locations/sajeongjeon.svg';
 
     if (phase === 'LOCATION_SELECTION') {
       this.container.innerHTML = `
         <div class="stage-content">
           <div class="observation-banner">
-            <h3>오늘의 관찰 처소: ${loc.name} <span style="font-size:13px; font-weight:normal; color:var(--text-gold);">[${loc.hanja}]</span></h3>
-            <p>${loc.atmosphere} — 좌측 궁궐 전각 중 한 곳을 택한 후, 상단의 <strong>[당일 정무 관찰 시작]</strong>을 누르십시오.</p>
+            <div class="observation-banner-header">
+              <img src="${locImg}" class="banner-location-icon" width="48" height="48" alt="${loc.name}" />
+              <div>
+                <h3>오늘의 관찰 처소: ${loc.name} <span class="hanja-gold">[${loc.hanja}]</span></h3>
+                <p class="banner-subtext">${loc.alias} · ${loc.atmosphere}</p>
+              </div>
+            </div>
+            <p class="banner-instruction">좌측 궁궐 전각 중 한 곳을 택한 후, 상단의 <strong>[당일 정무 입조 관찰]</strong>을 누르십시오.</p>
           </div>
           <div class="empty-observation">
-            <h4>사관이 붓을 적시며 입조를 대기하고 있습니다</h4>
+            <img src="./assets/seal_stamp.svg" width="48" height="48" alt="사관 준비" class="empty-icon" />
+            <h4>사관이 먹을 갈고 붓을 적시며 입조를 대기하고 있습니다</h4>
             <p>춘추관 사관은 군주의 처소와 신하들의 회랑을 묵묵히 오가며 오늘의 사초(史草)를 남길 준비를 합니다.</p>
           </div>
         </div>
@@ -40,10 +50,17 @@ export class ObservationView {
       this.container.innerHTML = `
         <div class="stage-content">
           <div class="observation-banner">
-            <h3>오늘의 관찰 처소: ${loc.name} <span style="font-size:13px; font-weight:normal; color:var(--text-gold);">[${loc.hanja}]</span></h3>
-            <p>오늘 이 처소에서는 사관의 귀와 눈에 띌 만한 공개 설전이나 은밀한 풍문이 감지되지 않았습니다.</p>
+            <div class="observation-banner-header">
+              <img src="${locImg}" class="banner-location-icon" width="48" height="48" alt="${loc.name}" />
+              <div>
+                <h3>오늘의 관찰 처소: ${loc.name} <span class="hanja-gold">[${loc.hanja}]</span></h3>
+                <p class="banner-subtext">${loc.alias}</p>
+              </div>
+            </div>
+            <p class="banner-instruction">오늘 이 처소에서는 사관의 귀와 눈에 띌 만한 공개 설전이나 은밀한 풍문이 감지되지 않았습니다.</p>
           </div>
           <div class="empty-observation">
+            <img src="${locImg}" width="56" height="56" alt="고요한 전각" class="empty-icon" />
             <h4>처소가 고요하여 적막이 흐릅니다</h4>
             <p>다른 전각에서는 피 튀기는 탄핵이나 밀담이 벌어졌을지 모르나, 사관이 머문 이곳에는 소식이 닿지 않았습니다.</p>
           </div>
@@ -100,8 +117,11 @@ export class ObservationView {
 
             <div class="sacho-form">
               <div class="sacho-form-title">
-                <span>📜 사초(史草) 필법 선택 — 춘추관 기록</span>
-                ${!isEditable ? '<span style="color:var(--text-gold); font-size:11px; margin-left:auto;">[서책 봉인 완료]</span>' : ''}
+                <span class="title-text">
+                  <img src="./assets/seal_stamp.svg" width="18" height="18" alt="인장" class="inline-seal" />
+                  사초(史草) 필법 선택 — 춘추관 기록
+                </span>
+                ${!isEditable ? '<span class="sealed-badge">[서책 봉인 완료]</span>' : ''}
               </div>
 
               <div class="sacho-options">
@@ -138,8 +158,13 @@ export class ObservationView {
     this.container.innerHTML = `
       <div class="stage-content">
         <div class="observation-banner">
-          <h3>오늘 [${loc.name}]에서 입수한 사초 전언 (${observedInfos.length}건)</h3>
-          <p>사관의 붓끝(直筆과 曲筆)에 따라 훗날 실록의 성격이 결정됩니다. 신중하게 전언을 적거나, 엄한 필치로 인물을 평가하십시오.</p>
+          <div class="observation-banner-header">
+            <img src="${locImg}" class="banner-location-icon" width="48" height="48" alt="${loc.name}" />
+            <div>
+              <h3>오늘 [${loc.name}]에서 입수한 사초 전언 (${observedInfos.length}건)</h3>
+              <p class="banner-subtext">사관의 붓끝(直筆과 曲筆)에 따라 훗날 실록의 성격이 결정됩니다. 신중하게 전언을 적거나, 엄한 필치로 인물을 평가하십시오.</p>
+            </div>
+          </div>
         </div>
 
         <div class="info-card-list">
@@ -149,9 +174,9 @@ export class ObservationView {
         ${
           isEditable
             ? `
-          <div style="margin-top:24px; text-align:right;">
-            <button id="btn-save-sacho" class="btn btn-primary" style="padding:10px 24px; font-size:15px;">
-              🖋️ 오늘의 사초(史草) 봉인 및 익일(翌日) 진행
+          <div class="observation-bottom-actions">
+            <button id="btn-save-sacho" class="btn btn-primary btn-lg">
+              🖋️ 오늘의 사초(史草) 봉인 및 익일(翌日) 진행 ➔
             </button>
           </div>
         `
@@ -167,6 +192,8 @@ export class ObservationView {
           const target = e.target as HTMLInputElement;
           const infoId = target.name.replace('opt_', '');
           const val = target.value;
+
+          SoundManager.getInstance().playBrush();
 
           if (val === 'IGNORE') {
             this.currentChoices.set(infoId, {
@@ -190,6 +217,7 @@ export class ObservationView {
 
       const btnSave = this.container.querySelector('#btn-save-sacho');
       btnSave?.addEventListener('click', () => {
+        SoundManager.getInstance().playStamp();
         this.onCommitSacho(Array.from(this.currentChoices.values()));
       });
     }

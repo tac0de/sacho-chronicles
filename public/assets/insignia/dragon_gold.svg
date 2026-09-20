@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60">
+  <!-- Royal Five-Clawed Golden Dragon Emblem (오조룡보 五爪龍補) -->
+  <circle cx="30" cy="30" r="28" fill="#801010" stroke="#ffd700" stroke-width="2"/>
+  <circle cx="30" cy="30" r="25" fill="none" stroke="#e5c178" stroke-width="0.8" stroke-dasharray="2,2"/>
+  <!-- Coiled Dragon Body -->
+  <path d="M22 20 Q30 14 38 22 Q46 30 38 38 Q30 46 22 38 Q14 30 22 20 Z" fill="none" stroke="#ffd700" stroke-width="3.5" stroke-linecap="round"/>
+  <!-- Dragon Head -->
+  <circle cx="30" cy="24" r="5" fill="#ffd700"/>
+  <!-- Horns & Whiskers -->
+  <path d="M28 20 L24 16 M32 20 L36 16" stroke="#ffd700" stroke-width="1.8"/>
+  <path d="M27 26 Q20 28 17 26 M33 26 Q40 28 43 26" fill="none" stroke="#ffd700" stroke-width="1.2"/>
+  <!-- Flaming Pearl (여의주 如意珠) -->
+  <circle cx="30" cy="30" r="3.5" fill="#ff4d4f" stroke="#ffd700" stroke-width="1"/>
+</svg>

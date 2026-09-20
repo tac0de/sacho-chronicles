@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <defs>
+    <linearGradient id="corridorBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#161820"/>
+      <stop offset="100%" stop-color="#0a0b0e"/>
+    </linearGradient>
+    <linearGradient id="lanternGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffd166"/>
+      <stop offset="100%" stop-color="#f77f00"/>
+    </linearGradient>
+  </defs>
+  <rect width="120" height="120" rx="12" fill="url(#corridorBg)" stroke="#454d63" stroke-width="1.5"/>
+
+  <!-- Perspective Ceiling Beams (회랑 처마 서까래) -->
+  <polygon points="12,18 108,18 78,44 42,44" fill="#232733"/>
+  <line x1="12" y1="18" x2="42" y2="44" stroke="#454d63" stroke-width="1.5"/>
+  <line x1="108" y1="18" x2="78" y2="44" stroke="#454d63" stroke-width="1.5"/>
+  <line x1="36" y1="18" x2="51" y2="44" stroke="#373e50" stroke-width="1"/>
+  <line x1="84" y1="18" x2="69" y2="44" stroke="#373e50" stroke-width="1"/>
+
+  <!-- Colonnade Pillars in Perspective -->
+  <!-- Back pillar -->
+  <rect x="44" y="44" width="4" height="48" fill="#32221b"/>
+  <rect x="72" y="44" width="4" height="48" fill="#32221b"/>
+  <!-- Middle pillar -->
+  <rect x="32" y="36" width="6" height="64" fill="#422e25"/>
+  <rect x="82" y="36" width="6" height="64" fill="#422e25"/>
+  <!-- Front pillar -->
+  <rect x="18" y="24" width="8" height="84" fill="#583c30"/>
+  <rect x="94" y="24" width="8" height="84" fill="#583c30"/>
+
+  <!-- Floor Board Lines in Perspective -->
+  <polygon points="12,108 108,108 72,92 48,92" fill="#1c1917"/>
+  <line x1="12" y1="108" x2="48" y2="92" stroke="#3b322c" stroke-width="1.5"/>
+  <line x1="108" y1="108" x2="72" y2="92" stroke="#3b322c" stroke-width="1.5"/>
+
+  <!-- Hanging Palace Silk Lantern (청사초롱) -->
+  <line x1="60" y1="44" x2="60" y2="58" stroke="#888" stroke-width="1"/>
+  <!-- Blue silk top -->
+  <rect x="54" y="58" width="12" height="7" rx="1" fill="#2b4c7e"/>
+  <!-- Red silk bottom -->
+  <rect x="54" y="65" width="12" height="9" rx="1" fill="#c0392b"/>
+  <!-- Inner Candle Light Glow -->
+  <circle cx="60" cy="67" r="4" fill="url(#lanternGlow)" opacity="0.85"/>
+  <circle cx="60" cy="67" r="16" fill="#ffd166" opacity="0.15"/>
+
+  <!-- Subtle Whispering Shadows at back -->
+  <ellipse cx="56" cy="80" rx="3" ry="6" fill="#0b0d12" opacity="0.8"/>
+  <ellipse cx="64" cy="80" rx="3.5" ry="6.5" fill="#0b0d12" opacity="0.8"/>
+</svg>

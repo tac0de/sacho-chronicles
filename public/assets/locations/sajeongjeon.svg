@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <defs>
+    <linearGradient id="hallBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#2a221a"/>
+      <stop offset="100%" stop-color="#14110e"/>
+    </linearGradient>
+    <linearGradient id="goldRoof" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#e5c178"/>
+      <stop offset="100%" stop-color="#9a7628"/>
+    </linearGradient>
+  </defs>
+  <!-- Background Shield -->
+  <rect width="120" height="120" rx="12" fill="url(#hallBg)" stroke="#8b6e22" stroke-width="1.5"/>
+
+  <!-- Sun and Moon (일월) -->
+  <circle cx="34" cy="30" r="10" fill="#cf3c3c" opacity="0.85"/>
+  <circle cx="86" cy="30" r="9" fill="#f4eedb" opacity="0.85"/>
+
+  <!-- Five Peaks (오봉 Silhouette) -->
+  <path d="M12 75 L30 46 L48 75 Z" fill="#1b2838" opacity="0.9"/>
+  <path d="M72 75 L90 46 L108 75 Z" fill="#1b2838" opacity="0.9"/>
+  <path d="M40 75 L60 38 L80 75 Z" fill="#223447"/>
+
+  <!-- Palace Traditional Tiled Roof (기와 지붕) -->
+  <!-- Upper Roof Ridge -->
+  <path d="M22 62 Q60 52 98 62 L94 67 Q60 58 26 67 Z" fill="url(#goldRoof)"/>
+  <!-- Roof Eaves Curvature -->
+  <path d="M15 72 Q60 60 105 72 L101 78 Q60 67 19 78 Z" fill="#c5a059"/>
+
+  <!-- Palace Pillars & Platform -->
+  <rect x="28" y="78" width="6" height="28" fill="#a83232" rx="1"/>
+  <rect x="44" y="78" width="5" height="28" fill="#a83232" rx="1"/>
+  <rect x="71" y="78" width="5" height="28" fill="#a83232" rx="1"/>
+  <rect x="86" y="78" width="6" height="28" fill="#a83232" rx="1"/>
+  <!-- Stone Foundation (월대) -->
+  <path d="M18 106 L102 106 L96 112 L24 112 Z" fill="#4a5263"/>
+
+  <!-- Center Royal Throne Silhouette -->
+  <rect x="54" y="86" width="12" height="14" fill="#cf3c3c" rx="2"/>
+  <circle cx="60" cy="82" r="3" fill="#e5c178"/>
+</svg>

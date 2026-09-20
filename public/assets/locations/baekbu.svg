@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <defs>
+    <linearGradient id="baekbuBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#14211a"/>
+      <stop offset="100%" stop-color="#0a120e"/>
+    </linearGradient>
+  </defs>
+  <rect width="120" height="120" rx="12" fill="url(#baekbuBg)" stroke="#2e7d73" stroke-width="1.5"/>
+
+  <!-- Frost / Winter Moon (서릿발 기강) -->
+  <circle cx="92" cy="28" r="12" fill="#cce3de" opacity="0.6"/>
+
+  <!-- Cypress Evergreen Trees (측백나무/잣나무 柏) -->
+  <path d="M22 68 L32 38 L42 68 Z" fill="#1b4332"/>
+  <path d="M25 56 L32 26 L39 56 Z" fill="#2d6a4f"/>
+  <rect x="30" y="68" width="4" height="12" fill="#2b1810"/>
+
+  <path d="M12 78 L20 50 L28 78 Z" fill="#1e3f30"/>
+
+  <!-- Haechi / Justice Scale Motif (해치 獬豸 흉배와 추상 실루엣) -->
+  <path d="M56 46 Q64 36 78 40 Q88 44 86 56 Q84 68 76 74 L68 74 L60 66 Z" fill="#2e7d73" stroke="#52b788" stroke-width="1.5"/>
+  <!-- Horn of Haechi (외뿔) -->
+  <path d="M78 40 L84 32 L81 42 Z" fill="#e5c178"/>
+  <circle cx="78" cy="46" r="2.5" fill="#f4eedb"/>
+
+  <!-- Stone Pedestal of Inspection (감찰대 석단) -->
+  <rect x="46" y="80" width="56" height="24" rx="3" fill="#263430" stroke="#52b788" stroke-width="1"/>
+  <!-- Inscription: 柏府 (Baekbu) -->
+  <text x="74" y="96" font-family="'Song Myung', serif" font-size="12" font-weight="bold" fill="#e5c178" text-anchor="middle">柏 府</text>
+</svg>

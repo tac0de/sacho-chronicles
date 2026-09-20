@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Royal Joseon Historiographer Seal Graphic -->
+  <rect x="5" y="5" width="90" height="90" rx="14" fill="#a82323" stroke="#ffd700" stroke-width="4"/>
+  <rect x="14" y="14" width="72" height="72" rx="8" fill="none" stroke="#f4eedb" stroke-width="2.5" stroke-dasharray="6,2"/>
+  <!-- Central Hanja: 春秋 (Chunchu) or 史草 (Sacho) -->
+  <text x="50" y="44" font-family="'Song Myung', serif" font-size="28" font-weight="900" fill="#f4eedb" text-anchor="middle">史草</text>
+  <text x="50" y="74" font-family="'Song Myung', serif" font-size="24" font-weight="900" fill="#ffd700" text-anchor="middle">之印</text>
+</svg>

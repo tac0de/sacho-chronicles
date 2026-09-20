@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <defs>
+    <linearGradient id="eundaeBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#192333"/>
+      <stop offset="100%" stop-color="#0e141e"/>
+    </linearGradient>
+    <linearGradient id="silverShine" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e2e8f0"/>
+      <stop offset="50%" stop-color="#94a3b8"/>
+      <stop offset="100%" stop-color="#cbd5e1"/>
+    </linearGradient>
+  </defs>
+  <rect width="120" height="120" rx="12" fill="url(#eundaeBg)" stroke="#56b6c2" stroke-width="1.5"/>
+
+  <!-- Moonlit Lattice Window -->
+  <rect x="25" y="16" width="70" height="42" rx="4" fill="#141a24" stroke="#334155" stroke-width="2"/>
+  <line x1="60" y1="16" x2="60" y2="58" stroke="#334155" stroke-width="2"/>
+  <line x1="25" y1="37" x2="95" y2="37" stroke="#334155" stroke-width="2"/>
+
+  <!-- Royal Decree Dispatch Box (어명 서륜함) -->
+  <rect x="28" y="70" width="64" height="32" rx="3" fill="#2d3748" stroke="url(#silverShine)" stroke-width="2"/>
+  <!-- Box Corner Metal Mounts (장석) -->
+  <path d="M28 76 L36 76 L36 70" fill="none" stroke="#e5c178" stroke-width="1.5"/>
+  <path d="M92 76 L84 76 L84 70" fill="none" stroke="#e5c178" stroke-width="1.5"/>
+  <circle cx="60" cy="84" r="5" fill="#e5c178"/>
+  <path d="M58 89 L62 89 L61 97 L59 97 Z" fill="#e5c178"/>
+
+  <!-- Unrolled Silk Scroll (비단 두루마리) -->
+  <path d="M20 54 Q60 48 100 54 L96 66 Q60 60 16 66 Z" fill="#f4eedb" stroke="#8b6e22" stroke-width="1"/>
+  <!-- Red Royal Seal on Decree (어보 인영) -->
+  <rect x="52" y="53" width="16" height="10" fill="#cf3c3c" rx="1" opacity="0.85"/>
+  <rect x="54" y="55" width="12" height="6" fill="none" stroke="#f4eedb" stroke-width="0.8"/>
+</svg>

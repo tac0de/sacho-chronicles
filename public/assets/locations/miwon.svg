@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <defs>
+    <linearGradient id="miwonBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#241e26"/>
+      <stop offset="100%" stop-color="#120e14"/>
+    </linearGradient>
+  </defs>
+  <rect width="120" height="120" rx="12" fill="url(#miwonBg)" stroke="#a27bba" stroke-width="1.5"/>
+
+  <!-- Sunlit Pavilion Window -->
+  <circle cx="60" cy="46" r="30" fill="#2d2233" stroke="#5a4566" stroke-width="2"/>
+
+  <!-- Remonstrance Paper Scroll (사간원 간언 상소) -->
+  <rect x="42" y="24" width="36" height="62" rx="2" fill="#f4eedb" stroke="#8b6e22" stroke-width="1.2"/>
+  <!-- Ink Calligraphy Lines -->
+  <line x1="48" y1="34" x2="72" y2="34" stroke="#222" stroke-width="2" stroke-linecap="round"/>
+  <line x1="48" y1="42" x2="68" y2="42" stroke="#222" stroke-width="2" stroke-linecap="round"/>
+  <line x1="48" y1="50" x2="72" y2="50" stroke="#222" stroke-width="2" stroke-linecap="round"/>
+  <line x1="48" y1="58" x2="64" y2="58" stroke="#222" stroke-width="2" stroke-linecap="round"/>
+  <!-- Red Censor Seal -->
+  <rect x="52" y="66" width="16" height="14" rx="1" fill="#cf3c3c"/>
+
+  <!-- Fern Branches (고사리 薇) flanking on sides -->
+  <!-- Left Fern -->
+  <path d="M32 94 Q24 74 18 56 Q28 62 30 74" fill="none" stroke="#68a678" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M25 76 Q18 70 12 72" fill="none" stroke="#68a678" stroke-width="2" stroke-linecap="round"/>
+  <path d="M28 64 Q20 56 16 58" fill="none" stroke="#68a678" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Right Straight Bamboo Brush (직간의 대나무 붓) -->
+  <line x1="86" y1="96" x2="98" y2="32" stroke="#d4af37" stroke-width="3" stroke-linecap="round"/>
+  <polygon points="98,32 101,22 95,29" fill="#1e1e1e"/>
+
+  <!-- Inscription: 薇 垣 -->
+  <rect x="36" y="92" width="48" height="20" rx="3" fill="#1f1824" stroke="#a27bba" stroke-width="1"/>
+  <text x="60" y="106" font-family="'Song Myung', serif" font-size="11" font-weight="bold" fill="#f4eedb" text-anchor="middle">薇 垣</text>
+</svg>

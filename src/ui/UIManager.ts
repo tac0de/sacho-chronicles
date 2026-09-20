@@ -7,6 +7,7 @@ import { SachoArchiveView } from './SachoArchiveView.js';
 import { DebugPanelView } from './DebugPanelView.js';
 import { SilokEndingView } from './SilokEndingView.js';
 import type { LocationId } from '../data/locations.js';
+import { SoundManager } from '../core/audio/SoundManager.js';
 
 type MainTab = 'OBSERVATION' | 'SACHO_BOOK' | 'EVENT_LOG';
 
@@ -104,6 +105,9 @@ export class UIManager {
   }
 
   private setTab(tab: MainTab): void {
+    if (this.activeMainTab !== tab) {
+      SoundManager.getInstance().playScroll();
+    }
     this.activeMainTab = tab;
     this.render();
   }

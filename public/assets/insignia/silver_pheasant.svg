@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60">
+  <!-- Silver Pheasant Palace Insignia (종2품 상선 백한 白鷴 흉배) -->
+  <rect width="60" height="60" rx="6" fill="#1b2a26" stroke="#56b6c2" stroke-width="1.8"/>
+  <!-- Elegant Long Tail of Pheasant -->
+  <path d="M22 42 Q30 26 38 28 Q44 32 40 46 Z" fill="#e2e8f0"/>
+  <path d="M22 42 Q14 48 8 54" stroke="#e2e8f0" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M24 44 Q18 52 14 56" stroke="#cbd5e1" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  <!-- Pheasant Head & Plume -->
+  <circle cx="38" cy="24" r="5" fill="#e2e8f0"/>
+  <circle cx="37" cy="23" r="1.2" fill="#0f172a"/>
+  <path d="M38 20 Q44 14 46 18" stroke="#ef4444" stroke-width="1.5" fill="none"/>
+</svg>

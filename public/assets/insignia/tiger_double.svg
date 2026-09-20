@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60">
+  <!-- Double Tiger Military Official Insignia (무관 정2품 호표/쌍호흉배) -->
+  <rect width="60" height="60" rx="6" fill="#2d1c16" stroke="#e5c178" stroke-width="1.8"/>
+  <path d="M14 42 Q24 26 36 28 Q44 32 46 44 Z" fill="#d97706"/>
+  <!-- Tiger Stripes -->
+  <path d="M22 34 L26 38 M30 32 L34 36 M38 34 L40 40" stroke="#1c1917" stroke-width="2"/>
+  <!-- Roaring Tiger Head -->
+  <circle cx="20" cy="28" r="7" fill="#d97706"/>
+  <circle cx="18" cy="27" r="1.5" fill="#fef08a"/>
+  <path d="M16 32 Q20 35 24 32" fill="#ef4444"/>
+  <!-- Mountain waves at bottom -->
+  <path d="M8 52 Q18 46 28 52 Q38 46 48 52" fill="none" stroke="#e5c178" stroke-width="1.5"/>
+</svg>

@@ -1,5 +1,6 @@
 import type { Engine } from '../core/simulation/Engine.js';
 import { LOCATIONS } from '../data/locations.js';
+import { SoundManager } from '../core/audio/SoundManager.js';
 
 const HEAVENLY_STEMS = ['갑(甲)', '을(乙)', '병(丙)', '정(丁)', '무(戊)', '기(己)', '경(庚)', '신(辛)', '임(壬)', '계(癸)'];
 const EARTHLY_BRANCHES = ['자(子)', '축(丑)', '인(寅)', '묘(卯)', '진(辰)', '사(巳)', '오(午)', '미(未)', '신(申)', '유(酉)', '술(戌)', '해(亥)'];
@@ -17,6 +18,7 @@ export class HeaderView {
   private onAdvanceDay: () => void;
   private onReseed: (seed: string) => void;
   private onCompileSilok: () => void;
+  private sound: SoundManager;
 
   constructor(
     container: HTMLElement,
@@ -34,6 +36,7 @@ export class HeaderView {
     this.onAdvanceDay = callbacks.onAdvanceDay;
     this.onReseed = callbacks.onReseed;
     this.onCompileSilok = callbacks.onCompileSilok;
+    this.sound = SoundManager.getInstance();
   }
 
   public render(isDebugOpen: boolean): void {
@@ -41,6 +44,7 @@ export class HeaderView {
     const phase = this.engine.timeManager.currentPhase;
     const locName = LOCATIONS[this.engine.playerLocation]?.name || '사정전';
     const sexagenary = getSexagenaryDay(day);
+    const isMuted = this.sound.isMuted();
 
     let phaseText = '처소 선택';
     let btnText = '당일 정무 입조 관찰';
@@ -59,7 +63,7 @@ export class HeaderView {
     this.container.innerHTML = `
       <div class="app-header">
         <div class="header-brand">
-          <div class="seal-emblem">史</div>
+          <img class="seal-emblem-img" src="./favicon.svg" alt="춘추관 인장" width="34" height="34" />
           <div class="title-group">
             <h1>사초 (史草) <span style="font-size:14px; font-weight:normal; color:#c5a059;">: 춘추필법</span></h1>
             <div class="subtitle">조선 춘추관 사관 정치 시뮬레이션 — The Silent Brush</div>
@@ -81,32 +85,47 @@ export class HeaderView {
         </div>
 
         <div class="header-actions">
+          <button id="btn-sound-toggle" class="btn btn-secondary btn-icon" title="${isMuted ? '궁중 효과음 켜기' : '궁중 효과음 끄기'}">
+            ${isMuted ? '🔇 무음' : '🔊 음향'}
+          </button>
           <button id="btn-compile-silok" class="btn btn-secondary" title="현재까지의 사초를 바탕으로 실록을 편찬하고 역사의 심판을 받습니다">
-            📜 실록 편찬 (결산)
+            📜 실록 편찬
           </button>
           <button id="btn-advance" class="btn ${btnClass}">
             ${btnText}
           </button>
           <button id="btn-debug-toggle" class="btn btn-debug ${isDebugOpen ? 'active' : ''}">
-            ⚙️ 사헌부 감찰록 (디버그) ${isDebugOpen ? 'ON' : 'OFF'}
+            ⚙️ 사헌부 감찰록 ${isDebugOpen ? 'ON' : 'OFF'}
           </button>
         </div>
       </div>
     `;
 
     // Event listeners
+    const btnSound = this.container.querySelector('#btn-sound-toggle');
+    btnSound?.addEventListener('click', () => {
+      const nowMuted = this.sound.toggleMute();
+      if (!nowMuted) {
+        this.sound.playStamp();
+      }
+      this.render(isDebugOpen);
+    });
+
     const btnCompile = this.container.querySelector('#btn-compile-silok');
     btnCompile?.addEventListener('click', () => {
+      this.sound.playStamp();
       this.onCompileSilok();
     });
 
     const btnAdvance = this.container.querySelector('#btn-advance');
     btnAdvance?.addEventListener('click', () => {
+      this.sound.playChime();
       this.onAdvanceDay();
     });
 
     const btnDebug = this.container.querySelector('#btn-debug-toggle');
     btnDebug?.addEventListener('click', () => {
+      this.sound.playScroll();
       this.onDebugToggle();
     });
 
@@ -115,7 +134,10 @@ export class HeaderView {
 
     const triggerReseed = () => {
       const val = seedInput?.value.trim();
-      if (val) this.onReseed(val);
+      if (val) {
+        this.sound.playStamp();
+        this.onReseed(val);
+      }
     };
 
     btnSeed?.addEventListener('click', triggerReseed);
