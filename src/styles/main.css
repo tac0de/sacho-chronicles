@@ -2952,14 +2952,20 @@ body {
 
 .night-moon-banner {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: linear-gradient(180deg, #1f1610 0%, #140e08 100%);
+  flex-direction: column;
+  gap: 14px;
+  background: linear-gradient(180deg, #1c140d 0%, #110b06 100%);
   border: 1.5px solid #5a4025;
   border-radius: var(--radius-lg);
-  padding: 16px 20px;
+  padding: 18px 20px;
   margin-bottom: 18px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.85);
+}
+
+.night-banner-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .night-banner-left {
@@ -2969,8 +2975,12 @@ body {
 }
 
 .night-moon-icon {
-  font-size: 36px;
-  filter: drop-shadow(0 0 8px rgba(255, 235, 150, 0.4));
+  font-size: 34px;
+  color: var(--accent-gold);
+  filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.4));
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .night-banner-title {
@@ -2983,6 +2993,8 @@ body {
   font-size: 18px;
   color: var(--text-gold);
   margin: 0;
+  font-family: var(--font-serif);
+  letter-spacing: -0.02em;
 }
 
 .night-banner-subtitle {
@@ -3031,42 +3043,169 @@ body {
   border-radius: 4px;
 }
 
-.night-scribe-hud {
-  display: flex;
+/* 사관 품격 패 (史官 符牌) 전용 바 */
+.night-scribe-talisman-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 12px;
+  width: 100%;
+  border-top: 1px dashed rgba(180, 140, 80, 0.25);
+  padding-top: 14px;
 }
 
-.hud-stat-box {
-  background: rgba(12, 8, 5, 0.85);
-  border: 1px solid #4a3520;
-  border-radius: var(--radius-sm);
-  padding: 6px 12px;
+.scribe-talisman-item {
+  background: linear-gradient(145deg, rgba(26, 19, 13, 0.95), rgba(15, 10, 6, 0.98));
+  border: 1px solid rgba(139, 101, 56, 0.45);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
   display: flex;
-  flex-direction: column;
   align-items: center;
+  gap: 12px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+  transition: all 0.2s ease;
 }
 
-.hud-lbl {
-  font-size: 10px;
+.scribe-talisman-item:hover {
+  border-color: var(--accent-gold);
+  background: linear-gradient(145deg, rgba(35, 25, 18, 0.98), rgba(20, 14, 9, 0.98));
+  box-shadow: 0 4px 14px rgba(212, 175, 55, 0.15);
+}
+
+.talisman-icon-wrap {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-gold);
+}
+
+.item-integrity .talisman-icon-wrap {
+  color: #79d2a6;
+  border-color: rgba(121, 210, 166, 0.4);
+}
+
+.item-peril .talisman-icon-wrap {
+  color: #ff8a80;
+  border-color: rgba(255, 138, 128, 0.4);
+}
+
+.item-wealth .talisman-icon-wrap {
+  color: #ffd54f;
+  border-color: rgba(255, 213, 79, 0.4);
+}
+
+.item-secret .talisman-icon-wrap {
+  color: #ce93d8;
+  border-color: rgba(206, 147, 216, 0.4);
+}
+
+.talisman-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.talisman-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 3px;
+}
+
+.talisman-hanja {
+  font-family: var(--font-serif);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent-gold);
+  background: rgba(212, 175, 55, 0.12);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  padding: 1px 4px;
+  border-radius: 2px;
+  line-height: 1;
+}
+
+.talisman-title {
+  font-size: 12px;
   color: var(--text-muted);
+  white-space: nowrap;
 }
 
-.hud-val {
-  font-size: 14px;
+.talisman-val-row {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.talisman-val {
+  font-size: 16px;
   font-weight: 800;
-  color: #81c784;
+  font-family: var(--font-serif);
+  color: #79d2a6;
+  letter-spacing: -0.02em;
 }
 
-.hud-val.gold {
+.talisman-val.gold {
   color: #ffd54f;
 }
 
-.hud-val.purple {
+.talisman-val.purple {
   color: #ce93d8;
 }
 
-.hud-val.danger {
+.talisman-val.danger {
   color: #ff8a80;
+}
+
+.talisman-max {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.talisman-sub {
+  font-size: 10px;
+  padding: 1px 5px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-muted);
+}
+
+.talisman-sub.danger-text {
+  background: rgba(244, 67, 54, 0.2);
+  color: #ff8a80;
+}
+
+.talisman-gauge-track {
+  height: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+  margin-top: 5px;
+  overflow: hidden;
+}
+
+.talisman-gauge-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
+.talisman-gauge-fill.bar-integrity {
+  background: linear-gradient(90deg, #4db6ac, #81c784);
+}
+
+.talisman-gauge-fill.bar-peril {
+  background: linear-gradient(90deg, #e57373, #ff5252);
+}
+
+.talisman-subtext {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  white-space: nowrap;
 }
 
 /* Visitor Card */
@@ -3651,12 +3790,26 @@ body {
 /* Mobile responsive for booklet & night chamber */
 @media (max-width: 900px) {
   .night-moon-banner {
-    flex-direction: column;
-    align-items: stretch;
+    padding: 14px;
     gap: 12px;
   }
-  .night-scribe-hud {
-    justify-content: space-between;
+  .night-banner-main {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .night-scribe-talisman-bar {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    padding-top: 10px;
+  }
+  .scribe-talisman-item {
+    padding: 8px 10px;
+    gap: 8px;
+  }
+  .talisman-icon-wrap {
+    width: 30px;
+    height: 30px;
   }
   .booklet-summary-grid {
     grid-template-columns: 1fr;
@@ -3667,6 +3820,13 @@ body {
   }
   .header-scribe-stats {
     display: none; /* Hide in tiny header, shown in chamber dossier */
+  }
+}
+
+@media (max-width: 480px) {
+  .night-scribe-talisman-bar {
+    grid-template-columns: 1fr;
+    gap: 6px;
   }
 }
 

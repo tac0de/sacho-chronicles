@@ -109,32 +109,83 @@ export class NightChamberView {
     this.container.innerHTML = `
       <div class="stage-content night-chamber-stage">
         <div class="night-moon-banner">
-          <div class="night-banner-left">
-            <span class="night-moon-icon">${renderIcon('moon')}</span>
-            <div>
-              <div class="night-banner-title">
-                <h3>심야의 침소 (深夜 史官 寢所) · 삼경(三更, 자정)</h3>
-                ${typeBadge}
+          <div class="night-banner-main">
+            <div class="night-banner-left">
+              <span class="night-moon-icon">${renderIcon('moon')}</span>
+              <div>
+                <div class="night-banner-title">
+                  <h3>심야의 침소 (深夜 史官 寢所) · 삼경(三更, 자정)</h3>
+                  ${typeBadge}
+                </div>
+                <p class="night-banner-subtitle">촛불만이 어른거리는 밤, 사관의 문지방을 넘은 은밀한 방문자가 있습니다.</p>
               </div>
-              <p class="night-banner-subtitle">촛불만이 어른거리는 밤, 사관의 문지방을 넘은 은밀한 방문자가 있습니다.</p>
             </div>
           </div>
-          <div class="night-scribe-hud">
-            <div class="hud-stat-box" title="사관의 신념: 낮을수록 곡필 오명 위험">
-              <span class="hud-lbl">직필 신념</span>
-              <strong class="hud-val ${stats.integrity < 40 ? 'danger' : ''}">${stats.integrity} / 100</strong>
+
+          <!-- 사관 품격 패 (史官 符牌) : 직필과 사화의 천칭 -->
+          <div class="night-scribe-talisman-bar">
+            <div class="scribe-talisman-item item-integrity" title="사관의 신념: 낮을수록 훗날 실록 편찬 시 곡필 오명 위험">
+              <div class="talisman-icon-wrap">${renderIcon('scale', { size: 18 })}</div>
+              <div class="talisman-content">
+                <div class="talisman-head">
+                  <span class="talisman-hanja">直筆</span>
+                  <span class="talisman-title">직필 신념</span>
+                </div>
+                <div class="talisman-val-row">
+                  <strong class="talisman-val ${stats.integrity < 40 ? 'danger' : ''}">${stats.integrity}</strong>
+                  <span class="talisman-max">/ 100</span>
+                </div>
+                <div class="talisman-gauge-track">
+                  <div class="talisman-gauge-fill bar-integrity" style="width: ${Math.max(0, Math.min(100, stats.integrity))}%;"></div>
+                </div>
+              </div>
             </div>
-            <div class="hud-stat-box" title="사화 위기: 100에 도달하면 멸문지화">
-              <span class="hud-lbl">사화 위기</span>
-              <strong class="hud-val ${stats.peril >= 70 ? 'danger' : ''}">${stats.peril}%</strong>
+
+            <div class="scribe-talisman-item item-peril" title="사화 위기: 100% 도달 시 즉시 어전 친국 및 멸문지화">
+              <div class="talisman-icon-wrap">${renderIcon('flame', { size: 18 })}</div>
+              <div class="talisman-content">
+                <div class="talisman-head">
+                  <span class="talisman-hanja">士禍</span>
+                  <span class="talisman-title">사화 위기</span>
+                </div>
+                <div class="talisman-val-row">
+                  <strong class="talisman-val ${stats.peril >= 70 ? 'danger' : ''}">${stats.peril}%</strong>
+                  <span class="talisman-sub ${stats.peril >= 70 ? 'danger-text' : ''}">${stats.peril >= 70 ? '경고' : '안정'}</span>
+                </div>
+                <div class="talisman-gauge-track">
+                  <div class="talisman-gauge-fill bar-peril" style="width: ${Math.max(0, Math.min(100, stats.peril))}%;"></div>
+                </div>
+              </div>
             </div>
-            <div class="hud-stat-box" title="가문 재력: 밀정 매수 및 가문 번영에 사용">
-              <span class="hud-lbl">가문 자금</span>
-              <strong class="hud-val gold">${stats.wealth}냥</strong>
+
+            <div class="scribe-talisman-item item-wealth" title="가문 재력: 자제 과거 천거(60냥) 및 가문 보전에 사용">
+              <div class="talisman-icon-wrap">${renderIcon('coins', { size: 18 })}</div>
+              <div class="talisman-content">
+                <div class="talisman-head">
+                  <span class="talisman-hanja">家財</span>
+                  <span class="talisman-title">가문 자금</span>
+                </div>
+                <div class="talisman-val-row">
+                  <strong class="talisman-val gold">${stats.wealth}냥</strong>
+                  <span class="talisman-sub">비상금</span>
+                </div>
+                <div class="talisman-subtext">자제 천거 60냥 대비</div>
+              </div>
             </div>
-            <div class="hud-stat-box" title="벽장에 은닉한 비밀 사가사초 편수">
-              <span class="hud-lbl">사가 비밀사초</span>
-              <strong class="hud-val purple">${stats.secretArchive.length}편</strong>
+
+            <div class="scribe-talisman-item item-secret" title="벽장에 은닉한 비밀 사가사초(私家史草) 편수">
+              <div class="talisman-icon-wrap">${renderIcon('book', { size: 18 })}</div>
+              <div class="talisman-content">
+                <div class="talisman-head">
+                  <span class="talisman-hanja">私草</span>
+                  <span class="talisman-title">비밀 사초</span>
+                </div>
+                <div class="talisman-val-row">
+                  <strong class="talisman-val purple">${stats.secretArchive.length}편</strong>
+                  <span class="talisman-sub">은닉</span>
+                </div>
+                <div class="talisman-subtext">사초 서책 봉안용</div>
+              </div>
             </div>
           </div>
         </div>
