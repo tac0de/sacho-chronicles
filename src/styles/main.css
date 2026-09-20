@@ -224,74 +224,102 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 8px 18px;
+  gap: 8px;
+  padding: 9px 20px;
   border-radius: var(--radius-sm);
   font-family: var(--font-serif);
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.15s ease-in-out;
+  transition: all 0.12s cubic-bezier(0.4, 0, 0.2, 1);
   border: 1px solid transparent;
   text-decoration: none;
+  user-select: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  letter-spacing: 0.5px;
+  position: relative;
 }
 
+.btn:active {
+  transform: translateY(2px) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6), inset 0 2px 4px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* 진사(辰砂) 인주 붉은 칠 버튼 */
 .btn-primary {
-  background: linear-gradient(135deg, #b83232 0%, #801d1d 100%);
-  color: #fff;
-  border-color: #d15656;
-  box-shadow: 0 2px 8px rgba(184, 50, 50, 0.45);
+  background: linear-gradient(180deg, #c43232 0%, #881a1a 100%);
+  color: #fff8eb;
+  border: 1px solid #e26161;
+  box-shadow: 0 3px 10px rgba(184, 50, 50, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
 }
 .btn-primary:hover {
-  background: linear-gradient(135deg, #cf3c3c 0%, #992323 100%);
-  box-shadow: 0 4px 14px rgba(184, 50, 50, 0.65);
+  background: linear-gradient(180deg, #d83d3d 0%, #9e2020 100%);
+  box-shadow: 0 5px 16px rgba(216, 61, 61, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.35);
   transform: translateY(-1px);
 }
 
+/* 황동(鍮器) 주동 버튼 */
 .btn-gold {
-  background: linear-gradient(135deg, #c5a059 0%, #8b6e22 100%);
-  color: #111215;
-  border-color: #e5c178;
-  font-weight: 800;
+  background: linear-gradient(180deg, #e5be6b 0%, #a67c22 100%);
+  color: #120e06;
+  border: 1px solid #ffd88a;
+  font-weight: 900;
+  box-shadow: 0 3px 12px rgba(197, 160, 89, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 .btn-gold:hover {
-  background: linear-gradient(135deg, #d8b26a 0%, #9e7e2c 100%);
+  background: linear-gradient(180deg, #f0ca78 0%, #b88a29 100%);
+  box-shadow: 0 5px 18px rgba(229, 190, 107, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.6);
   transform: translateY(-1px);
 }
 
+/* 흑칠(黑漆) 칠기 버튼 */
 .btn-secondary {
-  background: var(--bg-surface-elevated);
-  color: var(--text-main);
-  border-color: var(--border-subtle);
+  background: linear-gradient(180deg, #252b38 0%, #151922 100%);
+  color: #edeae2;
+  border: 1px solid #3d465c;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 .btn-secondary:hover {
-  background: var(--bg-card);
-  border-color: var(--border-strong);
+  background: linear-gradient(180deg, #2e3646 0%, #1c212d 100%);
+  border-color: #c5a059;
+  color: #f7edd7;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
 .btn-debug {
-  background: #19202f;
+  background: linear-gradient(180deg, #1f2738 0%, #111622 100%);
   color: #8bb6e6;
   border: 1px solid #334466;
   font-family: var(--font-mono);
   font-size: 12px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+}
+.btn-debug:hover {
+  background: linear-gradient(180deg, #27334a 0%, #161d2d 100%);
+  border-color: #5d89d4;
+  color: #b0d8ff;
+  transform: translateY(-1px);
 }
 .btn-debug.active {
-  background: #253659;
+  background: linear-gradient(180deg, #2d426d 0%, #1a2742 100%);
   color: #a8d5ff;
   border-color: #5d89d4;
-  box-shadow: 0 0 10px rgba(93, 137, 212, 0.5);
+  box-shadow: 0 0 12px rgba(93, 137, 212, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .btn-sm {
-  padding: 4px 10px;
+  padding: 4px 12px;
   font-size: 12px;
 }
 
 .btn-lg {
-  padding: 12px 26px;
+  padding: 13px 28px;
   font-size: 15px;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
+  font-weight: 800;
 }
 
 .btn-icon {
@@ -412,13 +440,18 @@ body {
 }
 
 .location-thumbnail {
-  width: 48px;
-  height: 48px;
+  width: 52px;
+  height: 52px;
   border-radius: 8px;
-  border: 1px solid rgba(197, 160, 89, 0.35);
+  border: 1.5px solid rgba(197, 160, 89, 0.45);
   background: #101217;
   flex-shrink: 0;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.55);
+  object-fit: cover;
+  transition: transform 0.2s;
+}
+.location-card:hover .location-thumbnail {
+  transform: scale(1.05);
 }
 
 .location-info {
@@ -594,40 +627,50 @@ body {
 }
 
 /* Observation View */
+.chamber-stage {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
 .observation-banner {
   background: linear-gradient(135deg, #222634 0%, #161820 100%);
   border-left: 4px solid var(--border-gold);
-  padding: 18px 24px;
+  padding: 20px 24px;
   border-radius: var(--radius-md);
-  margin-bottom: 22px;
   box-shadow: var(--shadow-sm);
 }
 
 .observation-banner-header {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 18px;
 }
 
 .banner-location-icon {
-  width: 48px;
-  height: 48px;
+  width: 56px;
+  height: 56px;
   border-radius: 8px;
-  border: 1px solid rgba(197, 160, 89, 0.4);
+  border: 1.5px solid rgba(197, 160, 89, 0.5);
   background: #101217;
   flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.55);
+  object-fit: cover;
+}
+
+.banner-title-col {
+  flex: 1;
 }
 
 .observation-banner h3 {
-  font-size: 18px;
+  font-size: 19px;
   font-weight: 800;
   color: var(--text-gold);
-  margin-bottom: 2px;
+  margin-bottom: 3px;
 }
 
 .hanja-gold {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: normal;
   color: var(--text-gold);
 }
@@ -638,15 +681,158 @@ body {
   line-height: 1.5;
 }
 
-.banner-instruction {
-  margin-top: 12px;
-  font-size: 12px;
-  color: #dfc999;
-  background: rgba(197, 160, 89, 0.08);
-  padding: 8px 14px;
+.banner-instruction-callout {
+  margin-top: 14px;
+  padding: 12px 18px;
+  background: rgba(197, 160, 89, 0.09);
+  border: 1px solid rgba(197, 160, 89, 0.3);
   border-radius: var(--radius-sm);
-  border: 1px dashed rgba(197, 160, 89, 0.25);
-  line-height: 1.45;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.callout-text {
+  font-size: 13px;
+  color: #f7edd7;
+  font-weight: 600;
+}
+
+.btn-chamber-action {
+  padding: 10px 22px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+/* 춘추관 사관 집무실 히어로 카드 */
+.chunchugwan-chamber-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+}
+
+.chamber-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 290px;
+  overflow: hidden;
+}
+
+.chamber-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  filter: brightness(0.92);
+  transition: transform 0.4s ease;
+}
+.chunchugwan-chamber-card:hover .chamber-hero-img {
+  transform: scale(1.02);
+}
+
+.chamber-overlay-badge {
+  position: absolute;
+  bottom: 18px;
+  left: 22px;
+  background: rgba(18, 20, 26, 0.9);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border-gold);
+  padding: 8px 18px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: var(--shadow-lg);
+}
+
+.chamber-seal {
+  background: var(--accent-seal-red);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 900;
+  padding: 3px 8px;
+  border-radius: 3px;
+  letter-spacing: 1px;
+}
+
+.chamber-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-gold);
+}
+
+.chamber-briefing {
+  padding: 24px 28px;
+  background: linear-gradient(180deg, #1b1e27 0%, #141720 100%);
+}
+
+.chamber-briefing-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text-gold);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.omen-tag {
+  font-size: 11px;
+  background: rgba(197, 160, 89, 0.15);
+  color: var(--text-gold);
+  padding: 3px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(197, 160, 89, 0.3);
+  font-weight: 700;
+}
+
+.chamber-text {
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+
+.chamber-tips-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.chamber-tip-item {
+  display: flex;
+  gap: 14px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-subtle);
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  transition: border-color 0.2s;
+}
+.chamber-tip-item:hover {
+  border-color: var(--border-gold);
+}
+
+.tip-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.chamber-tip-item strong {
+  font-size: 13px;
+  color: var(--text-paper);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.chamber-tip-item p {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
 }
 
 .empty-observation {

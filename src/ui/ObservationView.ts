@@ -8,39 +8,88 @@ export class ObservationView {
   private container: HTMLElement;
   private engine: Engine;
   private onCommitSacho: (choices: PendingSachoChoice[]) => void;
+  private onStartObservation?: () => void;
   private currentChoices: Map<string, PendingSachoChoice> = new Map();
 
-  constructor(container: HTMLElement, engine: Engine, onCommitSacho: (choices: PendingSachoChoice[]) => void) {
+  constructor(
+    container: HTMLElement,
+    engine: Engine,
+    onCommitSacho: (choices: PendingSachoChoice[]) => void,
+    onStartObservation?: () => void
+  ) {
     this.container = container;
     this.engine = engine;
     this.onCommitSacho = onCommitSacho;
+    this.onStartObservation = onStartObservation;
   }
 
   public render(): void {
     const phase = this.engine.timeManager.currentPhase;
     const loc = LOCATIONS[this.engine.playerLocation];
-    const locImg = LOCATION_IMAGES[loc.id] || './assets/locations/sajeongjeon.svg';
+    const locImg = LOCATION_IMAGES[loc.id] || './assets/locations/sajeongjeon.jpg';
 
     if (phase === 'LOCATION_SELECTION') {
       this.container.innerHTML = `
-        <div class="stage-content">
+        <div class="stage-content chamber-stage">
           <div class="observation-banner">
             <div class="observation-banner-header">
-              <img src="${locImg}" class="banner-location-icon" width="48" height="48" alt="${loc.name}" />
-              <div>
+              <img src="${locImg}" class="banner-location-icon" width="56" height="56" alt="${loc.name}" />
+              <div class="banner-title-col">
                 <h3>오늘의 관찰 처소: ${loc.name} <span class="hanja-gold">[${loc.hanja}]</span></h3>
                 <p class="banner-subtext">${loc.alias} · ${loc.atmosphere}</p>
               </div>
             </div>
-            <p class="banner-instruction">좌측 궁궐 전각 중 한 곳을 택한 후, 상단의 <strong>[당일 정무 입조 관찰]</strong>을 누르십시오.</p>
+            <div class="banner-instruction-callout">
+              <span class="callout-text">좌측 궁궐 5대 전각 중 행차할 곳을 선택하신 후, 입조 버튼을 누르십시오.</span>
+              <button id="btn-enter-chamber" class="btn btn-gold btn-chamber-action">
+                🏛️ ${loc.name} 입조 관찰 시작 ➔
+              </button>
+            </div>
           </div>
-          <div class="empty-observation">
-            <img src="./assets/seal_stamp.svg" width="48" height="48" alt="사관 준비" class="empty-icon" />
-            <h4>사관이 먹을 갈고 붓을 적시며 입조를 대기하고 있습니다</h4>
-            <p>춘추관 사관은 군주의 처소와 신하들의 회랑을 묵묵히 오가며 오늘의 사초(史草)를 남길 준비를 합니다.</p>
+
+          <div class="chunchugwan-chamber-card">
+            <div class="chamber-image-wrapper">
+              <img src="./assets/locations/chunchugwan.jpg" alt="춘추관 사관 집무실" class="chamber-hero-img" />
+              <div class="chamber-overlay-badge">
+                <span class="chamber-seal">春秋館</span>
+                <span class="chamber-title">사관의 집무대 (史官 執務臺)</span>
+              </div>
+            </div>
+            <div class="chamber-briefing">
+              <div class="chamber-briefing-title">
+                <span>📜 사관 일과 요강 (史官 日課 要綱)</span>
+                <span class="omen-tag">궁중 기류 감지 중</span>
+              </div>
+              <p class="chamber-text">
+                대궐 안에서는 서인과 동인의 파벌 다툼과 권력 암투가 쉼 없이 전개됩니다.
+                사관은 처소에 감도는 <strong>[氣流]</strong>를 살펴 의심스러운 현장에 잠입하고, 관원들의 밀담과 풍문을 수집하여 참과 거짓을 가려내야 합니다.
+              </p>
+              <div class="chamber-tips-grid">
+                <div class="chamber-tip-item">
+                  <span class="tip-icon">⚖️</span>
+                  <div>
+                    <strong>직필(直筆)과 곡필(曲筆)의 갈림길</strong>
+                    <p>사실에 충실할수록 만고직필(萬古直筆)의 명예를 얻으나, 편파적으로 기록하면 곡필의 오명을 씁니다.</p>
+                  </div>
+                </div>
+                <div class="chamber-tip-item">
+                  <span class="tip-icon">🔍</span>
+                  <div>
+                    <strong>소문과 진실의 괴리</strong>
+                    <p>전언(傳聞)과 풍문(風聞)은 과장되거나 조작될 수 있으니 첩보 신빙도를 주의 깊게 살피십시오.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       `;
+
+      this.container.querySelector('#btn-enter-chamber')?.addEventListener('click', () => {
+        SoundManager.getInstance().playChime();
+        this.onStartObservation?.();
+      });
+
       return;
     }
 

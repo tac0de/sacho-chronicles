@@ -71,16 +71,21 @@ export class UIManager {
       this.render();
     });
 
-    this.observationView = new ObservationView(stageBodyEl, this.engine, (choices: PendingSachoChoice[]) => {
-      this.engine.commitSacho(choices);
-      const nextDay = this.engine.proceedToNextDay();
-      this.activeMainTab = 'OBSERVATION';
-      if (nextDay > 30) {
-        this.openSilokEnding();
-        return;
-      }
-      this.render();
-    });
+    this.observationView = new ObservationView(
+      stageBodyEl,
+      this.engine,
+      (choices: PendingSachoChoice[]) => {
+        this.engine.commitSacho(choices);
+        const nextDay = this.engine.proceedToNextDay();
+        this.activeMainTab = 'OBSERVATION';
+        if (nextDay > 30) {
+          this.openSilokEnding();
+          return;
+        }
+        this.render();
+      },
+      () => this.handleAdvanceButton()
+    );
 
     this.courtRosterView = new CourtRosterView(rosterEl, this.engine);
     this.sachoArchiveView = new SachoArchiveView(stageBodyEl, this.engine);

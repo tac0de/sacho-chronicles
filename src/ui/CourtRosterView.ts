@@ -6,24 +6,24 @@ import { SoundManager } from '../core/audio/SoundManager.js';
 function getInsigniaIcon(posId: string): string {
   switch (posId) {
     case 'KING':
-      return './assets/insignia/dragon_gold.svg';
+      return './assets/insignia/dragon_gold.jpg';
     case 'CHIEF_STATE_COUNCILLOR':
     case 'LEFT_STATE_COUNCILLOR':
     case 'RIGHT_STATE_COUNCILLOR':
     case 'MINISTER_OF_PERSONNEL':
-      return './assets/insignia/crane_double.svg';
+      return './assets/insignia/crane_double.jpg';
     case 'MINISTER_OF_WAR':
-      return './assets/insignia/tiger_double.svg';
+      return './assets/insignia/tiger_double.jpg';
     case 'INSPECTOR_GENERAL':
-      return './assets/insignia/haechi.svg';
+      return './assets/insignia/haechi.jpg';
     case 'ROYAL_EUNUCH':
-      return './assets/insignia/silver_pheasant.svg';
+      return './assets/insignia/silver_pheasant.jpg';
     case 'CENSOR_GENERAL':
     case 'CHIEF_SECRETARY':
     case 'ACADEMY_DRAFTER':
     case 'COURT_CLERK':
     default:
-      return './assets/insignia/crane_single.svg';
+      return './assets/insignia/crane_single.jpg';
   }
 }
 

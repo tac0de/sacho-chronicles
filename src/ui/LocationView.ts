@@ -4,11 +4,11 @@ import { POSITIONS } from '../data/positions.js';
 import { SoundManager } from '../core/audio/SoundManager.js';
 
 export const LOCATION_IMAGES: Record<LocationId, string> = {
-  ROYAL_HALL: './assets/locations/sajeongjeon.svg',
-  ROYAL_SECRETARIAT: './assets/locations/eundae.svg',
-  OFFICE_OF_INSPECTOR: './assets/locations/baekbu.svg',
-  OFFICE_OF_CENSORS: './assets/locations/miwon.svg',
-  PALACE_CORRIDOR: './assets/locations/cheonrang.svg',
+  ROYAL_HALL: './assets/locations/sajeongjeon.jpg',
+  ROYAL_SECRETARIAT: './assets/locations/eundae.jpg',
+  OFFICE_OF_INSPECTOR: './assets/locations/baekbu.jpg',
+  OFFICE_OF_CENSORS: './assets/locations/miwon.jpg',
+  PALACE_CORRIDOR: './assets/locations/cheonrang.jpg',
 };
 
 export class LocationView {
