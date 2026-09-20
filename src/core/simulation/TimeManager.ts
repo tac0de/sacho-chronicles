@@ -1,6 +1,7 @@
 export type DailyPhase =
   | 'LOCATION_SELECTION'   // 오늘 방문할 장소 선택 단계
   | 'OBSERVATION_RECORD'   // 관찰 결과 확인 및 사초 집필 단계
+  | 'NIGHT_VISITATION'     // 심야의 내방 및 밀지/회유 딜레마
   | 'DAY_COMPLETED';       // 하루 정산 완료 및 익일 대기
 
 export class TimeManager {

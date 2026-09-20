@@ -12,6 +12,9 @@ import { SachoBook } from '../records/SachoBook.js';
 import type { SachoRecord, RecordCertainty } from '../records/SachoRecord.js';
 import { SilokEvaluator, type SilokEvaluationResult } from '../records/SilokEvaluator.js';
 import type { LocationId } from '../../data/locations.js';
+import { NightDilemmaEngine, type NightDilemma, type ButterflyTrigger } from '../dilemma/NightDilemmaEngine.js';
+import { DynastyManager } from '../dynasty/DynastyManager.js';
+import { SilokCodec } from '../sharing/SilokCodec.js';
 
 export interface PendingSachoChoice {
   infoId: string;
@@ -19,10 +22,29 @@ export interface PendingSachoChoice {
   certainty: RecordCertainty;
 }
 
+export interface ScribeStats {
+  integrity: number; // 직필 신념 (0~100)
+  peril: number;     // 사화 위기 (0~100)
+  wealth: number;    // 가문 재력 (냥)
+  secretArchive: Array<{
+    day: number;
+    title: string;
+    content: string;
+  }>;
+}
+
+export interface MorningBulletin {
+  day: number;
+  headline: string;
+  detail: string;
+  type: string;
+}
+
 export class Engine {
   public seed: number;
   public random: Random;
   public timeManager: TimeManager;
+  public dynastyManager: DynastyManager;
   public agents: Agent[] = [];
   public agentMap: Map<string, Agent> = new Map();
   public relationships!: RelationshipManager;
@@ -38,10 +60,23 @@ export class Engine {
   public simulationLogs: string[] = [];
   public dailyLocationOmens: Map<LocationId, string> = new Map();
 
+  // New Core Systems State
+  public scribeStats: ScribeStats = {
+    integrity: 75,
+    peril: 15,
+    wealth: 20,
+    secretArchive: [],
+  };
+  public currentDilemma: NightDilemma | null = null;
+  public pendingButterflies: ButterflyTrigger[] = [];
+  public butterflyHistory: ButterflyTrigger[] = [];
+  public latestMorningBulletin: MorningBulletin | null = null;
+
   constructor(seed: number | string = 1024) {
     this.seed = typeof seed === 'number' ? seed : 1024;
     this.random = new Random(seed);
     this.timeManager = new TimeManager(1);
+    this.dynastyManager = new DynastyManager();
     this.factRegistry = new WorldFactRegistry();
     this.infoNetwork = new InfoNetwork();
     this.eventGenerator = new EventGenerator();
@@ -50,7 +85,7 @@ export class Engine {
     this.initWorld(seed);
   }
 
-  public initWorld(seed: number | string): void {
+  public initWorld(seed: number | string, inheritDynasty: boolean = false): void {
     this.seed = typeof seed === 'number' ? seed : 1024;
     this.random = new Random(seed);
     this.timeManager.reset(1);
@@ -64,13 +99,25 @@ export class Engine {
     this.playerLocation = 'ROYAL_HALL';
     this.dailyLocationOmens.clear();
 
+    const bonuses = inheritDynasty ? this.dynastyManager.getStartingBonusStats() : { bonusIntegrity: 0, bonusPeril: 0, bonusWealth: 0 };
+    this.scribeStats = {
+      integrity: Math.max(10, Math.min(100, 75 + bonuses.bonusIntegrity)),
+      peril: Math.max(0, Math.min(100, 15 + bonuses.bonusPeril)),
+      wealth: Math.max(10, 20 + bonuses.bonusWealth),
+      secretArchive: [],
+    };
+    this.currentDilemma = null;
+    this.pendingButterflies = [];
+    this.butterflyHistory = [];
+    this.latestMorningBulletin = null;
+
     const initResult: AgentInitializationResult = AgentFactory.createAll(this.random);
     this.agents = initResult.agents;
     this.agentMap = initResult.agentMap;
     this.relationships = initResult.relationshipManager;
 
     this.generateDailyOmens();
-    this.simulationLogs.push(`[System] 세계가 초기화되었습니다. (Seed: ${this.random.getSeed()})`);
+    this.simulationLogs.push(`[System] 세계가 초기화되었습니다. (Seed: ${this.random.getSeed()}, 국왕: ${this.dynastyManager.getCurrentKing().templeName})`);
   }
 
   /**
@@ -207,12 +254,13 @@ export class Engine {
   }
 
   /**
-   * 6 & 7. 사초 기록 완료 및 다음 날 전환 준비
+   * 6 & 7. 사초 기록 완료 및 심야의 내방 단계로 전환
    */
   public commitSacho(choices: PendingSachoChoice[]): void {
     if (this.timeManager.currentPhase !== 'OBSERVATION_RECORD') return;
 
     const day = this.timeManager.currentDay;
+    const todayRecords: SachoRecord[] = [];
 
     for (const choice of choices) {
       if (!choice.recordIt) continue; // 기록하지 않음 선택
@@ -243,21 +291,119 @@ export class Engine {
       };
 
       this.sachoBook.addRecord(record);
+      todayRecords.push(record);
     }
+
+    // 심야 내방자 및 딜레마 생성
+    this.currentDilemma = NightDilemmaEngine.generateDilemma(this, todayRecords);
+    this.timeManager.setPhase('NIGHT_VISITATION');
+    this.simulationLogs.push(`[Day ${day} 야간] 심야의 내방자 [${this.currentDilemma.visitorName}]이(가) 침소에 당도함.`);
+  }
+
+  /**
+   * 심야 내방자의 뇌물/겁박/밀명에 대한 사관의 결단
+   */
+  public resolveNightChoice(choiceId: string): void {
+    if (!this.currentDilemma) {
+      this.timeManager.setPhase('DAY_COMPLETED');
+      return;
+    }
+
+    const choice = this.currentDilemma.choices.find((c) => c.id === choiceId) || this.currentDilemma.choices[0];
+    if (!choice) {
+      this.timeManager.setPhase('DAY_COMPLETED');
+      return;
+    }
+
+    // 스탯 반영 (0 ~ 100 범위 제한)
+    this.scribeStats.integrity = Math.max(0, Math.min(100, this.scribeStats.integrity + choice.integrityDelta));
+    this.scribeStats.peril = Math.max(0, Math.min(100, this.scribeStats.peril + choice.perilDelta));
+    this.scribeStats.wealth = Math.max(0, this.scribeStats.wealth + choice.wealthDelta);
+
+    // 사가 비밀 사초 은닉
+    if (choice.secretArchiveEntry) {
+      this.scribeStats.secretArchive.push({
+        day: this.timeManager.currentDay,
+        title: choice.secretArchiveEntry.title,
+        content: choice.secretArchiveEntry.content,
+      });
+    }
+
+    // 나비효과 트리거 예약
+    if (choice.butterflyTrigger) {
+      this.pendingButterflies.push(choice.butterflyTrigger);
+      this.butterflyHistory.push(choice.butterflyTrigger);
+    }
+
+    this.simulationLogs.push(
+      `[Day ${this.timeManager.currentDay} 심야 결단] "${choice.label}" 선택 (직필: ${this.scribeStats.integrity}, 위기: ${this.scribeStats.peril}%)`
+    );
 
     this.timeManager.setPhase('DAY_COMPLETED');
   }
 
   /**
-   * 다음 날로 이동
+   * 다음 날로 이동 및 나비효과 정치적 파장 실시간 집행
    */
   public proceedToNextDay(): number {
-    if (this.timeManager.currentPhase !== 'DAY_COMPLETED') {
-      // 기록 단계에서 기록 없이 그냥 넘길 경우 자동 처리
-      if (this.timeManager.currentPhase === 'OBSERVATION_RECORD') {
-        this.commitSacho([]);
+    if (this.timeManager.currentPhase === 'NIGHT_VISITATION') {
+      const fallback = this.currentDilemma?.choices[0]?.id || '';
+      this.resolveNightChoice(fallback);
+    } else if (this.timeManager.currentPhase === 'OBSERVATION_RECORD') {
+      this.commitSacho([]);
+      if (this.currentDilemma) {
+        this.resolveNightChoice(this.currentDilemma.choices[0]?.id || '');
       }
     }
+
+    const dayJustFinished = this.timeManager.currentDay;
+
+    // 나비효과 집행 및 여명 조보 발행
+    this.latestMorningBulletin = null;
+    if (this.pendingButterflies.length > 0) {
+      const primaryTrigger = this.pendingButterflies[0];
+
+      for (const trigger of this.pendingButterflies) {
+        const ag = this.agentMap.get(trigger.targetId);
+        if (ag) {
+          ag.politicalPower = Math.max(5, Math.min(100, ag.politicalPower + trigger.powerDelta));
+          if (trigger.type === 'IMPEACHMENT') {
+            ag.currentStatus = '사헌부 탄핵 심문';
+          } else if (trigger.type === 'COVERUP_EXPOSED') {
+            ag.currentStatus = '어전 국문 피의자';
+          } else if (trigger.type === 'FACTION_PURGE') {
+            ag.currentStatus = '사화 파직 위기';
+          } else if (trigger.type === 'ROYAL_PRAISE') {
+            ag.currentStatus = '국왕 친전 포상';
+          }
+        }
+
+        const butterflyEvent: PoliticalEvent = {
+          id: `BUTTERFLY_${dayJustFinished + 1}_${trigger.targetId}`,
+          day: dayJustFinished + 1,
+          type: trigger.type === 'IMPEACHMENT' ? 'IMPEACHMENT' : 'ROYAL_REPRIMAND',
+          locationId: 'ROYAL_HALL',
+          instigatorId: trigger.instigatorId || 'scribe',
+          targetId: trigger.targetId,
+          title: trigger.newsHeadline,
+          summary: trigger.newsDetail,
+          causationReason: `[사관의 사초 및 심야 결단] ${trigger.reason}`,
+          generatedInfoIds: [],
+          relationChanges: [],
+        };
+        this.allEventsHistory.push(butterflyEvent);
+      }
+
+      this.latestMorningBulletin = {
+        day: dayJustFinished + 1,
+        headline: primaryTrigger.newsHeadline,
+        detail: primaryTrigger.newsDetail,
+        type: primaryTrigger.type,
+      };
+
+      this.pendingButterflies = [];
+    }
+
     const nextDay = this.timeManager.advanceToNextDay();
     this.generateDailyOmens();
     return nextDay;
@@ -269,19 +415,25 @@ export class Engine {
   public runAutoDays(count: number): void {
     for (let i = 0; i < count; i++) {
       if (this.timeManager.currentPhase === 'LOCATION_SELECTION') {
-        // 무작위 장소 선택
         const locs: LocationId[] = ['ROYAL_HALL', 'ROYAL_SECRETARIAT', 'OFFICE_OF_INSPECTOR', 'OFFICE_OF_CENSORS', 'PALACE_CORRIDOR'];
         this.playerLocation = this.random.pick(locs);
         this.executeDay();
       }
       if (this.timeManager.currentPhase === 'OBSERVATION_RECORD') {
-        // 관찰 정보 중 일부를 무작위로 사초에 기록
         const choices: PendingSachoChoice[] = this.dailyObservedInfo.map((info) => ({
           infoId: info.id,
           recordIt: this.random.chance(0.7),
           certainty: this.random.pick<RecordCertainty>(['CAUTIOUS', 'MODERATE', 'ASSERTIVE']),
         }));
         this.commitSacho(choices);
+      }
+      if (this.timeManager.currentPhase === 'NIGHT_VISITATION') {
+        const choice = this.currentDilemma?.choices[0];
+        if (choice) {
+          this.resolveNightChoice(choice.id);
+        } else {
+          this.timeManager.setPhase('DAY_COMPLETED');
+        }
       }
       if (this.timeManager.currentPhase === 'DAY_COMPLETED') {
         this.proceedToNextDay();
@@ -302,6 +454,75 @@ export class Engine {
   }
 
   /**
+   * 노백엔드 URL 공유용 압축 해시 생성
+   */
+  public getShareableSilokUrl(): string {
+    const evaluation = this.compileSilok();
+    const currentKing = this.dynastyManager.getCurrentKing();
+    const shareData = {
+      version: 1,
+      seed: this.seed,
+      day: this.timeManager.currentDay,
+      generation: this.dynastyManager.getGeneration(),
+      kingName: currentKing.templeName,
+      scribeStats: {
+        integrity: this.scribeStats.integrity,
+        peril: this.scribeStats.peril,
+        wealth: this.scribeStats.wealth,
+      },
+      records: this.sachoBook.getAll().map((r) => ({
+        day: r.day,
+        subjectName: r.subjectName,
+        certainty: r.certainty,
+        statement: r.statement,
+        witnessType: r.witnessType,
+      })),
+      secretArchive: this.scribeStats.secretArchive,
+      butterflies: this.butterflyHistory.map((b) => ({
+        day: this.timeManager.currentDay,
+        headline: b.newsHeadline,
+        detail: b.newsDetail,
+      })),
+      evaluation: {
+        grade: evaluation.grade,
+        title: evaluation.title,
+        score: evaluation.score,
+        summary: evaluation.evaluationSummary,
+      },
+    };
+
+    const encoded = SilokCodec.encode(shareData);
+    if (typeof window !== 'undefined') {
+      const base = window.location.href.split('#')[0];
+      return `${base}#silok=${encoded}`;
+    }
+    return `#silok=${encoded}`;
+  }
+
+  /**
+   * 신왕 즉위 및 가문 차대 사관 계승 (무한 로그라이트 500년 루프)
+   */
+  public startNewDynastyReign(): void {
+    const evaluation = this.compileSilok();
+    const westCount = this.agents.filter((a) => a.faction === 'WEST' && a.politicalPower >= 50).length;
+    const eastCount = this.agents.filter((a) => a.faction === 'EAST' && a.politicalPower >= 50).length;
+    const winningFaction = westCount >= eastCount ? '서인(西人)' : '동인(東人)';
+
+    this.dynastyManager.recordReignEnd(
+      evaluation.grade,
+      evaluation.title,
+      this.scribeStats.integrity,
+      this.scribeStats.peril,
+      this.scribeStats.secretArchive.length,
+      this.scribeStats.wealth,
+      winningFaction
+    );
+
+    this.dynastyManager.advanceToNextReign();
+    this.initWorld(this.random.nextInt(10000, 99999), true);
+  }
+
+  /**
    * 디버그용 전체 스냅샷 반환
    */
   public getDebugSnapshot() {
@@ -309,6 +530,9 @@ export class Engine {
       currentDay: this.timeManager.currentDay,
       currentPhase: this.timeManager.currentPhase,
       seed: this.random.getSeed(),
+      generation: this.dynastyManager.getGeneration(),
+      king: this.dynastyManager.getCurrentKing().templeName,
+      scribeStats: this.scribeStats,
       playerLocation: this.playerLocation,
       worldFacts: this.factRegistry.getAll(),
       agents: this.agents.map((a) => a.getProfileSnapshot()),

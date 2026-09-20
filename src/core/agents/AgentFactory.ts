@@ -109,6 +109,17 @@ export class AgentFactory {
         goal: cfg.goal,
       });
 
+      const westPositions: PositionId[] = ['CHIEF_STATE_COUNCILLOR', 'RIGHT_STATE_COUNCILLOR', 'MINISTER_OF_WAR', 'CENSOR_GENERAL'];
+      const eastPositions: PositionId[] = ['LEFT_STATE_COUNCILLOR', 'MINISTER_OF_PERSONNEL', 'INSPECTOR_GENERAL', 'ACADEMY_DRAFTER'];
+
+      if (westPositions.includes(cfg.positionId)) {
+        agent.faction = 'WEST';
+      } else if (eastPositions.includes(cfg.positionId)) {
+        agent.faction = 'EAST';
+      } else {
+        agent.faction = 'NEUTRAL';
+      }
+
       agents.push(agent);
       agentMap.set(agent.id, agent);
     }

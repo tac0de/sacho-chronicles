@@ -47,6 +47,9 @@ export class HeaderView {
     const isMuted = this.sound.isMuted();
     const isBgmMuted = this.sound.isBgmMuted();
 
+    const stats = this.engine.scribeStats;
+    const king = this.engine.dynastyManager.getCurrentKing();
+
     let phaseText = '처소 선택';
     let btnText = '입조 관찰 ➔';
     let btnClass = 'btn-gold';
@@ -55,6 +58,10 @@ export class HeaderView {
       phaseText = '사초 집필';
       btnText = '사초 봉인 ➔';
       btnClass = 'btn-primary';
+    } else if (phase === 'NIGHT_VISITATION') {
+      phaseText = '심야 결단';
+      btnText = '심야 처소 ➔';
+      btnClass = 'btn-gold';
     } else if (phase === 'DAY_COMPLETED') {
       phaseText = '정산 완료';
       btnText = `익일(Day ${day + 1}) ➔`;
@@ -83,6 +90,12 @@ export class HeaderView {
             <span class="hud-val-gold">🏛️ ${locName}</span>
             <span class="hud-sep">·</span>
             <span class="hud-val-text">${phaseText}</span>
+          </div>
+          <div class="header-scribe-stats" title="사관 가문 위상 및 당대 군주">
+            <span class="hud-stat-chip chip-integrity" title="직필 신념">⚖️ ${stats.integrity}</span>
+            <span class="hud-stat-chip chip-peril" title="사화 위기">🔥 ${stats.peril}%</span>
+            <span class="hud-stat-chip chip-wealth" title="가문 재력">💰 ${stats.wealth}냥</span>
+            <span class="hud-stat-chip chip-king" title="당대 재위 군주">👑 ${king.templeName.slice(0, 3)}</span>
           </div>
           <div class="seed-box" title="세계 생성 개벽 시드">
             <span class="seed-label">🌱</span>

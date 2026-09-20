@@ -2,10 +2,13 @@ import { Engine, type PendingSachoChoice } from '../core/simulation/Engine.js';
 import { HeaderView } from './HeaderView.js';
 import { LocationView } from './LocationView.js';
 import { ObservationView } from './ObservationView.js';
+import { NightChamberView } from './NightChamberView.js';
 import { CourtRosterView } from './CourtRosterView.js';
 import { SachoArchiveView } from './SachoArchiveView.js';
 import { DebugPanelView } from './DebugPanelView.js';
 import { SilokEndingView } from './SilokEndingView.js';
+import { SilokBookletView } from './SilokBookletView.js';
+import { SilokCodec, type SilokShareData } from '../core/sharing/SilokCodec.js';
 import type { LocationId } from '../data/locations.js';
 import { SoundManager } from '../core/audio/SoundManager.js';
 
@@ -18,6 +21,7 @@ export class UIManager {
 
   private isDebugOpen: boolean = false;
   private isEndingOpen: boolean = false;
+  private isBookletOpen: boolean = false;
   private activeMainTab: MainTab = 'OBSERVATION';
   private activeMobileView: MobileView = 'STAGE';
 
@@ -25,10 +29,12 @@ export class UIManager {
   private headerView!: HeaderView;
   private locationView!: LocationView;
   private observationView!: ObservationView;
+  private nightChamberView!: NightChamberView;
   private courtRosterView!: CourtRosterView;
   private sachoArchiveView!: SachoArchiveView;
   private debugPanelView!: DebugPanelView;
   private endingView: SilokEndingView | null = null;
+  private silokBookletView: SilokBookletView | null = null;
 
   constructor(root: HTMLElement, initialSeed: number | string = 12345) {
     this.root = root;
@@ -98,17 +104,24 @@ export class UIManager {
       this.engine,
       (choices: PendingSachoChoice[]) => {
         this.engine.commitSacho(choices);
-        const nextDay = this.engine.proceedToNextDay();
         this.activeMainTab = 'OBSERVATION';
         this.activeMobileView = 'STAGE';
-        if (nextDay > 30) {
-          this.openSilokEnding();
-          return;
-        }
         this.render();
       },
       () => this.handleAdvanceButton()
     );
+
+    this.nightChamberView = new NightChamberView(stageBodyEl, this.engine, (choiceId: string) => {
+      this.engine.resolveNightChoice(choiceId);
+      const nextDay = this.engine.proceedToNextDay();
+      this.activeMainTab = 'OBSERVATION';
+      this.activeMobileView = 'STAGE';
+      if (nextDay > 30) {
+        this.openSilokEnding();
+        return;
+      }
+      this.render();
+    });
 
     this.courtRosterView = new CourtRosterView(rosterEl, this.engine);
     this.sachoArchiveView = new SachoArchiveView(stageBodyEl, this.engine);
@@ -117,6 +130,14 @@ export class UIManager {
       onClose: () => this.toggleDebug(),
       onFastForward: (days) => this.handleFastForward(days),
     });
+
+    // Hash check for serverless shared Silok booklet on URL load
+    if (typeof window !== 'undefined' && window.location.hash.startsWith('#silok=')) {
+      const shareData = SilokCodec.decode(window.location.hash);
+      if (shareData) {
+        this.openSilokBooklet(shareData);
+      }
+    }
 
     // Main nav tab listeners
     this.root.querySelector('#tab-obs')?.addEventListener('click', () => {
@@ -178,8 +199,17 @@ export class UIManager {
       this.engine.executeDay();
       this.activeMainTab = 'OBSERVATION';
     } else if (phase === 'OBSERVATION_RECORD') {
-      this.engine.proceedToNextDay();
+      this.engine.commitSacho([]);
       this.activeMainTab = 'OBSERVATION';
+    } else if (phase === 'NIGHT_VISITATION') {
+      const fallback = this.engine.currentDilemma?.choices[0]?.id || '';
+      this.engine.resolveNightChoice(fallback);
+      const nextDay = this.engine.proceedToNextDay();
+      this.activeMainTab = 'OBSERVATION';
+      if (nextDay > 30) {
+        this.openSilokEnding();
+        return;
+      }
     } else if (phase === 'DAY_COMPLETED') {
       const nextDay = this.engine.proceedToNextDay();
       this.activeMainTab = 'OBSERVATION';
@@ -217,8 +247,90 @@ export class UIManager {
         endingRoot.innerHTML = '';
         this.setTab('SACHO_BOOK');
       },
+      onStartDynasty: () => {
+        this.isEndingOpen = false;
+        endingRoot.innerHTML = '';
+        this.engine.startNewDynastyReign();
+        this.setTab('OBSERVATION');
+      },
+      onOpenBooklet: () => {
+        this.isEndingOpen = false;
+        endingRoot.innerHTML = '';
+        this.openSilokBookletFromCurrent();
+      },
+      onCopyShareUrl: () => {
+        const url = this.engine.getShareableSilokUrl();
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(url).then(() => {
+            alert('실록 공유 URL이 클립보드에 복사되었습니다!\n누구에게나 링크를 전달하여 웹에서 서책을 열람할 수 있습니다.');
+          });
+        }
+      },
     });
     this.endingView.render();
+  }
+
+  public openSilokBooklet(data: SilokShareData): void {
+    this.isBookletOpen = true;
+    const endingRoot = this.root.querySelector('#ending-root') as HTMLElement;
+    this.silokBookletView = new SilokBookletView(endingRoot, data, {
+      onClose: () => {
+        this.isBookletOpen = false;
+        endingRoot.innerHTML = '';
+      },
+      onStartNewDynasty: () => {
+        this.isBookletOpen = false;
+        endingRoot.innerHTML = '';
+        this.engine.startNewDynastyReign();
+        this.setTab('OBSERVATION');
+      },
+      onRestartNewGame: () => {
+        this.isBookletOpen = false;
+        endingRoot.innerHTML = '';
+        if (typeof window !== 'undefined') {
+          window.location.hash = '';
+        }
+        this.handleReseed('12345');
+      },
+    });
+    this.silokBookletView.render();
+  }
+
+  private openSilokBookletFromCurrent(): void {
+    const evaluation = this.engine.compileSilok();
+    const currentKing = this.engine.dynastyManager.getCurrentKing();
+    const shareData: SilokShareData = {
+      version: 1,
+      seed: this.engine.seed,
+      day: this.engine.timeManager.currentDay,
+      generation: this.engine.dynastyManager.getGeneration(),
+      kingName: currentKing.templeName,
+      scribeStats: {
+        integrity: this.engine.scribeStats.integrity,
+        peril: this.engine.scribeStats.peril,
+        wealth: this.engine.scribeStats.wealth,
+      },
+      records: this.engine.sachoBook.getAll().map((r) => ({
+        day: r.day,
+        subjectName: r.subjectName,
+        certainty: r.certainty,
+        statement: r.statement,
+        witnessType: r.witnessType,
+      })),
+      secretArchive: this.engine.scribeStats.secretArchive,
+      butterflies: this.engine.butterflyHistory.map((b) => ({
+        day: this.engine.timeManager.currentDay,
+        headline: b.newsHeadline,
+        detail: b.newsDetail,
+      })),
+      evaluation: {
+        grade: evaluation.grade,
+        title: evaluation.title,
+        score: evaluation.score,
+        summary: evaluation.evaluationSummary,
+      },
+    };
+    this.openSilokBooklet(shareData);
   }
 
   public render(): void {
@@ -233,7 +345,11 @@ export class UIManager {
     const stageBodyEl = this.root.querySelector('#stage-body') as HTMLElement;
 
     if (this.activeMainTab === 'OBSERVATION') {
-      this.observationView.render();
+      if (this.engine.timeManager.currentPhase === 'NIGHT_VISITATION') {
+        this.nightChamberView.render();
+      } else {
+        this.observationView.render();
+      }
     } else if (this.activeMainTab === 'SACHO_BOOK') {
       this.sachoArchiveView.render();
     } else if (this.activeMainTab === 'EVENT_LOG') {

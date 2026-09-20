@@ -5,6 +5,9 @@ export class SilokEndingView {
   private result: SilokEvaluationResult;
   private onRestart: (newSeed?: string) => void;
   private onClose: () => void;
+  private onStartDynasty?: () => void;
+  private onOpenBooklet?: () => void;
+  private onCopyShareUrl?: () => void;
 
   constructor(
     container: HTMLElement,
@@ -12,12 +15,18 @@ export class SilokEndingView {
     callbacks: {
       onRestart: (newSeed?: string) => void;
       onClose: () => void;
+      onStartDynasty?: () => void;
+      onOpenBooklet?: () => void;
+      onCopyShareUrl?: () => void;
     }
   ) {
     this.container = container;
     this.result = result;
     this.onRestart = callbacks.onRestart;
     this.onClose = callbacks.onClose;
+    this.onStartDynasty = callbacks.onStartDynasty;
+    this.onOpenBooklet = callbacks.onOpenBooklet;
+    this.onCopyShareUrl = callbacks.onCopyShareUrl;
   }
 
   public render(): void {
@@ -114,6 +123,21 @@ export class SilokEndingView {
 
             <!-- Ending Actions -->
             <div class="ending-actions">
+              ${
+                this.onStartDynasty
+                  ? `
+                <button id="btn-dynasty-next" class="btn btn-gold btn-lg" style="grid-column: 1 / -1; font-size: 15px; font-weight: bold; background: linear-gradient(135deg, #c59b27 0%, #8b6508 100%);">
+                  👑 차대 계승: 신왕 즉위 및 가문 사필록 잇기 (500년 루프) ➔
+                </button>
+              `
+                  : ''
+              }
+              <button id="btn-open-booklet" class="btn btn-secondary">
+                📖 비단 실록 서책으로 열람
+              </button>
+              <button id="btn-copy-share-url" class="btn btn-secondary">
+                🔗 사초 영구 링크 복사
+              </button>
               <button id="btn-download-scroll" class="btn btn-secondary">
                 🖼️ 실록 족자 이미지 저장 (PNG)
               </button>
@@ -141,6 +165,18 @@ export class SilokEndingView {
 
     this.container.querySelector('#btn-inspect-sacho')?.addEventListener('click', () => {
       this.onClose();
+    });
+
+    this.container.querySelector('#btn-dynasty-next')?.addEventListener('click', () => {
+      this.onStartDynasty?.();
+    });
+
+    this.container.querySelector('#btn-open-booklet')?.addEventListener('click', () => {
+      this.onOpenBooklet?.();
+    });
+
+    this.container.querySelector('#btn-copy-share-url')?.addEventListener('click', () => {
+      this.onCopyShareUrl?.();
     });
 
     this.container.querySelector('#btn-new-era')?.addEventListener('click', () => {

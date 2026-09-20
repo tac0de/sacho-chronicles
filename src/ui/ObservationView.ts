@@ -29,8 +29,27 @@ export class ObservationView {
     const locImg = LOCATION_IMAGES[loc.id] || './assets/locations/sajeongjeon.jpg';
 
     if (phase === 'LOCATION_SELECTION') {
+      const bulletin = this.engine.latestMorningBulletin;
+      const stats = this.engine.scribeStats;
+      const gen = this.engine.dynastyManager.getGeneration();
+      const king = this.engine.dynastyManager.getCurrentKing();
+
+      const bulletinHtml = bulletin
+        ? `
+        <div class="morning-bulletin-banner">
+          <div class="bulletin-header">
+            <span class="bulletin-seal">黎明 朝報</span>
+            <span class="bulletin-title">【여명 조보 · 黎明 朝報】 Day ${bulletin.day} 어전 및 궐내 긴급 공론</span>
+          </div>
+          <h4 class="bulletin-headline">${bulletin.headline}</h4>
+          <p class="bulletin-detail">${bulletin.detail}</p>
+        </div>
+      `
+        : '';
+
       this.container.innerHTML = `
         <div class="stage-content chamber-stage">
+          ${bulletinHtml}
           <div class="observation-banner">
             <div class="observation-banner-header">
               <img src="${locImg}" class="banner-location-icon" width="56" height="56" alt="${loc.name}" />
@@ -56,6 +75,11 @@ export class ObservationView {
               </div>
             </div>
             <div class="chamber-briefing">
+              <div class="chamber-dynasty-badge">
+                <span class="badge-gen">조선 ${gen}대 사관</span>
+                <span class="badge-king">재위 군주: ${king.templeName} [${king.personality}]</span>
+                <span class="badge-stats">⚖️ 직필 ${stats.integrity} · 🔥 위기 ${stats.peril}% · 💰 재력 ${stats.wealth}냥 · 🗝️ 밀록 ${stats.secretArchive.length}편</span>
+              </div>
               <div class="chamber-briefing-title">
                 <span>📜 사관 일과 요강 (史官 日課 要綱)</span>
                 <span class="omen-tag">궁중 기류 감지 중</span>
@@ -90,6 +114,31 @@ export class ObservationView {
         this.onStartObservation?.();
       });
 
+      return;
+    }
+
+    if (phase === 'DAY_COMPLETED') {
+      const nextDayNum = this.engine.timeManager.currentDay + 1;
+      this.container.innerHTML = `
+        <div class="stage-content chamber-stage">
+          <div class="observation-banner">
+            <h3>심야의 결단 완료 (決斷 完了)</h3>
+            <p>사관의 결단이 역사의 물줄기를 바꾸었습니다. 촛불을 끄고 여명을 맞이할 준비를 마쳤습니다.</p>
+          </div>
+          <div class="night-completed-card">
+            <div class="night-completed-icon">🌅</div>
+            <h4>대궐에 새로운 여명이 밝아옵니다</h4>
+            <p>사관의 붓끝과 어젯밤의 결단에 따른 정치적 파장이 오늘 아침 어전 조참에 서슬 퍼렇게 드러날 것입니다.</p>
+            <button id="btn-next-day-dawn" class="btn btn-gold btn-lg" style="margin-top: 20px;">
+              ☀️ 여명을 맞이하여 익일(Day ${nextDayNum})로 나아가기 ➔
+            </button>
+          </div>
+        </div>
+      `;
+      this.container.querySelector('#btn-next-day-dawn')?.addEventListener('click', () => {
+        SoundManager.getInstance().playChime();
+        this.onStartObservation?.();
+      });
       return;
     }
 
@@ -225,7 +274,7 @@ export class ObservationView {
             ? `
           <div class="observation-bottom-actions">
             <button id="btn-save-sacho" class="btn btn-primary btn-lg">
-              🖋️ 오늘의 사초(史草) 봉인 및 익일(翌日) 진행 ➔
+              🖋️ 오늘의 사초(史草) 봉인 및 심야 처소 이동 ➔
             </button>
           </div>
         `

@@ -70,11 +70,24 @@ test.describe('조선 사관 시뮬레이션: 사초: 춘추필법 E2E 테스트
       await assertiveRadio.check();
     }
 
-    // 5) [오늘의 사초 봉인 및 익일 진행] 클릭 -> 바로 Day 2 전환 검증
+    // 5) [오늘의 사초 봉인 및 심야 처소 이동] 클릭
     const saveSachoBtn = page.locator('#btn-save-sacho');
     await saveSachoBtn.click();
 
-    // 바로 Day 2로 진행되었는지 확인
+    // 6) 심야의 내방 딜레마 화면 노출 확인 (야간 침소 및 내방객 대화)
+    const nightStage = page.locator('.night-chamber-stage');
+    await expect(nightStage).toBeVisible();
+    await expect(page.locator('.night-visitor-card')).toBeVisible();
+
+    // 야간 침소 딜레마 스크린샷 저장
+    await page.screenshot({ path: 'screenshots/15-night-chamber.png' });
+
+    // 결단 선택 버튼 클릭 -> 심야 결단 단행
+    const choiceBtn = page.locator('.btn-choice-action').first();
+    await expect(choiceBtn).toBeVisible();
+    await choiceBtn.click();
+
+    // 7) 결단 후 익일(Day 2)로 진행되었는지 확인
     await expect(page.locator('.day-badge')).toContainText('Day 2');
 
     // 스크린샷 저장
@@ -276,6 +289,44 @@ test.describe('조선 사관 시뮬레이션: 사초: 춘추필법 E2E 테스트
     await expect(page.locator('.debug-table')).toBeVisible();
     await expect(page.locator('.debug-table tbody tr')).toHaveCount(12);
     await page.screenshot({ path: 'screenshots/12-mobile-debug-agents.png' });
+  });
+
+  test('8. 노백엔드 URL 실록 서책(Silok Booklet) 및 왕조 계승 루프 검증', async ({ page }) => {
+    await page.goto('/?seed=12345');
+
+    // 1) 실록 편찬 모달 열기
+    await page.locator('#btn-compile-silok').click();
+    await expect(page.locator('.ending-scroll-container')).toBeVisible();
+
+    // 2) 신왕 즉위 및 서책 열람 버튼 가시성 확인
+    const nextDynastyBtn = page.locator('#btn-dynasty-next');
+    const openBookletBtn = page.locator('#btn-open-booklet');
+    await expect(nextDynastyBtn).toBeVisible();
+    await expect(openBookletBtn).toBeVisible();
+
+    // 3) 비단 실록 서책 모달 열기
+    await openBookletBtn.click();
+    const bookletModal = page.locator('.silok-booklet-modal');
+    await expect(bookletModal).toBeVisible();
+
+    // 4) 서책 4대 탭 노출 검증
+    const tabs = page.locator('.booklet-tab');
+    await expect(tabs).toHaveCount(4);
+
+    // 5) 2번째 탭 [사초 편년기] 클릭
+    await page.locator('.booklet-tab[data-page="CHRONICLE"]').click();
+    await expect(page.locator('.booklet-page-content')).toBeVisible();
+
+    // 스크린샷 저장
+    await page.screenshot({ path: 'screenshots/13-silok-booklet.png', fullPage: true });
+
+    // 6) 신왕 즉위 및 차대 계승 버튼 클릭 -> 2대 사관으로 전승
+    await page.locator('#btn-booklet-next-reign').click();
+    await expect(bookletModal).not.toBeVisible();
+
+    // 7) 2대 사관 가풍 및 HUD 확인
+    await expect(page.locator('.chamber-dynasty-badge')).toContainText('조선 2대 사관');
+    await page.screenshot({ path: 'screenshots/14-dynasty-generation-2.png' });
   });
 });
 

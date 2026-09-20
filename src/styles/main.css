@@ -2447,4 +2447,886 @@ body {
   }
 }
 
+/* ==========================================================================
+   Header Scribe Persona & HUD Chips
+   ========================================================================== */
+.header-scribe-stats {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(22, 16, 10, 0.7);
+  border: 1px solid #4a3520;
+  border-radius: var(--radius-sm);
+  padding: 3px 8px;
+}
+
+.hud-stat-chip {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+.chip-integrity {
+  background: rgba(46, 125, 50, 0.2);
+  color: #81c784;
+  border: 1px solid rgba(129, 199, 132, 0.3);
+}
+
+.chip-peril {
+  background: rgba(198, 40, 40, 0.2);
+  color: #ef9a9a;
+  border: 1px solid rgba(239, 154, 154, 0.3);
+}
+
+.chip-wealth {
+  background: rgba(234, 179, 8, 0.15);
+  color: #ffd54f;
+  border: 1px solid rgba(255, 213, 79, 0.3);
+}
+
+.chip-king {
+  background: rgba(156, 39, 176, 0.2);
+  color: #ce93d8;
+  border: 1px solid rgba(206, 147, 216, 0.3);
+}
+
+/* ==========================================================================
+   Morning Proclamation Banner (黎明 朝報)
+   ========================================================================== */
+.morning-bulletin-banner {
+  flex-shrink: 0;
+  background: linear-gradient(135deg, rgba(80, 20, 20, 0.95) 0%, rgba(35, 15, 10, 0.95) 100%);
+  border: 2px solid #e5c178;
+  border-radius: var(--radius-md);
+  padding: 14px 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.7), inset 0 0 15px rgba(229, 193, 120, 0.15);
+  animation: bulletinGlow 2.5s infinite alternate ease-in-out;
+}
+
+@keyframes bulletinGlow {
+  0% { border-color: #b3883b; box-shadow: 0 4px 15px rgba(0,0,0,0.6); }
+  100% { border-color: #ffd54f; box-shadow: 0 4px 22px rgba(255, 213, 79, 0.35); }
+}
+
+.bulletin-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.bulletin-seal {
+  background: #c62828;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 900;
+  padding: 2px 7px;
+  border-radius: 2px;
+  letter-spacing: 1px;
+}
+
+.bulletin-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-gold);
+}
+
+.bulletin-headline {
+  font-size: 16px;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 6px 0;
+  word-break: keep-all;
+}
+
+.bulletin-detail {
+  font-size: 13px;
+  color: #e0d5c1;
+  line-height: 1.5;
+  margin: 0;
+  word-break: keep-all;
+}
+
+/* Chamber Dynasty Badge */
+.chamber-dynasty-badge {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  background: rgba(30, 20, 12, 0.85);
+  border: 1px solid #5a4025;
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  margin-bottom: 12px;
+  font-size: 12px;
+}
+
+.badge-gen {
+  background: var(--accent-seal-red);
+  color: #fff;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 2px;
+}
+
+.badge-king {
+  color: var(--text-gold);
+  font-weight: 700;
+}
+
+.badge-stats {
+  color: var(--text-paper);
+  margin-left: auto;
+}
+
+/* Night Completed Card */
+.night-completed-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background: rgba(22, 16, 11, 0.9);
+  border: 1px solid #4a3520;
+  border-radius: var(--radius-lg);
+  text-align: center;
+}
+
+.night-completed-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+/* ==========================================================================
+   Night Chamber Stage (심야의 침소)
+   ========================================================================= */
+.night-chamber-stage {
+  background: radial-gradient(circle at 50% 20%, #16100b 0%, #0c0805 100%);
+  min-height: 100%;
+}
+
+.night-moon-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(180deg, #1f1610 0%, #140e08 100%);
+  border: 1.5px solid #5a4025;
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+  margin-bottom: 18px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.8);
+}
+
+.night-banner-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.night-moon-icon {
+  font-size: 36px;
+  filter: drop-shadow(0 0 8px rgba(255, 235, 150, 0.4));
+}
+
+.night-banner-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.night-banner-title h3 {
+  font-size: 18px;
+  color: var(--text-gold);
+  margin: 0;
+}
+
+.night-banner-subtitle {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 4px 0 0 0;
+}
+
+.night-badge-bribe {
+  background: rgba(234, 179, 8, 0.2);
+  color: #ffd54f;
+  border: 1px solid rgba(255, 213, 79, 0.4);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.night-badge-threat {
+  background: rgba(198, 40, 40, 0.25);
+  color: #ff8a80;
+  border: 1px solid rgba(255, 138, 128, 0.4);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.night-badge-royal {
+  background: rgba(156, 39, 176, 0.25);
+  color: #e1bee7;
+  border: 1px solid rgba(225, 190, 231, 0.4);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.night-badge-petition {
+  background: rgba(33, 150, 243, 0.2);
+  color: #90caf9;
+  border: 1px solid rgba(144, 202, 249, 0.4);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.night-scribe-hud {
+  display: flex;
+  gap: 12px;
+}
+
+.hud-stat-box {
+  background: rgba(12, 8, 5, 0.85);
+  border: 1px solid #4a3520;
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hud-lbl {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.hud-val {
+  font-size: 14px;
+  font-weight: 800;
+  color: #81c784;
+}
+
+.hud-val.gold {
+  color: #ffd54f;
+}
+
+.hud-val.purple {
+  color: #ce93d8;
+}
+
+.hud-val.danger {
+  color: #ff8a80;
+}
+
+/* Visitor Card */
+.night-visitor-card {
+  background: linear-gradient(180deg, #1a120b 0%, #120c07 100%);
+  border: 1.5px solid #6b4d2a;
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+}
+
+.visitor-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.visitor-identity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.visitor-rank-pill {
+  background: #382617;
+  color: var(--text-gold);
+  border: 1px solid #5a4025;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.visitor-name {
+  font-size: 18px;
+  color: #fff;
+  margin: 0;
+}
+
+.visitor-title {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.visitor-dilemma-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-gold);
+}
+
+.visitor-atmosphere {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #d1c4b2;
+  font-style: italic;
+  margin-bottom: 14px;
+  padding: 6px 12px;
+  background: rgba(10, 7, 4, 0.6);
+  border-left: 3px solid #8c6838;
+}
+
+.visitor-speech-bubble {
+  position: relative;
+  background: rgba(28, 19, 12, 0.95);
+  border: 1px solid #5a4025;
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+}
+
+.speech-quote-mark {
+  position: absolute;
+  top: 4px;
+  left: 10px;
+  font-size: 32px;
+  color: #5a4025;
+  line-height: 1;
+  font-family: serif;
+}
+
+.speech-text {
+  font-size: 15px;
+  color: var(--text-paper);
+  line-height: 1.6;
+  padding-left: 14px;
+  word-break: keep-all;
+}
+
+/* Choices Grid */
+.night-choices-wrapper {
+  margin-top: 10px;
+}
+
+.choices-instruction {
+  font-size: 14px;
+  color: #e5c178;
+  margin-bottom: 14px;
+  word-break: keep-all;
+}
+
+.night-choices-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.night-choice-card {
+  background: linear-gradient(180deg, #20170f 0%, #150e08 100%);
+  border: 1.5px solid #4a3520;
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.night-choice-card:hover {
+  transform: translateY(-2px);
+  border-color: #8c6838;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.7);
+}
+
+.night-choice-header {
+  margin-bottom: 8px;
+}
+
+.night-choice-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hanja-tag {
+  background: rgba(180, 130, 50, 0.2);
+  color: var(--text-gold);
+  border: 1px solid rgba(229, 193, 120, 0.3);
+  font-size: 12px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.night-choice-label {
+  font-size: 16px;
+  color: #fff;
+}
+
+.night-choice-desc {
+  font-size: 13.5px;
+  color: #d1c4b2;
+  margin: 0 0 8px 0;
+  line-height: 1.5;
+  word-break: keep-all;
+}
+
+.night-consequence-hint {
+  font-size: 12px;
+  color: #a8947f;
+  margin-bottom: 12px;
+  word-break: keep-all;
+}
+
+.hint-label {
+  font-weight: 700;
+  color: #c59b27;
+}
+
+.night-choice-deltas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.delta-badge {
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 3px;
+}
+
+.delta-badge.plus {
+  background: rgba(46, 125, 50, 0.25);
+  color: #81c784;
+  border: 1px solid rgba(129, 199, 132, 0.4);
+}
+
+.delta-badge.minus {
+  background: rgba(198, 40, 40, 0.25);
+  color: #ef9a9a;
+  border: 1px solid rgba(239, 154, 154, 0.4);
+}
+
+.delta-badge.safe {
+  background: rgba(0, 150, 136, 0.25);
+  color: #80cbc4;
+  border: 1px solid rgba(128, 203, 196, 0.4);
+}
+
+.delta-badge.danger {
+  background: rgba(216, 67, 21, 0.25);
+  color: #ffab91;
+  border: 1px solid rgba(255, 171, 145, 0.4);
+}
+
+.delta-badge.gold {
+  background: rgba(234, 179, 8, 0.2);
+  color: #ffd54f;
+  border: 1px solid rgba(255, 213, 79, 0.4);
+}
+
+.delta-badge.secret {
+  background: rgba(156, 39, 176, 0.25);
+  color: #ce93d8;
+  border: 1px solid rgba(206, 147, 216, 0.4);
+}
+
+.delta-badge.butterfly {
+  background: rgba(255, 111, 0, 0.25);
+  color: #ffb74d;
+  border: 1px solid rgba(255, 183, 77, 0.4);
+}
+
+.btn-choice-action {
+  width: 100%;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+/* ==========================================================================
+   Silok Booklet (Interactive Folding Silk Book)
+   ========================================================================== */
+.silok-booklet-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(6px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.silok-booklet-modal {
+  width: 900px;
+  max-width: 96vw;
+  max-height: 92vh;
+  background: #18120b;
+  border: 2px solid #8c6838;
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(140, 104, 56, 0.2);
+  overflow: hidden;
+}
+
+.booklet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: linear-gradient(180deg, #241910 0%, #1a120b 100%);
+  border-bottom: 2px solid #6b4d2a;
+}
+
+.booklet-emblem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dragon-seal {
+  background: var(--accent-seal-red);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 900;
+  padding: 4px 8px;
+  border-radius: 3px;
+  letter-spacing: 1px;
+}
+
+.booklet-title {
+  font-size: 20px;
+  color: var(--text-gold);
+  margin: 0;
+}
+
+.booklet-dynasty-badge {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.booklet-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.booklet-tabs {
+  display: flex;
+  background: #120d08;
+  border-bottom: 1px solid #4a3520;
+  overflow-x: auto;
+}
+
+.booklet-tab {
+  flex: 1;
+  min-width: 140px;
+  padding: 12px 14px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.booklet-tab:hover {
+  color: var(--text-paper);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.booklet-tab.active {
+  color: var(--text-gold);
+  border-bottom-color: var(--border-gold);
+  background: rgba(140, 104, 56, 0.15);
+}
+
+.booklet-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.booklet-page-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.booklet-eval-hero {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: linear-gradient(135deg, rgba(40, 26, 15, 0.9) 0%, rgba(20, 13, 8, 0.9) 100%);
+  border: 1.5px solid #8c6838;
+  border-radius: var(--radius-md);
+  padding: 18px 24px;
+}
+
+.eval-ribbon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--accent-seal-red);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 4px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.eval-grade-large {
+  font-size: 36px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.eval-score-label {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.eval-title-gold {
+  font-size: 20px;
+  color: var(--text-gold);
+  margin: 0 0 6px 0;
+}
+
+.eval-summary-text {
+  font-size: 14px;
+  color: var(--text-paper);
+  margin: 0;
+  line-height: 1.5;
+  word-break: keep-all;
+}
+
+.booklet-summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.summary-col-card {
+  background: rgba(22, 16, 10, 0.85);
+  border: 1px solid #4a3520;
+  border-radius: var(--radius-md);
+  padding: 16px;
+}
+
+.summary-col-card h4 {
+  font-size: 15px;
+  color: var(--text-gold);
+  margin: 0 0 10px 0;
+}
+
+.summary-col-card p {
+  font-size: 13px;
+  color: var(--text-paper);
+  margin: 6px 0;
+}
+
+/* Chronicle Row */
+.chronicle-row-item {
+  background: rgba(20, 14, 9, 0.8);
+  border-left: 3px solid var(--border-gold);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 10px 14px;
+}
+
+.chronicle-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+  font-size: 12px;
+}
+
+.chronicle-day {
+  color: var(--text-gold);
+  font-weight: 700;
+}
+
+.chronicle-subject {
+  font-weight: 700;
+  color: #fff;
+}
+
+.chronicle-cert {
+  font-size: 10px;
+  padding: 1px 5px;
+  border-radius: 2px;
+  font-weight: 700;
+}
+
+.cert-assertive {
+  background: rgba(198, 40, 40, 0.3);
+  color: #ef9a9a;
+}
+
+.cert-moderate {
+  background: rgba(234, 179, 8, 0.2);
+  color: #ffd54f;
+}
+
+.cert-cautious {
+  background: rgba(46, 125, 50, 0.25);
+  color: #81c784;
+}
+
+.chronicle-statement {
+  font-size: 13.5px;
+  color: var(--text-paper);
+  margin: 0;
+  line-height: 1.5;
+  word-break: keep-all;
+}
+
+/* Secret Archive Card */
+.secret-archive-card {
+  background: linear-gradient(180deg, #1f1425 0%, #120a16 100%);
+  border: 1.5px solid #8e44ad;
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+}
+
+.secret-archive-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.secret-day-badge {
+  background: #8e44ad;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 2px;
+}
+
+.secret-title {
+  font-size: 15px;
+  color: #e1bee7;
+}
+
+.secret-content-body {
+  font-size: 13.5px;
+  color: #f3e5f5;
+  line-height: 1.6;
+  word-break: keep-all;
+}
+
+/* Butterfly History Card */
+.butterfly-history-card {
+  background: linear-gradient(180deg, #25160d 0%, #170d07 100%);
+  border: 1.5px solid #e67e22;
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+}
+
+.butterfly-history-day {
+  font-size: 11px;
+  font-weight: 800;
+  color: #e67e22;
+  margin-bottom: 4px;
+}
+
+.butterfly-history-headline {
+  font-size: 15px;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 6px 0;
+  word-break: keep-all;
+}
+
+.butterfly-history-detail {
+  font-size: 13px;
+  color: #d1c4b2;
+  margin: 0;
+  line-height: 1.5;
+  word-break: keep-all;
+}
+
+.empty-booklet-msg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.empty-booklet-msg .empty-icon {
+  font-size: 40px;
+  margin-bottom: 12px;
+}
+
+/* Booklet Footer */
+.booklet-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: #140e08;
+  border-top: 1.5px solid #4a3520;
+}
+
+.booklet-footer-stats {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.booklet-footer-stats strong {
+  color: var(--text-paper);
+}
+
+/* Mobile responsive for booklet & night chamber */
+@media (max-width: 900px) {
+  .night-moon-banner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .night-scribe-hud {
+    justify-content: space-between;
+  }
+  .booklet-summary-grid {
+    grid-template-columns: 1fr;
+  }
+  .booklet-footer {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .header-scribe-stats {
+    display: none; /* Hide in tiny header, shown in chamber dossier */
+  }
+}
+
+
 

@@ -15,6 +15,8 @@ export interface OfficialVerdict {
 }
 
 export interface SilokEvaluationResult {
+  grade: 'S' | 'A' | 'B' | 'C' | 'F';
+  score: number;
   title: string;              // 사관 칭호 (예: 만고의 직필가)
   titleHanja: string;         // 한자 칭호
   evaluationSummary: string;  // 총평
@@ -156,8 +158,22 @@ export class SilokEvaluator {
         accuracyScore,
       };
     });
+    const grade: 'S' | 'A' | 'B' | 'C' | 'F' =
+      truthRate >= 75 && distortionRate <= 15
+        ? 'S'
+        : truthRate >= 50 && distortionRate <= 25
+        ? 'A'
+        : distortionRate >= 35
+        ? 'C'
+        : omissionRate >= 60
+        ? 'F'
+        : 'B';
+
+    const score = Math.max(0, Math.min(100, Math.round(truthRate * 0.7 - distortionRate * 0.4 - omissionRate * 0.2 + 30)));
 
     return {
+      grade,
+      score,
       title,
       titleHanja,
       evaluationSummary: summary,

@@ -20,6 +20,7 @@ export class Agent {
   public rank: string;
   public department: string;
   public age: number;
+  public faction: 'WEST' | 'EAST' | 'NEUTRAL' = 'NEUTRAL';
 
   // 주요 내부 성향치 (0 ~ 100)
   public politicalPower: number; // 정치적 영향력
