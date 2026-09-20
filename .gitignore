@@ -2,4 +2,6 @@ node_modules/
 dist/
 .DS_Store
 _archive_black_gavel/
+playwright-report/
+test-results/
 *.local

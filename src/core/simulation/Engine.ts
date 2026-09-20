@@ -10,6 +10,7 @@ import { EventGenerator } from '../events/EventGenerator.js';
 import type { PoliticalEvent } from '../events/PoliticalEvent.js';
 import { SachoBook } from '../records/SachoBook.js';
 import type { SachoRecord, RecordCertainty } from '../records/SachoRecord.js';
+import { SilokEvaluator, type SilokEvaluationResult } from '../records/SilokEvaluator.js';
 import type { LocationId } from '../../data/locations.js';
 
 export interface PendingSachoChoice {
@@ -35,6 +36,7 @@ export class Engine {
   public allEventsHistory: PoliticalEvent[] = [];
   public dailyObservedInfo: Information[] = [];
   public simulationLogs: string[] = [];
+  public dailyLocationOmens: Map<LocationId, string> = new Map();
 
   constructor(seed: number | string = 1024) {
     this.seed = typeof seed === 'number' ? seed : 1024;
@@ -60,13 +62,61 @@ export class Engine {
     this.dailyObservedInfo = [];
     this.simulationLogs = [];
     this.playerLocation = 'ROYAL_HALL';
+    this.dailyLocationOmens.clear();
 
     const initResult: AgentInitializationResult = AgentFactory.createAll(this.random);
     this.agents = initResult.agents;
     this.agentMap = initResult.agentMap;
     this.relationships = initResult.relationshipManager;
 
+    this.generateDailyOmens();
     this.simulationLogs.push(`[System] 세계가 초기화되었습니다. (Seed: ${this.random.getSeed()})`);
+  }
+
+  /**
+   * 매일 아침 5대 처소의 기류 징후(Omen/Tell) 생성
+   */
+  public generateDailyOmens(): void {
+    this.dailyLocationOmens.clear();
+
+    // 관원들의 상태 및 관계에 따라 기류 결정
+    const troubledCount = this.agents.filter((a) => a.currentStatus.includes('위기') || a.currentStatus.includes('근신')).length;
+    const schemerCount = this.agents.filter((a) => a.ambition >= 80).length;
+
+    // 사정전 (편전)
+    if (troubledCount > 0) {
+      this.dailyLocationOmens.set('ROYAL_HALL', '어전 쪽으로 조참 대신들의 낯빛이 굳어있고 무거운 긴장감이 흐른다.');
+    } else {
+      this.dailyLocationOmens.set('ROYAL_HALL', '유학관들의 잔잔한 경서 강독 소리와 조정 대신들의 입조가 이어진다.');
+    }
+
+    // 은대 (승정원)
+    if (this.random.chance(0.5)) {
+      this.dailyLocationOmens.set('ROYAL_SECRETARIAT', '승정원 문간으로 서리와 내관들이 긴박하게 공문서 궤짝을 나르고 있다.');
+    } else {
+      this.dailyLocationOmens.set('ROYAL_SECRETARIAT', '도승지가 조용히 어제 내린 교지를 정서하며 붓을 말리고 있다.');
+    }
+
+    // 백부 (사헌부)
+    if (schemerCount > 2 || troubledCount > 0) {
+      this.dailyLocationOmens.set('OFFICE_OF_INSPECTOR', '사헌부 감찰관들이 굳은 표정으로 백관들의 혐의 장부를 대조하고 있다.');
+    } else {
+      this.dailyLocationOmens.set('OFFICE_OF_INSPECTOR', '풍헌 청사 앞뜰에 잣나무 잎만 스칠 뿐 드나드는 발길이 뜸하다.');
+    }
+
+    // 미원 (사간원)
+    if (this.random.chance(0.6)) {
+      this.dailyLocationOmens.set('OFFICE_OF_CENSORS', '사간원 창호지 문 너머로 간관들의 격앙된 연명 차자(箚子) 논의가 들린다.');
+    } else {
+      this.dailyLocationOmens.set('OFFICE_OF_CENSORS', '간관들이 경연 준비를 위해 성리학 주석서를 조용히 열람하고 있다.');
+    }
+
+    // 궐내 천랑 (회랑)
+    if (schemerCount > 0 || this.random.chance(0.5)) {
+      this.dailyLocationOmens.set('PALACE_CORRIDOR', '회랑 후미진 기둥 그늘 뒤로 갓을 깊이 눌러쓴 인영들이 귓속말을 나눈다.');
+    } else {
+      this.dailyLocationOmens.set('PALACE_CORRIDOR', '순라군들의 규칙적인 발걸음 소리만이 긴 행랑에 울려 퍼진다.');
+    }
   }
 
   public setPlayerLocation(loc: LocationId): void {
@@ -209,6 +259,7 @@ export class Engine {
       }
     }
     const nextDay = this.timeManager.advanceToNextDay();
+    this.generateDailyOmens();
     return nextDay;
   }
 
@@ -236,6 +287,18 @@ export class Engine {
         this.proceedToNextDay();
       }
     }
+  }
+
+  /**
+   * 실록 편찬 및 평가 실행
+   */
+  public compileSilok() {
+    return SilokEvaluator.evaluate(
+      this.sachoBook.getAll(),
+      this.factRegistry.getAll(),
+      this.agents,
+      this.allEventsHistory
+    );
   }
 
   /**

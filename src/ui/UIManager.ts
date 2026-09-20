@@ -5,6 +5,7 @@ import { ObservationView } from './ObservationView.js';
 import { CourtRosterView } from './CourtRosterView.js';
 import { SachoArchiveView } from './SachoArchiveView.js';
 import { DebugPanelView } from './DebugPanelView.js';
+import { SilokEndingView } from './SilokEndingView.js';
 import type { LocationId } from '../data/locations.js';
 
 type MainTab = 'OBSERVATION' | 'SACHO_BOOK' | 'EVENT_LOG';
@@ -14,6 +15,7 @@ export class UIManager {
   private engine: Engine;
 
   private isDebugOpen: boolean = false;
+  private isEndingOpen: boolean = false;
   private activeMainTab: MainTab = 'OBSERVATION';
 
   // Subviews
@@ -23,6 +25,7 @@ export class UIManager {
   private courtRosterView!: CourtRosterView;
   private sachoArchiveView!: SachoArchiveView;
   private debugPanelView!: DebugPanelView;
+  private endingView: SilokEndingView | null = null;
 
   constructor(root: HTMLElement, initialSeed: number | string = 12345) {
     this.root = root;
@@ -45,6 +48,7 @@ export class UIManager {
         <div id="roster-root"></div>
         <div id="debug-root"></div>
       </div>
+      <div id="ending-root"></div>
     `;
 
     const headerEl = this.root.querySelector('#header-root') as HTMLElement;
@@ -58,6 +62,7 @@ export class UIManager {
       onDebugToggle: () => this.toggleDebug(),
       onAdvanceDay: () => this.handleAdvanceButton(),
       onReseed: (seed) => this.handleReseed(seed),
+      onCompileSilok: () => this.openSilokEnding(),
     });
 
     this.locationView = new LocationView(locationEl, this.engine, (loc: LocationId) => {
@@ -67,6 +72,12 @@ export class UIManager {
 
     this.observationView = new ObservationView(stageBodyEl, this.engine, (choices: PendingSachoChoice[]) => {
       this.engine.commitSacho(choices);
+      const nextDay = this.engine.proceedToNextDay();
+      this.activeMainTab = 'OBSERVATION';
+      if (nextDay > 30) {
+        this.openSilokEnding();
+        return;
+      }
       this.render();
     });
 
@@ -109,12 +120,15 @@ export class UIManager {
       this.engine.executeDay();
       this.activeMainTab = 'OBSERVATION';
     } else if (phase === 'OBSERVATION_RECORD') {
-      // 사초 집필 완료 처리 (기본값으로 커밋)
       this.engine.proceedToNextDay();
       this.activeMainTab = 'OBSERVATION';
     } else if (phase === 'DAY_COMPLETED') {
-      this.engine.proceedToNextDay();
+      const nextDay = this.engine.proceedToNextDay();
       this.activeMainTab = 'OBSERVATION';
+      if (nextDay > 30) {
+        this.openSilokEnding();
+        return;
+      }
     }
     this.render();
   }
@@ -128,6 +142,25 @@ export class UIManager {
   private handleFastForward(days: number): void {
     this.engine.runAutoDays(days);
     this.render();
+  }
+
+  private openSilokEnding(): void {
+    this.isEndingOpen = true;
+    const endingResult = this.engine.compileSilok();
+    const endingRoot = this.root.querySelector('#ending-root') as HTMLElement;
+    this.endingView = new SilokEndingView(endingRoot, endingResult, {
+      onRestart: (newSeed) => {
+        this.isEndingOpen = false;
+        endingRoot.innerHTML = '';
+        this.handleReseed(newSeed || '12345');
+      },
+      onClose: () => {
+        this.isEndingOpen = false;
+        endingRoot.innerHTML = '';
+        this.setTab('SACHO_BOOK');
+      },
+    });
+    this.endingView.render();
   }
 
   public render(): void {

@@ -16,6 +16,7 @@ export class HeaderView {
   private onDebugToggle: () => void;
   private onAdvanceDay: () => void;
   private onReseed: (seed: string) => void;
+  private onCompileSilok: () => void;
 
   constructor(
     container: HTMLElement,
@@ -24,6 +25,7 @@ export class HeaderView {
       onDebugToggle: () => void;
       onAdvanceDay: () => void;
       onReseed: (seed: string) => void;
+      onCompileSilok: () => void;
     }
   ) {
     this.container = container;
@@ -31,6 +33,7 @@ export class HeaderView {
     this.onDebugToggle = callbacks.onDebugToggle;
     this.onAdvanceDay = callbacks.onAdvanceDay;
     this.onReseed = callbacks.onReseed;
+    this.onCompileSilok = callbacks.onCompileSilok;
   }
 
   public render(isDebugOpen: boolean): void {
@@ -78,6 +81,9 @@ export class HeaderView {
         </div>
 
         <div class="header-actions">
+          <button id="btn-compile-silok" class="btn btn-secondary" title="현재까지의 사초를 바탕으로 실록을 편찬하고 역사의 심판을 받습니다">
+            📜 실록 편찬 (결산)
+          </button>
           <button id="btn-advance" class="btn ${btnClass}">
             ${btnText}
           </button>
@@ -89,6 +95,11 @@ export class HeaderView {
     `;
 
     // Event listeners
+    const btnCompile = this.container.querySelector('#btn-compile-silok');
+    btnCompile?.addEventListener('click', () => {
+      this.onCompileSilok();
+    });
+
     const btnAdvance = this.container.querySelector('#btn-advance');
     btnAdvance?.addEventListener('click', () => {
       this.onAdvanceDay();

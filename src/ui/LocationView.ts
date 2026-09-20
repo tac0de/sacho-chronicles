@@ -25,6 +25,8 @@ export class LocationView {
           .map((pId) => `<span class="visitor-tag">${POSITIONS[pId]?.title || pId}</span>`)
           .join('');
 
+        const omen = this.engine.dailyLocationOmens.get(loc.id) || '처소에 고요한 기운이 감돕니다.';
+
         return `
           <div class="location-card ${isSelected ? 'selected' : ''}" data-id="${loc.id}">
             <div class="location-card-title">
@@ -33,6 +35,10 @@ export class LocationView {
             </div>
             <div style="font-size:11px; color:var(--text-gold); margin-bottom:3px;">
               ${loc.alias}
+            </div>
+            <div class="location-omen">
+              <span class="omen-badge">氣流</span>
+              <span class="omen-text">${omen}</span>
             </div>
             <div class="desc">${loc.description}</div>
             <div class="location-visitors">

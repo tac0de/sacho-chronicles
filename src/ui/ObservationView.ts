@@ -151,7 +151,7 @@ export class ObservationView {
             ? `
           <div style="margin-top:24px; text-align:right;">
             <button id="btn-save-sacho" class="btn btn-primary" style="padding:10px 24px; font-size:15px;">
-              🖋️ 붓을 거두고 오늘의 사초(史草) 봉인하기
+              🖋️ 오늘의 사초(史草) 봉인 및 익일(翌日) 진행
             </button>
           </div>
         `

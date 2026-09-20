@@ -169,9 +169,15 @@ body {
   font-family: var(--font-mono);
   font-size: 12px;
   background: var(--bg-surface);
-  padding: 4px 8px;
+  padding: 4px 10px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border-subtle);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.seed-box span {
+  white-space: nowrap;
 }
 
 .seed-box input {
@@ -375,6 +381,35 @@ body {
 .location-card-title .hanja {
   font-size: 12px;
   color: var(--text-muted);
+}
+
+.location-omen {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  background: rgba(197, 160, 89, 0.08);
+  border: 1px solid rgba(197, 160, 89, 0.2);
+  border-radius: var(--radius-sm);
+  padding: 5px 8px;
+  margin-bottom: 8px;
+}
+
+.omen-badge {
+  font-size: 10px;
+  font-weight: 800;
+  background: #3b2c15;
+  color: var(--text-gold);
+  padding: 1px 5px;
+  border-radius: 2px;
+  border: 1px solid var(--border-gold);
+  flex-shrink: 0;
+}
+
+.omen-text {
+  font-size: 11px;
+  color: #dfc999;
+  font-style: italic;
+  line-height: 1.4;
 }
 
 .location-card .desc {
@@ -940,3 +975,276 @@ body {
 .log-entry.highlight {
   color: #f6ad55;
 }
+
+/* ================= SILOK ENDING SCROLL MODAL ================= */
+#ending-root:empty {
+  display: none;
+}
+
+#ending-root {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+}
+
+.ending-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 11, 15, 0.96);
+  backdrop-filter: blur(16px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.ending-scroll-container {
+  width: 920px;
+  max-width: 95vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.95);
+  background-color: #14120e !important;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.scroll-roller-top, .scroll-roller-bottom {
+  height: 20px;
+  background: linear-gradient(180deg, #593e25 0%, #302113 100%);
+  border: 2px solid #8b6e22;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+  flex-shrink: 0;
+  z-index: 5;
+}
+
+.scroll-body {
+  background-color: #16140f !important;
+  border: 2px solid #63502d;
+  border-top: none;
+  border-bottom: none;
+  padding: 32px 36px;
+  overflow-y: auto;
+  color: var(--text-main);
+  box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.85);
+  z-index: 3;
+}
+
+.ending-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 2px solid #5a492b;
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.ending-seal-large {
+  width: 52px;
+  height: 52px;
+  background: radial-gradient(circle, #b83232 0%, #7d1a1a 100%);
+  color: #fff;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 900;
+  border: 2px solid #ff9999;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(184, 50, 50, 0.5);
+  flex-shrink: 0;
+}
+
+.ending-title-group h2 {
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--text-gold);
+  letter-spacing: 1px;
+}
+
+.ending-subtitle {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.ending-close-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: transparent;
+  border: 1px solid #5a492b;
+  color: var(--text-muted);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ending-close-btn:hover {
+  color: #fff;
+  border-color: #8b6e22;
+}
+
+.evaluation-banner {
+  background: linear-gradient(135deg, #2b251a 0%, #1a1711 100%);
+  border: 1px solid #8b6e22;
+  border-left: 6px solid #d4af37;
+  padding: 18px 22px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.title-badge-large {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #3b2c15;
+  border: 2px solid #e5c178;
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+  min-width: 140px;
+}
+.title-badge-large .hanja {
+  font-size: 13px;
+  color: #e5c178;
+  letter-spacing: 2px;
+}
+.title-badge-large .korean {
+  font-size: 17px;
+  font-weight: 900;
+  color: #fff;
+}
+
+.evaluation-summary-text {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #f7edd7;
+  font-style: italic;
+}
+
+.ending-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.stat-card {
+  background: #201e18;
+  border: 1px solid #4a3e29;
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  text-align: center;
+}
+.stat-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+.stat-value {
+  font-size: 26px;
+  font-weight: 900;
+  margin-bottom: 4px;
+  font-family: var(--font-mono);
+}
+.stat-desc {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.verdicts-section {
+  margin-bottom: 28px;
+}
+
+.verdicts-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-gold);
+  border-bottom: 1px solid #4a3e29;
+  padding-bottom: 8px;
+  margin-bottom: 14px;
+}
+
+.verdicts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.verdict-item {
+  background: #1f1c16;
+  border: 1px solid #3d3525;
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+}
+
+.verdict-header {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.verdict-name {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text-paper);
+}
+
+.verdict-pos {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.verdict-score {
+  font-size: 12px;
+  font-weight: 800;
+  font-family: var(--font-mono);
+}
+
+.verdict-truth-row, .verdict-sacho-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 3px;
+}
+
+.verdict-commentary {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px dashed rgba(197, 160, 89, 0.2);
+  font-size: 12px;
+  color: #dfc999;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.ending-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  border-top: 1px solid #4a3e29;
+  padding-top: 18px;
+}
+
