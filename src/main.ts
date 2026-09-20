@@ -1,4 +1,5 @@
 import { UIManager } from './ui/UIManager.js';
+import { SoundManager } from './core/audio/SoundManager.js';
 
 window.addEventListener('DOMContentLoaded', () => {
   const appElement = document.getElementById('app');
@@ -13,6 +14,15 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const uiManager = new UIManager(appElement, initialSeed);
   uiManager.init();
+
+  // 최초 사용자 클릭 또는 키입력 시 궁중 정악(BGM) 자동 시작
+  const startAudioOnFirstInteraction = () => {
+    SoundManager.getInstance().startBgm();
+    window.removeEventListener('click', startAudioOnFirstInteraction);
+    window.removeEventListener('keydown', startAudioOnFirstInteraction);
+  };
+  window.addEventListener('click', startAudioOnFirstInteraction);
+  window.addEventListener('keydown', startAudioOnFirstInteraction);
 
   // Expose to window for rapid browser console inspection if needed
   (window as any).__sachoUiManager = uiManager;

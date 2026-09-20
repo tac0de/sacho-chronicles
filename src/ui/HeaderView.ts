@@ -45,47 +45,59 @@ export class HeaderView {
     const locName = LOCATIONS[this.engine.playerLocation]?.name || '사정전';
     const sexagenary = getSexagenaryDay(day);
     const isMuted = this.sound.isMuted();
+    const isBgmMuted = this.sound.isBgmMuted();
 
     let phaseText = '처소 선택';
-    let btnText = '당일 정무 입조 관찰';
+    let btnText = '입조 관찰 ➔';
     let btnClass = 'btn-gold';
 
     if (phase === 'OBSERVATION_RECORD') {
-      phaseText = '사초 집필(史草 執筆)';
-      btnText = '사초 봉인 완료';
+      phaseText = '사초 집필';
+      btnText = '사초 봉인 ➔';
       btnClass = 'btn-primary';
     } else if (phase === 'DAY_COMPLETED') {
-      phaseText = '당일 정산 완료';
-      btnText = `익일(Day ${day + 1})로 진행`;
+      phaseText = '정산 완료';
+      btnText = `익일(Day ${day + 1}) ➔`;
       btnClass = 'btn-gold';
     }
 
     this.container.innerHTML = `
       <div class="app-header">
         <div class="header-brand">
-          <img class="seal-emblem-img" src="./favicon.svg" alt="춘추관 인장" width="34" height="34" />
+          <img class="seal-emblem-img" src="./favicon.svg" alt="춘추관 인장" width="36" height="36" />
           <div class="title-group">
-            <h1>사초 (史草) <span style="font-size:14px; font-weight:normal; color:#c5a059;">: 춘추필법</span></h1>
-            <div class="subtitle">조선 춘추관 사관 정치 시뮬레이션 — The Silent Brush</div>
+            <div class="title-row">
+              <h1>사초 (史草)</h1>
+              <span class="title-tag">: 춘추필법</span>
+            </div>
+            <div class="subtitle">조선 춘추관 사관 정치 시뮬레이션</div>
           </div>
         </div>
 
         <div class="header-status-group">
-          <div class="day-badge">Day ${day} <span style="font-size:11px; font-weight:normal; color:var(--text-paper); margin-left:4px;">${sexagenary}</span></div>
-          <div class="phase-indicator">
-            <span style="color:var(--text-muted)">입조 처소:</span> <strong style="color:var(--text-gold)">${locName}</strong>
-            <span style="color:var(--border-strong); margin:0 6px;">|</span>
-            <span style="color:var(--text-muted)">정무 단계:</span> <span>${phaseText}</span>
+          <div class="day-badge">
+            <span class="day-num">Day ${day}</span>
+            <span class="day-sexagenary">${sexagenary}</span>
           </div>
-          <div class="seed-box">
-            <span>개벽 시드:</span>
+          <div class="phase-indicator">
+            <span class="hud-val-gold">🏛️ ${locName}</span>
+            <span class="hud-sep">·</span>
+            <span class="hud-val-text">${phaseText}</span>
+          </div>
+          <div class="seed-box" title="세계 생성 개벽 시드">
+            <span class="seed-label">🌱</span>
             <input type="text" id="seed-input" value="${this.engine.seed}" title="시드를 변경하고 Enter를 누르면 재시작합니다" />
-            <button id="btn-seed-apply" class="btn btn-secondary btn-sm" title="새 시드로 세계 재시작">적용</button>
+            <button id="btn-seed-apply" class="btn btn-secondary btn-xs" title="새 시드로 세계 재시작">적용</button>
           </div>
         </div>
 
+        <div class="header-divider"></div>
+
         <div class="header-actions">
-          <button id="btn-sound-toggle" class="btn btn-secondary btn-icon" title="${isMuted ? '궁중 효과음 켜기' : '궁중 효과음 끄기'}">
+          <button id="btn-bgm-toggle" class="btn btn-secondary btn-icon btn-audio" title="${isBgmMuted ? '궁중 정악 풍류음 켜기' : '궁중 정악 풍류음 끄기'}">
+            ${isBgmMuted ? '🔇 풍류' : '🎵 풍류'}
+          </button>
+          <button id="btn-sound-toggle" class="btn btn-secondary btn-icon btn-audio" title="${isMuted ? '궁중 효과음 켜기' : '궁중 효과음 끄기'}">
             ${isMuted ? '🔇 무음' : '🔊 음향'}
           </button>
           <button id="btn-compile-silok" class="btn btn-secondary" title="현재까지의 사초를 바탕으로 실록을 편찬하고 역사의 심판을 받습니다">
@@ -95,13 +107,19 @@ export class HeaderView {
             ${btnText}
           </button>
           <button id="btn-debug-toggle" class="btn btn-debug ${isDebugOpen ? 'active' : ''}">
-            ⚙️ 사헌부 감찰록 ${isDebugOpen ? 'ON' : 'OFF'}
+            ⚙️ 감찰록 ${isDebugOpen ? 'ON' : 'OFF'}
           </button>
         </div>
       </div>
     `;
 
     // Event listeners
+    const btnBgm = this.container.querySelector('#btn-bgm-toggle');
+    btnBgm?.addEventListener('click', () => {
+      this.sound.toggleBgm();
+      this.render(isDebugOpen);
+    });
+
     const btnSound = this.container.querySelector('#btn-sound-toggle');
     btnSound?.addEventListener('click', () => {
       const nowMuted = this.sound.toggleMute();

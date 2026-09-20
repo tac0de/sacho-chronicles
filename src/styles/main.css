@@ -1,30 +1,31 @@
 :root {
-  --bg-primary: #111215;
-  --bg-surface: #171920;
-  --bg-surface-elevated: #1e222b;
-  --bg-card: #232733;
-  --bg-card-hover: #2d3242;
-  --bg-hanji: #1c1a17;
+  /* 조선 고문서·고목(古木) 옻칠·바랜 한지 엔틱 팔레트 */
+  --bg-primary: #100c08;
+  --bg-surface: #16100a;
+  --bg-surface-elevated: #20170f;
+  --bg-card: #1b130c;
+  --bg-card-hover: #261b11;
+  --bg-hanji: #1c140d;
   
-  --border-subtle: #2d3342;
-  --border-strong: #454d63;
-  --border-gold: #c5a059;
-  --border-ink: #3b2f23;
+  --border-subtle: #362618;
+  --border-strong: #543c26;
+  --border-gold: #bfa15f;
+  --border-ink: #26190f;
   
-  --text-main: #edeae2;
-  --text-secondary: #a3abbd;
-  --text-muted: #6e7687;
-  --text-gold: #e5c178;
-  --text-red: #e06c75;
-  --text-jade: #56b6c2;
-  --text-paper: #f4eedb;
+  --text-main: #eae0cb;
+  --text-secondary: #b8a68c;
+  --text-muted: #7d6e5a;
+  --text-gold: #dfba6c;
+  --text-red: #cc4e46;
+  --text-jade: #559e95;
+  --text-paper: #f4edd9;
   
-  --accent-gold: #d4af37;
-  --accent-gold-dark: #8b6e22;
-  --accent-seal-red: #b83232;
-  --accent-seal-red-hover: #cf3c3c;
-  --accent-blue-court: #2e4374;
-  --accent-jade: #2e7d73;
+  --accent-gold: #cba254;
+  --accent-gold-dark: #8c6a26;
+  --accent-seal-red: #8f2323;
+  --accent-seal-red-hover: #a82e2e;
+  --accent-blue-court: #1d2d47;
+  --accent-jade: #22524a;
   
   /* 조선 목판본 및 실록 필사본 묵직한 서체 스택 */
   --font-serif: 'Hahmlet', 'Song Myung', 'Nanum Myeongjo', 'Noto Serif KR', serif;
@@ -35,9 +36,9 @@
   --radius-md: 6px;
   --radius-lg: 10px;
   
-  --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.45);
-  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.6);
-  --shadow-lg: 0 8px 28px rgba(0, 0, 0, 0.75);
+  --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.55);
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.7);
+  --shadow-lg: 0 8px 28px rgba(0, 0, 0, 0.85);
 }
 
 * {
@@ -48,6 +49,9 @@
 
 body {
   background-color: var(--bg-primary);
+  background-image: 
+    radial-gradient(ellipse at 50% 0%, rgba(90, 60, 30, 0.22) 0%, transparent 70%),
+    radial-gradient(ellipse at 50% 100%, rgba(15, 10, 5, 0.5) 0%, transparent 65%);
   color: var(--text-main);
   font-family: var(--font-serif);
   line-height: 1.65;
@@ -65,7 +69,7 @@ body {
   overflow: hidden;
 }
 
-/* Scrollbar */
+/* Scrollbar (오래된 황동/고목 질감) */
 ::-webkit-scrollbar {
   width: 7px;
   height: 7px;
@@ -81,26 +85,27 @@ body {
   background: var(--border-gold);
 }
 
-/* ================= TOP HEADER ================= */
+/* ================= TOP HEADER (조선 춘추관 고목 현판 HUD) ================= */
 .app-header {
-  height: 64px;
-  background: linear-gradient(180deg, #1c1f28 0%, #12141a 100%);
-  border-bottom: 2px solid var(--border-gold);
+  height: 74px;
+  min-height: 74px;
+  background: linear-gradient(180deg, #1c140d 0%, #100b07 100%);
+  border-bottom: 2px solid #755530;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 24px;
+  gap: 12px;
+  padding: 0 16px;
   flex-shrink: 0;
   z-index: 20;
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.75), inset 0 -1px 0 rgba(191, 161, 95, 0.25);
 }
 
 .header-brand {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   flex-shrink: 0;
-  min-width: max-content;
 }
 
 .seal-emblem-img {
@@ -108,7 +113,7 @@ body {
   height: 36px;
   border-radius: 6px;
   border: 1px solid var(--border-gold);
-  box-shadow: 0 2px 8px rgba(184, 50, 50, 0.45);
+  box-shadow: 0 2px 8px rgba(143, 35, 35, 0.6), inset 0 0 4px rgba(0,0,0,0.5);
   transition: transform 0.2s;
   cursor: default;
 }
@@ -116,95 +121,139 @@ body {
   transform: scale(1.05);
 }
 
-.seal-emblem {
-  width: 40px;
-  height: 40px;
-  background: radial-gradient(circle, #c73636 0%, #941e1e 100%);
-  color: #fff;
-  border-radius: 4px;
+.title-group {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: center;
-  font-family: var(--font-serif);
-  font-size: 20px;
-  font-weight: 900;
-  border: 1px solid #ff8888;
-  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.6), 0 2px 6px rgba(184, 50, 50, 0.4);
-  letter-spacing: -1px;
+}
+
+.title-row {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
 }
 
 .title-group h1 {
-  font-size: 20px;
-  font-weight: 800;
+  font-size: 18px;
+  font-weight: 900;
   color: var(--text-gold);
-  letter-spacing: 1.1px;
+  letter-spacing: 0.8px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  white-space: nowrap;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.85);
+}
+
+.title-tag {
+  font-size: 12px;
+  font-weight: 600;
+  color: #bfa15f;
   white-space: nowrap;
 }
 
 .title-group .subtitle {
-  font-size: 11px;
-  color: var(--text-secondary);
+  font-size: 10px;
+  color: var(--text-muted);
   font-family: var(--font-serif);
-  letter-spacing: 0.4px;
+  letter-spacing: 0.3px;
   white-space: nowrap;
 }
 
 .header-status-group {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
 .day-badge {
-  background: #2b1e14;
-  border: 1px solid var(--border-gold);
-  color: var(--text-gold);
-  padding: 4px 16px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: linear-gradient(180deg, #2b1c10 0%, #1a1008 100%);
+  border: 1px solid #73532e;
   border-radius: 20px;
-  font-size: 14px;
+  padding: 5px 12px;
+  font-size: 12.5px;
   font-weight: 800;
-  letter-spacing: 0.8px;
-  box-shadow: 0 0 10px rgba(197, 160, 89, 0.2);
+  white-space: nowrap;
+  flex-shrink: 0;
+  box-shadow: inset 0 1px 0 rgba(255, 220, 150, 0.15), 0 2px 6px rgba(0, 0, 0, 0.6);
+}
+
+.day-num {
+  font-weight: 900;
+  color: #f5eedd;
+}
+
+.day-sexagenary {
+  font-size: 11px;
+  font-weight: 500;
+  color: #deb86a;
 }
 
 .phase-indicator {
-  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
   color: var(--text-main);
-  background: var(--bg-surface-elevated);
-  padding: 4px 14px;
+  background: #1a120a;
+  padding: 5px 10px;
   border-radius: var(--radius-sm);
-  border: 1px solid var(--border-subtle);
+  border: 1px solid #3d2b1c;
+  white-space: nowrap;
+  flex-shrink: 0;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 2px 5px rgba(0, 0, 0, 0.45);
+}
+
+.hud-label {
+  color: var(--text-muted);
+}
+
+.hud-val-gold {
+  color: var(--text-gold);
+  font-weight: 800;
+}
+
+.hud-val-text {
+  color: var(--text-paper);
+  font-weight: 600;
+}
+
+.hud-sep {
+  color: #4a3624;
+  margin: 0 3px;
 }
 
 .seed-box {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   font-family: var(--font-mono);
-  font-size: 12px;
-  background: var(--bg-surface);
-  padding: 4px 10px;
+  font-size: 11px;
+  background: #150e09;
+  padding: 3px 6px;
   border-radius: var(--radius-sm);
-  border: 1px solid var(--border-subtle);
+  border: 1px solid #362417;
   white-space: nowrap;
   flex-shrink: 0;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.5);
 }
 
-.seed-box span {
+.seed-label {
+  color: var(--text-muted);
   white-space: nowrap;
 }
 
 .seed-box input {
-  width: 70px;
+  width: 52px;
   background: transparent;
   border: none;
-  border-bottom: 1px solid var(--border-strong);
+  border-bottom: 1px solid #5a3d27;
   color: var(--text-gold);
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   text-align: center;
 }
 
@@ -213,101 +262,152 @@ body {
   border-bottom-color: var(--accent-gold);
 }
 
+.header-divider {
+  width: 1px;
+  height: 28px;
+  background: linear-gradient(180deg, transparent, #755530, transparent);
+  flex-shrink: 0;
+  margin: 0 8px;
+}
+
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 6px;
+  flex-shrink: 0;
+  margin-left: auto;
 }
 
-/* ================= BUTTONS ================= */
+.header-actions .btn {
+  padding: 6px 11px;
+  font-size: 12.5px;
+}
+
+.header-actions .btn-gold {
+  padding: 7px 15px;
+  font-size: 13px;
+}
+
+.btn-audio {
+  min-width: 68px;
+  padding: 6px 9px !important;
+  font-size: 12px !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+/* ================= BUTTONS (고목 현판 및 놋쇠·인주 입체 손맛) ================= */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 9px 20px;
+  gap: 6px;
+  padding: 8px 18px;
   border-radius: var(--radius-sm);
   font-family: var(--font-serif);
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.12s cubic-bezier(0.4, 0, 0.2, 1);
   border: 1px solid transparent;
   text-decoration: none;
   user-select: none;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.1);
   letter-spacing: 0.5px;
   position: relative;
 }
 
 .btn:active {
   transform: translateY(2px) !important;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6), inset 0 2px 4px rgba(0, 0, 0, 0.4) !important;
 }
 
-/* 진사(辰砂) 인주 붉은 칠 버튼 */
+/* 진사(辰砂) 인주 봉인 도장 버튼 */
 .btn-primary {
-  background: linear-gradient(180deg, #c43232 0%, #881a1a 100%);
-  color: #fff8eb;
-  border: 1px solid #e26161;
-  box-shadow: 0 3px 10px rgba(184, 50, 50, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.25);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  background: linear-gradient(180deg, #8e2323 0%, #5c1111 100%);
+  color: #fcedd7;
+  border: 1px solid #bd3c3c;
+  border-top: 1px solid #d95a5a;
+  border-bottom: 1px solid #360707;
+  box-shadow: inset 0 1px 0 rgba(255, 200, 200, 0.25), inset 0 -2px 0 rgba(0, 0, 0, 0.5), 0 3px 8px rgba(100, 20, 20, 0.5);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
 }
 .btn-primary:hover {
-  background: linear-gradient(180deg, #d83d3d 0%, #9e2020 100%);
-  box-shadow: 0 5px 16px rgba(216, 61, 61, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  background: linear-gradient(180deg, #a42a2a 0%, #6e1616 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 200, 200, 0.35), 0 5px 14px rgba(160, 30, 30, 0.65);
   transform: translateY(-1px);
 }
+.btn-primary:active {
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6), 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+}
 
-/* 황동(鍮器) 주동 버튼 */
+/* 오랜 세월을 머금은 고동빛 놋쇠 / 황동 유기(鍮器) 버튼 */
 .btn-gold {
-  background: linear-gradient(180deg, #e5be6b 0%, #a67c22 100%);
-  color: #120e06;
-  border: 1px solid #ffd88a;
+  background: linear-gradient(180deg, #c7a459 0%, #916c27 55%, #664914 100%);
+  color: #1a1104;
+  border: 1px solid #dfc384;
+  border-top: 1px solid #f6e0ad;
+  border-bottom: 1px solid #402c08;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 -2px 0 rgba(0, 0, 0, 0.45), 0 3px 10px rgba(0, 0, 0, 0.6);
   font-weight: 900;
-  box-shadow: 0 3px 12px rgba(197, 160, 89, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.5);
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+  text-shadow: 0 1px 0 rgba(255, 235, 180, 0.4);
 }
 .btn-gold:hover {
-  background: linear-gradient(180deg, #f0ca78 0%, #b88a29 100%);
-  box-shadow: 0 5px 18px rgba(229, 190, 107, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  background: linear-gradient(180deg, #d6b366 0%, #a37c2f 55%, #755519 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65), 0 5px 14px rgba(180, 130, 45, 0.4);
   transform: translateY(-1px);
 }
-
-/* 흑칠(黑漆) 칠기 버튼 */
-.btn-secondary {
-  background: linear-gradient(180deg, #252b38 0%, #151922 100%);
-  color: #edeae2;
-  border: 1px solid #3d465c;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+.btn-gold:active {
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.7), 0 1px 2px rgba(0, 0, 0, 0.5) !important;
 }
-.btn-secondary:hover {
-  background: linear-gradient(180deg, #2e3646 0%, #1c212d 100%);
-  border-color: #c5a059;
-  color: #f7edd7;
+
+/* 흑칠(黑漆) 고목 현판 버튼 */
+.btn-secondary, .btn-wood {
+  background: linear-gradient(180deg, #2c2016 0%, #1a120b 100%);
+  color: #e5dac5;
+  border: 1px solid #4a3622;
+  border-top: 1px solid #634930;
+  border-bottom: 1px solid #100b06;
+  box-shadow: inset 0 1px 0 rgba(230, 190, 130, 0.15), inset 0 -1px 0 rgba(0, 0, 0, 0.8), 0 3px 6px rgba(0, 0, 0, 0.55);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+}
+.btn-secondary:hover, .btn-wood:hover {
+  background: linear-gradient(180deg, #38291c 0%, #22180f 100%);
+  border-color: #8a6736;
+  color: #fff3db;
+  box-shadow: inset 0 1px 0 rgba(230, 190, 130, 0.25), 0 4px 10px rgba(0, 0, 0, 0.65);
   transform: translateY(-1px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+.btn-secondary:active, .btn-wood:active {
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8), 0 1px 2px rgba(0, 0, 0, 0.5) !important;
 }
 
+/* 사헌부 먹물 암행패 버튼 */
 .btn-debug {
-  background: linear-gradient(180deg, #1f2738 0%, #111622 100%);
-  color: #8bb6e6;
-  border: 1px solid #334466;
+  background: linear-gradient(180deg, #1c2528 0%, #101618 100%);
+  color: #8abcb6;
+  border: 1px solid #2f4547;
   font-family: var(--font-mono);
   font-size: 12px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+  box-shadow: inset 0 1px 0 rgba(140, 200, 190, 0.15), 0 2px 6px rgba(0, 0, 0, 0.5);
 }
 .btn-debug:hover {
-  background: linear-gradient(180deg, #27334a 0%, #161d2d 100%);
-  border-color: #5d89d4;
-  color: #b0d8ff;
+  background: linear-gradient(180deg, #243438 0%, #162022 100%);
+  border-color: #4a706b;
+  color: #b0ded9;
   transform: translateY(-1px);
 }
 .btn-debug.active {
-  background: linear-gradient(180deg, #2d426d 0%, #1a2742 100%);
-  color: #a8d5ff;
-  border-color: #5d89d4;
-  box-shadow: 0 0 12px rgba(93, 137, 212, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  background: linear-gradient(180deg, #243939 0%, #152424 100%);
+  color: #aae0d8;
+  border-color: #4a7570;
+  box-shadow: 0 0 10px rgba(74, 117, 112, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.btn-xs {
+  padding: 3px 8px;
+  font-size: 11px;
 }
 
 .btn-sm {
@@ -323,18 +423,29 @@ body {
 }
 
 .btn-icon {
-  padding: 6px 14px;
-  font-size: 13px;
+  padding: 6px 12px;
+  font-size: 12.5px;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
+}
+
+.btn-audio {
+  min-width: 76px;
+  padding: 6px 10px;
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  white-space: nowrap;
 }
 
 /* ================= MAIN LAYOUT ================= */
 .app-body {
   display: flex;
   flex: 1;
-  height: calc(100vh - 64px);
+  height: calc(100vh - 74px);
   min-height: 0;
   overflow: hidden;
   position: relative;
@@ -370,7 +481,7 @@ body {
   align-items: center;
   justify-content: space-between;
   flex-shrink: 0;
-  background: #151821;
+  background: #140e08;
 }
 
 .panel-header h2 {
@@ -401,26 +512,27 @@ body {
 }
 
 .location-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
+  background: linear-gradient(180deg, #1f160e 0%, #150e08 100%);
+  border: 1px solid #3a2719;
   border-radius: var(--radius-md);
   padding: 14px 16px;
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
+  box-shadow: inset 0 1px 0 rgba(255, 220, 150, 0.05), 0 3px 8px rgba(0,0,0,0.45);
 }
 
 .location-card:hover {
-  background: var(--bg-card-hover);
-  border-color: var(--border-strong);
+  background: linear-gradient(180deg, #261b11 0%, #1a110a 100%);
+  border-color: #5c3f28;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.55);
 }
 
 .location-card.selected {
-  background: #282116;
+  background: linear-gradient(180deg, #2b1d11 0%, #1e130a 100%);
   border-color: var(--border-gold);
-  box-shadow: 0 0 14px rgba(197, 160, 89, 0.3);
+  box-shadow: 0 0 14px rgba(191, 161, 95, 0.28), inset 0 1px 0 rgba(255, 230, 160, 0.15);
 }
 
 .location-card.selected::before {
@@ -444,9 +556,9 @@ body {
   height: 52px;
   border-radius: 8px;
   border: 1.5px solid rgba(197, 160, 89, 0.45);
-  background: #101217;
+  background: #140d07;
   flex-shrink: 0;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.6);
   object-fit: cover;
   transition: transform 0.2s;
 }
@@ -542,9 +654,11 @@ body {
 /* Scribe seal card filling bottom of left sidebar */
 .scribe-dossier {
   padding: 14px 16px;
-  background: linear-gradient(180deg, #1b1916 0%, #131210 100%);
-  border-top: 1px solid var(--border-ink);
+  background: linear-gradient(180deg, #1d140b 0%, #120c07 100%);
+  border-top: 1px solid #4a341e;
+  border-left: 4px solid #8e2323;
   flex-shrink: 0;
+  box-shadow: inset 0 0 12px rgba(0,0,0,0.5);
 }
 
 .scribe-dossier-header {
@@ -585,9 +699,9 @@ body {
 }
 
 .stage-nav {
-  height: 48px;
-  background: var(--bg-surface);
-  border-bottom: 1px solid var(--border-subtle);
+  height: 52px;
+  background: #140e08;
+  border-bottom: 2px solid #382618;
   display: flex;
   padding: 0 20px;
   gap: 8px;
@@ -596,27 +710,32 @@ body {
 }
 
 .nav-tab {
-  background: transparent;
-  border: none;
+  background: #1b120a;
+  border: 1px solid #382618;
+  border-bottom: none;
   color: var(--text-secondary);
   font-family: var(--font-serif);
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 700;
-  padding: 8px 16px;
+  padding: 9px 18px;
   cursor: pointer;
-  border-radius: var(--radius-sm);
+  border-radius: 4px 4px 0 0;
   transition: all 0.15s;
 }
 
 .nav-tab:hover {
   color: var(--text-main);
-  background: var(--bg-surface-elevated);
+  background: #25190f;
+  border-color: #5c3e24;
 }
 
 .nav-tab.active {
-  color: var(--text-gold);
-  background: var(--bg-surface-elevated);
-  border-bottom: 2px solid var(--accent-gold);
+  color: #f5eedd;
+  background: #261a10;
+  border: 1px solid #bfa15f;
+  border-top: 2px solid #dfba6c;
+  border-bottom: none;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.5);
 }
 
 .stage-content {
@@ -634,11 +753,12 @@ body {
 }
 
 .observation-banner {
-  background: linear-gradient(135deg, #222634 0%, #161820 100%);
+  background: linear-gradient(135deg, #261c12 0%, #161009 100%);
+  border: 1px solid #4a3420;
   border-left: 4px solid var(--border-gold);
   padding: 20px 24px;
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
 }
 
 .observation-banner-header {
@@ -652,9 +772,9 @@ body {
   height: 56px;
   border-radius: 8px;
   border: 1.5px solid rgba(197, 160, 89, 0.5);
-  background: #101217;
+  background: #140d07;
   flex-shrink: 0;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.65);
   object-fit: cover;
 }
 
@@ -669,6 +789,11 @@ body {
   margin-bottom: 3px;
 }
 
+.observation-banner .subtitle {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
 .hanja-gold {
   font-size: 14px;
   font-weight: normal;
@@ -676,7 +801,7 @@ body {
 }
 
 .banner-subtext {
-  font-size: 13px;
+  font-size: 12.5px;
   color: var(--text-secondary);
   line-height: 1.5;
 }
@@ -684,8 +809,8 @@ body {
 .banner-instruction-callout {
   margin-top: 14px;
   padding: 12px 18px;
-  background: rgba(197, 160, 89, 0.09);
-  border: 1px solid rgba(197, 160, 89, 0.3);
+  background: rgba(191, 161, 95, 0.1);
+  border: 1px solid rgba(191, 161, 95, 0.3);
   border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
@@ -705,47 +830,63 @@ body {
   white-space: nowrap;
 }
 
-/* 춘추관 사관 집무실 히어로 카드 */
-.chunchugwan-chamber-card {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-gold);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  box-shadow: var(--shadow-md);
-  display: flex;
-  flex-direction: column;
+.banner-cta-col {
+  flex-shrink: 0;
 }
 
-.chamber-image-wrapper {
+/* 춘추관 집무실 로비 */
+.chunchugwan-chamber-card,
+.chamber-lobby {
+  background: linear-gradient(180deg, #1e150d 0%, #130d07 100%);
+  border: 1.5px solid #4a3520;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7);
+}
+
+.chamber-image-wrapper,
+.chamber-hero-wrap {
   position: relative;
   width: 100%;
-  height: 290px;
+  height: 320px;
   overflow: hidden;
+  border-bottom: 2px solid #6b4d2a;
 }
 
 .chamber-hero-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 30%;
-  filter: brightness(0.92);
-  transition: transform 0.4s ease;
+  object-position: center 35%;
+  filter: brightness(0.92) contrast(1.06);
+  transition: transform 0.6s cubic-bezier(0.2, 0, 0.2, 1);
 }
-.chunchugwan-chamber-card:hover .chamber-hero-img {
+.chunchugwan-chamber-card:hover .chamber-hero-img,
+.chamber-lobby:hover .chamber-hero-img {
   transform: scale(1.02);
 }
 
-.chamber-overlay-badge {
+.chamber-hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(16, 11, 7, 0.1) 0%, rgba(16, 11, 7, 0.45) 55%, rgba(16, 11, 7, 0.95) 100%);
+  pointer-events: none;
+}
+
+.chamber-overlay-badge,
+.chamber-hero-badge {
   position: absolute;
   bottom: 18px;
-  left: 22px;
-  background: rgba(18, 20, 26, 0.9);
-  backdrop-filter: blur(8px);
-  border: 1px solid var(--border-gold);
-  padding: 8px 18px;
-  border-radius: var(--radius-md);
+  left: 24px;
   display: flex;
   align-items: center;
+  background: rgba(16, 11, 7, 0.85);
+  border: 1px solid #73532e;
+  border-radius: 4px;
+  padding: 6px 14px;
   gap: 12px;
   box-shadow: var(--shadow-lg);
 }
@@ -768,7 +909,7 @@ body {
 
 .chamber-briefing {
   padding: 24px 28px;
-  background: linear-gradient(180deg, #1b1e27 0%, #141720 100%);
+  background: linear-gradient(180deg, #20170e 0%, #150e08 100%);
 }
 
 .chamber-briefing-title {
@@ -807,8 +948,8 @@ body {
 .chamber-tip-item {
   display: flex;
   gap: 14px;
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid var(--border-subtle);
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid #3d2a1b;
   padding: 14px 16px;
   border-radius: var(--radius-md);
   transition: border-color 0.2s;
@@ -859,17 +1000,17 @@ body {
 }
 
 .info-card {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
+  background: linear-gradient(180deg, #1f160e 0%, #150e08 100%);
+  border: 1px solid #3d2b1b;
   border-radius: var(--radius-lg);
   padding: 20px 24px;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   transition: all 0.2s ease;
 }
 
 .info-card:hover {
-  border-color: var(--border-strong);
-  box-shadow: var(--shadow-md);
+  border-color: #5c3e24;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.65);
 }
 
 .info-card-header {
@@ -896,9 +1037,9 @@ body {
   border: 1px solid #7d5b2e;
 }
 .witness-badge.rumor {
-  background: #381938;
-  color: #d279cf;
-  border: 1px solid #7a2e7d;
+  background: #3b1919;
+  color: #d27979;
+  border: 1px solid #7d2e2e;
 }
 
 .credibility-meter {
@@ -926,14 +1067,14 @@ body {
   line-height: 1.7;
   margin-bottom: 16px;
   padding: 14px 18px;
-  background: var(--bg-card);
+  background: #171009;
   border-radius: var(--radius-sm);
   border-left: 3px solid var(--border-gold);
 }
 
 .sacho-form {
-  background: var(--bg-surface-elevated);
-  border: 1px solid var(--border-subtle);
+  background: #1b130b;
+  border: 1px solid #3a2718;
   border-radius: var(--radius-md);
   padding: 16px 18px;
 }
@@ -980,15 +1121,15 @@ body {
   gap: 12px;
   padding: 11px 14px;
   border-radius: var(--radius-sm);
-  background: var(--bg-card);
+  background: #171009;
   cursor: pointer;
-  border: 1px solid transparent;
+  border: 1px solid #362517;
   transition: all 0.15s;
 }
 
 .sacho-option:hover {
-  background: var(--bg-card-hover);
-  border-color: var(--border-subtle);
+  background: #23180e;
+  border-color: #5c3e24;
   transform: translateX(2px);
 }
 
@@ -998,9 +1139,9 @@ body {
 }
 
 .sacho-option.active {
-  background: #282116;
+  background: #2b1d10;
   border-color: var(--border-gold);
-  box-shadow: 0 0 10px rgba(197, 160, 89, 0.15);
+  box-shadow: 0 0 10px rgba(191, 161, 95, 0.2);
 }
 
 .option-badge {
@@ -1010,10 +1151,10 @@ body {
   font-weight: 800;
   flex-shrink: 0;
 }
-.badge-cautious { background: #1c2c3d; color: #8ab4f8; border: 1px solid #334d6b; }
-.badge-moderate { background: #3d3319; color: #f2c979; border: 1px solid #6e5c2b; }
-.badge-assertive { background: #471a1a; color: #ff8a8a; border: 1px solid #7d2e2e; }
-.badge-ignore { background: #25272e; color: #9aa0a6; border: 1px solid #3e424d; }
+.badge-cautious { background: #221910; color: #dfba6c; border: 1px solid #63472b; }
+.badge-moderate { background: #2d2011; color: #f5d590; border: 1px solid #87642e; }
+.badge-assertive { background: #3b1313; color: #f59595; border: 1px solid #7a2424; }
+.badge-ignore { background: #1a130c; color: #a89782; border: 1px solid #3d2b1b; }
 
 .option-text {
   font-size: 13px;
@@ -1089,10 +1230,10 @@ body {
   width: 38px;
   height: 38px;
   border-radius: 6px;
-  border: 1px solid rgba(197, 160, 89, 0.35);
-  background: #141720;
+  border: 1px solid rgba(197, 160, 89, 0.4);
+  background: #150e08;
   flex-shrink: 0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.45);
   object-fit: contain;
 }
 
@@ -1187,12 +1328,12 @@ body {
 }
 
 .sacho-archive-item {
-  background: #191815;
-  border: 1px solid #3d3527;
+  background: linear-gradient(180deg, #1e150d 0%, #140e08 100%);
+  border: 1px solid #4a3420;
   border-left: 6px solid var(--accent-seal-red);
   padding: 18px 22px;
   border-radius: var(--radius-sm);
-  box-shadow: inset 0 0 24px rgba(0, 0, 0, 0.45);
+  box-shadow: inset 0 0 24px rgba(0, 0, 0, 0.5);
 }
 
 .sacho-archive-meta {
@@ -1232,9 +1373,9 @@ body {
   left: 0;
   right: 0;
   height: 490px;
-  background: rgba(14, 16, 23, 0.98);
+  background: rgba(18, 13, 8, 0.98);
   backdrop-filter: blur(10px);
-  border-top: 3px solid #5d89d4;
+  border-top: 3px solid #73532e;
   z-index: 100;
   display: flex;
   flex-direction: column;
@@ -1249,8 +1390,8 @@ body {
 
 .debug-header {
   height: 44px;
-  background: #161c28;
-  border-bottom: 1px solid #283449;
+  background: #160e08;
+  border-bottom: 1px solid #362416;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1262,7 +1403,7 @@ body {
   font-family: var(--font-mono);
   font-size: 13px;
   font-weight: 700;
-  color: #9cd0ff;
+  color: #dfba6c;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -1275,8 +1416,8 @@ body {
 
 .debug-tab {
   background: transparent;
-  border: 1px solid #283449;
-  color: #8c9cb3;
+  border: 1px solid #3d2a1b;
+  color: #a6947e;
   padding: 4px 10px;
   border-radius: 3px;
   font-family: var(--font-mono);
@@ -1284,9 +1425,9 @@ body {
   cursor: pointer;
 }
 .debug-tab.active {
-  background: #2b3d63;
-  color: #fff;
-  border-color: #5d89d4;
+  background: #382718;
+  color: #f5eedd;
+  border-color: #bfa15f;
 }
 
 .debug-body {
@@ -1304,19 +1445,19 @@ body {
 }
 
 .debug-table th, .debug-table td {
-  border: 1px solid #242c3d;
+  border: 1px solid #382618;
   padding: 7px 10px;
   text-align: left;
 }
 
 .debug-table th {
-  background: #1b2333;
-  color: #9cd0ff;
+  background: #22170e;
+  color: #dfba6c;
   font-weight: 600;
 }
 
 .debug-table tr:hover td {
-  background: rgba(43, 61, 99, 0.35);
+  background: rgba(191, 161, 95, 0.12);
 }
 
 .truth-badge {
