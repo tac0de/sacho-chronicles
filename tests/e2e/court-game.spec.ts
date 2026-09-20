@@ -368,5 +368,54 @@ test.describe('조선 사관 시뮬레이션: 사초: 춘추필법 E2E 테스트
     await expect(page.locator('#btn-download-scroll')).toBeVisible();
     await page.screenshot({ path: 'screenshots/16-sns-viral-buttons.png' });
   });
+
+  test('10. 사신왈(史臣曰) 유저 한 줄 집필, 오늘의 사초 모드 및 가문 자제 천거 시스템 검증', async ({ page }) => {
+    await page.goto('/?seed=12345');
+
+    // 1) [오늘의 사초] 챌린지 버튼 클릭 검증
+    const dailyBtn = page.locator('#btn-daily-challenge');
+    await expect(dailyBtn).toBeVisible();
+    await dailyBtn.click();
+
+    // 2) 상단 헤더에 오늘의 사초 골드 뱃지 노출 확인
+    const dailyBadge = page.locator('.daily-challenge-badge');
+    await expect(dailyBadge).toBeVisible();
+    await expect(dailyBadge).toContainText('오늘의 사초');
+
+    // 3) 가문 서고 열기 -> 가문 가보 탭에서 [가문 자제 문과 천거] UI 검증
+    await page.locator('#btn-dynasty-archive').click();
+    await page.locator('.archive-tab[data-tab="HEIRLOOMS"]').click();
+
+    const sonCard = page.locator('.family-son-card');
+    await expect(sonCard).toBeVisible();
+    await expect(sonCard).toContainText('가문 자제 문과 급제 및 입조 천거');
+    await expect(page.locator('#btn-sponsor-son')).toBeVisible();
+    await page.locator('#btn-archive-close').click();
+
+    // 4) 실록 편찬(역사의 심판) 열기
+    await page.locator('#btn-compile-silok').click();
+    const endingModal = page.locator('.ending-scroll-container');
+    await expect(endingModal).toBeVisible();
+
+    // 5) 유저 사신왈(史臣曰) 입력 카드 및 붉은 낙관 확인
+    const sashinwalCard = page.locator('.user-sashinwal-card');
+    await expect(sashinwalCard).toBeVisible();
+    const sashinwalInput = page.locator('#input-sashinwal');
+    await expect(sashinwalInput).toBeVisible();
+
+    // 직접 유저 사관 총평 입력
+    await sashinwalInput.fill('춘추의 필법은 꺾이지 않으며, 역사의 거울은 천 년을 비춘다.');
+    await expect(sashinwalInput).toHaveValue('춘추의 필법은 꺾이지 않으며, 역사의 거울은 천 년을 비춘다.');
+
+    // 6) 신규 개편된 액션 데크 (영웅 버튼, 3열 내비 그리드, 툴바 칩) 레이아웃 검증
+    await expect(page.locator('.ending-action-deck')).toBeVisible();
+    await expect(page.locator('.btn-hero')).toBeVisible();
+    await expect(page.locator('.ending-nav-grid')).toBeVisible();
+    await expect(page.locator('.ending-share-toolbar')).toBeVisible();
+
+    // 7) 하단 액션 덱으로 스크롤하여 버튼들의 깔끔한 정렬 검증 & 스크린샷 캡처
+    await page.locator('.ending-action-deck').scrollIntoViewIfNeeded();
+    await page.screenshot({ path: 'screenshots/17-sashinwal-daily-challenge.png' });
+  });
 });
 

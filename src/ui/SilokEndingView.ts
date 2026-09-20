@@ -6,6 +6,7 @@ export interface SilokEndingMeta {
   kingName: string;
   generation: number;
   day: number;
+  isDailyChallenge?: boolean;
   scribeStats: {
     integrity: number;
     peril: number;
@@ -137,38 +138,61 @@ export class SilokEndingView {
               </div>
             </div>
 
-            <!-- Ending Actions -->
-            <div class="ending-actions">
+            <!-- Custom Scribe Commentary (사신왈 직접 집필) -->
+            <div class="user-sashinwal-card">
+              <div class="user-sashinwal-header">
+                <span class="sashinwal-title-tag">${renderIcon('brush')} 사신왈 (史臣曰) — 사관 친필 총평</span>
+                <span class="sashinwal-tip">역사에 남길 마지막 한마디를 적으시면 족자 이미지에 사관 직인과 함께 인쇄됩니다 (최대 60자)</span>
+              </div>
+              <div class="user-sashinwal-input-wrapper">
+                <input type="text" id="input-sashinwal" maxlength="60" placeholder="예: 권력의 칼날 앞에서도 붓을 꺾지 않았으니, 훗날 역사가 그 진실을 밝히리라." />
+                <div class="scribe-seal-badge-stamp" title="춘추관 사관 직인">史官之印</div>
+              </div>
+            </div>
+
+            <!-- Ending Actions: Structured Action Deck -->
+            <div class="ending-action-deck">
               ${
                 this.onStartDynasty
                   ? `
-                <button id="btn-dynasty-next" class="btn btn-gold btn-lg" style="grid-column: 1 / -1; font-size: 15px; font-weight: bold; background: linear-gradient(135deg, #c59b27 0%, #8b6508 100%);">
-                  ${renderIcon('crown')} 차대 계승: 신왕 즉위 및 가문 사필록 잇기 (500년 루프) ${renderIcon('arrow-right')}
+                <button id="btn-dynasty-next" class="btn btn-gold btn-hero" title="500년 왕조 연대기를 이어받아 다음 군주의 치세로 넘어갑니다">
+                  ${renderIcon('crown')} 신왕 즉위 및 차대 가문 계승 (500년 왕조 루프) ${renderIcon('arrow-right')}
                 </button>
               `
                   : ''
               }
-              <button id="btn-open-booklet" class="btn btn-secondary">
-                ${renderIcon('book')} 비단 실록 서책으로 열람
-              </button>
-              <button id="btn-share-twitter" class="btn btn-secondary" title="트위터(X)에 이 실록 총평을 바로 공유합니다">
-                ${renderIcon('zap')} X (트위터) 공유
-              </button>
-              <button id="btn-copy-share-url" class="btn btn-secondary">
-                ${renderIcon('copy')} 사초 영구 링크 복사
-              </button>
-              <button id="btn-download-scroll" class="btn btn-secondary" title="고화질 조선왕조실록 족자 이미지를 다운로드합니다">
-                ${renderIcon('image')} 실록 족자 이미지 저장 (PNG)
-              </button>
-              <button id="btn-copy-silok" class="btn btn-secondary">
-                ${renderIcon('copy')} 총평 복사
-              </button>
-              <button id="btn-new-era" class="btn btn-gold">
-                ${renderIcon('refresh')} 새 치세로 다시 시작
-              </button>
-              <button id="btn-inspect-sacho" class="btn btn-primary">
-                ${renderIcon('book')} 사초 전권 열람
-              </button>
+
+              <!-- Navigation & Review Buttons (3 Columns) -->
+              <div class="ending-nav-grid">
+                <button id="btn-open-booklet" class="btn btn-secondary">
+                  ${renderIcon('book')} 비단 실록 서책으로 열람
+                </button>
+                <button id="btn-inspect-sacho" class="btn btn-primary">
+                  ${renderIcon('scroll')} 사초 30일 전권 검토
+                </button>
+                <button id="btn-new-era" class="btn btn-secondary">
+                  ${renderIcon('refresh')} 새 치세로 다시 시작
+                </button>
+              </div>
+
+              <!-- Share & Archive Toolbar (Compact Chip Row) -->
+              <div class="ending-share-toolbar">
+                <span class="share-toolbar-label">${renderIcon('image')} 실록 봉안 및 공유:</span>
+                <div class="share-toolbar-chips">
+                  <button id="btn-download-scroll" class="btn btn-gold btn-sm" title="고화질 조선왕조실록 족자 이미지를 다운로드합니다">
+                    ${renderIcon('image')} 족자 이미지 저장 (PNG)
+                  </button>
+                  <button id="btn-share-twitter" class="btn btn-secondary btn-sm" title="트위터(X)에 이 실록 총평을 바로 공유합니다">
+                    ${renderIcon('zap')} X (트위터) 공유
+                  </button>
+                  <button id="btn-copy-share-url" class="btn btn-secondary btn-sm" title="누구나 열람 가능한 영구 링크 복사">
+                    ${renderIcon('copy')} 실록 링크 복사
+                  </button>
+                  <button id="btn-copy-silok" class="btn btn-secondary btn-sm" title="텍스트 요약본 복사">
+                    ${renderIcon('copy')} 총평 복사
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -199,7 +223,10 @@ export class SilokEndingView {
     });
 
     this.container.querySelector('#btn-share-twitter')?.addEventListener('click', () => {
-      const shareText = `📜 [조선왕조실록 사관 총평]\n칭호: ${r.title} (${r.titleHanja})\n직필률: ${r.truthRate}% | 곡필률: ${r.distortionRate}%\n"${r.evaluationSummary}"\n\n나만의 조선왕조실록을 편찬하고 역사의 심판을 받아보세요! #사초춘추필법 #SachoChronicles`;
+      const userCommentInput = this.container.querySelector('#input-sashinwal') as HTMLInputElement;
+      const customComment = userCommentInput?.value.trim();
+      const commentPart = customComment ? `\n\n[史臣曰] "${customComment}"` : `\n\n"${r.evaluationSummary}"`;
+      const shareText = `📜 [조선왕조실록 사관 총평]\n칭호: ${r.title} (${r.titleHanja})\n직필률: ${r.truthRate}% | 곡필률: ${r.distortionRate}%${commentPart}\n\n나만의 조선왕조실록을 편찬하고 역사의 심판을 받아보세요! #사초춘추필법 #SachoChronicles`;
       const url = window.location.href.split('#')[0];
       const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(url)}`;
       window.open(twitterUrl, '_blank');
@@ -211,7 +238,10 @@ export class SilokEndingView {
     });
 
     this.container.querySelector('#btn-copy-silok')?.addEventListener('click', () => {
-      const text = `[조선왕조실록 사관 총평]\n칭호: ${r.title} (${r.titleHanja})\n직필률: ${r.truthRate}% | 곡필률: ${r.distortionRate}% | 묵살률: ${r.omissionRate}%\n총평: "${r.evaluationSummary}"\n\n사초: 춘추필법 (Sacho: The Silent Brush)`;
+      const userCommentInput = this.container.querySelector('#input-sashinwal') as HTMLInputElement;
+      const customComment = userCommentInput?.value.trim();
+      const commentPart = customComment ? `\n사신왈: "${customComment}"\n` : `\n총평: "${r.evaluationSummary}"\n`;
+      const text = `[조선왕조실록 사관 총평]\n칭호: ${r.title} (${r.titleHanja})\n직필률: ${r.truthRate}% | 곡필률: ${r.distortionRate}% | 묵살률: ${r.omissionRate}%${commentPart}\n사초: 춘추필법 (Sacho: The Silent Brush)`;
       navigator.clipboard?.writeText(text).then(() => {
         alert('실록 편찬 결과가 클립보드에 복사되었습니다.');
       });
@@ -225,6 +255,9 @@ export class SilokEndingView {
   private exportScrollAsImage(): void {
     const r = this.result;
     const m = this.meta;
+    const userCommentInput = this.container.querySelector('#input-sashinwal') as HTMLInputElement;
+    const customComment = userCommentInput?.value.trim() || undefined;
+
     exportScrollCanvas({
       kingName: m?.kingName || '성종 (成宗)',
       generation: m?.generation || 1,
@@ -239,6 +272,8 @@ export class SilokEndingView {
       integrity: m?.scribeStats?.integrity ?? 85,
       peril: m?.scribeStats?.peril ?? 15,
       wealth: m?.scribeStats?.wealth ?? 50,
+      userComment: customComment,
+      isDailyChallenge: m?.isDailyChallenge ?? false,
       verdicts: r.officialVerdicts.map((v) => ({
         name: v.name,
         positionTitle: v.positionTitle,

@@ -9,6 +9,7 @@ import { DebugPanelView } from './DebugPanelView.js';
 import { SilokEndingView } from './SilokEndingView.js';
 import { SilokBookletView } from './SilokBookletView.js';
 import { DynastyArchiveView } from './DynastyArchiveView.js';
+import { InquisitionModalView } from './InquisitionModalView.js';
 import { SilokCodec, type SilokShareData } from '../core/sharing/SilokCodec.js';
 import type { LocationId } from '../data/locations.js';
 import { SoundManager } from '../core/audio/SoundManager.js';
@@ -85,6 +86,7 @@ export class UIManager {
       </div>
       <div id="ending-root"></div>
       <div id="archive-modal-root"></div>
+      <div id="inquisition-modal-root"></div>
     `;
 
     const headerEl = this.root.querySelector('#header-root') as HTMLElement;
@@ -100,6 +102,7 @@ export class UIManager {
       onReseed: (seed) => this.handleReseed(seed),
       onCompileSilok: () => this.openSilokEnding(),
       onOpenDynastyArchive: () => this.openDynastyArchive(),
+      onStartDailyChallenge: () => this.handleDailyChallenge(),
     });
 
     this.locationView = new LocationView(locationEl, this.engine, (loc: LocationId) => {
@@ -241,6 +244,12 @@ export class UIManager {
     this.render();
   }
 
+  private handleDailyChallenge(): void {
+    this.engine.startDailyChallenge();
+    this.activeMainTab = 'OBSERVATION';
+    this.render();
+  }
+
   private handleFastForward(days: number): void {
     this.engine.runAutoDays(days);
     this.render();
@@ -284,6 +293,7 @@ export class UIManager {
       kingName: this.engine.dynastyManager.getCurrentKing().templeName,
       generation: this.engine.dynastyManager.getGeneration(),
       day: this.engine.timeManager.currentDay,
+      isDailyChallenge: this.engine.isDailyChallenge,
       scribeStats: {
         integrity: this.engine.scribeStats.integrity,
         peril: this.engine.scribeStats.peril,
@@ -330,6 +340,14 @@ export class UIManager {
       onResetArchive: () => {
         this.render();
       },
+      onSponsorSon: () => {
+        const res = this.engine.sponsorSonForOffice();
+        this.render();
+        return res;
+      },
+    }, {
+      currentWealth: this.engine.scribeStats.wealth,
+      familySonInOffice: this.engine.familySonInOffice,
     });
     this.dynastyArchiveView.render();
   }
@@ -412,6 +430,31 @@ export class UIManager {
         btn.classList.toggle('active', v === this.activeMobileView);
       }
     });
+
+    // 7. Royal Inquisition crisis modal if active
+    this.renderInquisitionModal();
+  }
+
+  private renderInquisitionModal(): void {
+    const inqRoot = this.root.querySelector('#inquisition-modal-root') as HTMLElement;
+    if (!inqRoot) return;
+
+    if (this.engine.currentInquisition) {
+      const inqView = new InquisitionModalView(
+        inqRoot,
+        this.engine.currentInquisition,
+        {
+          onChoice: (choiceId: 'CONFRONT' | 'INFORM' | 'ABDICATE') => {
+            const res = this.engine.resolveInquisition(choiceId);
+            alert(res.summary);
+            this.render();
+          },
+        }
+      );
+      inqView.render();
+    } else {
+      inqRoot.innerHTML = '';
+    }
   }
 
   private updateTabStyles(): void {

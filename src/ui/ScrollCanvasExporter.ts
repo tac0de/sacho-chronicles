@@ -12,6 +12,8 @@ export interface ScrollExportData {
   integrity: number;
   peril: number;
   wealth: number;
+  userComment?: string;
+  isDailyChallenge?: boolean;
   verdicts?: Array<{
     name: string;
     positionTitle: string;
@@ -75,11 +77,19 @@ export function exportScrollCanvas(data: ScrollExportData): void {
   ctx.fillText('實錄', sealX + sealSize / 2, sealY + 32);
   ctx.fillText('之寶', sealX + sealSize / 2, sealY + 62);
 
-  // 4. Header Titles
+  // 4. Header Titles & Daily Challenge Tag
   ctx.textAlign = 'left';
   ctx.fillStyle = '#e5c178';
   ctx.font = 'bold 32px serif';
   ctx.fillText(`${data.kingName} 실록초본 (實錄草本)`, 165, 95);
+
+  if (data.isDailyChallenge) {
+    ctx.textAlign = 'right';
+    ctx.fillStyle = '#dfba6c';
+    ctx.font = 'bold 15px serif';
+    ctx.fillText('📅 [오늘의 사초 챌린지 완수]', canvas.width - 70, 75);
+    ctx.textAlign = 'left';
+  }
 
   ctx.fillStyle = '#a89885';
   ctx.font = '16px serif';
@@ -175,29 +185,66 @@ export function exportScrollCanvas(data: ScrollExportData): void {
   ctx.stroke();
 
   if (data.verdicts && data.verdicts.length > 0) {
-    const list = data.verdicts.slice(0, 5);
+    const maxVerdicts = data.userComment ? 3 : 5;
+    const list = data.verdicts.slice(0, maxVerdicts);
     list.forEach((v, idx) => {
-      const vy = verdictSectionY + 35 + idx * 125;
+      const vy = verdictSectionY + 35 + idx * 115;
       ctx.fillStyle = '#1a130c';
-      ctx.fillRect(70, vy, canvas.width - 140, 110);
+      ctx.fillRect(70, vy, canvas.width - 140, 102);
       ctx.strokeStyle = '#3e2a16';
-      ctx.strokeRect(70, vy, canvas.width - 140, 110);
+      ctx.strokeRect(70, vy, canvas.width - 140, 102);
 
       ctx.textAlign = 'left';
       ctx.fillStyle = '#f5eedd';
       ctx.font = 'bold 16px serif';
-      ctx.fillText(`${v.name} (${v.positionTitle} · ${v.rank})`, 90, vy + 30);
+      ctx.fillText(`${v.name} (${v.positionTitle} · ${v.rank})`, 90, vy + 28);
 
       ctx.textAlign = 'right';
       ctx.fillStyle = '#79d2a6';
       ctx.font = '13px monospace';
-      ctx.fillText(`직필 부합도: ${v.accuracyScore}%`, canvas.width - 90, vy + 30);
+      ctx.fillText(`직필 부합도: ${v.accuracyScore}%`, canvas.width - 90, vy + 28);
 
       ctx.textAlign = 'left';
       ctx.fillStyle = '#dfc999';
-      ctx.font = 'italic 14px serif';
-      ctx.fillText(`"${v.verdictText}"`, 90, vy + 68);
+      ctx.font = 'italic 13.5px serif';
+      ctx.fillText(`"${v.verdictText}"`, 90, vy + 64);
     });
+
+    // User's custom Sashinwal comment box
+    if (data.userComment) {
+      const ucy = verdictSectionY + 35 + list.length * 115 + 10;
+      ctx.fillStyle = '#21170e';
+      ctx.fillRect(70, ucy, canvas.width - 140, 115);
+      ctx.strokeStyle = '#bfa15f';
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(70, ucy, canvas.width - 140, 115);
+
+      // Scribe Seal (史官之印)
+      const sealSize = 52;
+      ctx.fillStyle = '#a62626';
+      ctx.fillRect(90, ucy + 30, sealSize, sealSize);
+      ctx.strokeStyle = '#e57373';
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(90, ucy + 30, sealSize, sealSize);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 16px serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('史官', 90 + sealSize / 2, ucy + 52);
+      ctx.fillText('之印', 90 + sealSize / 2, ucy + 74);
+
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#dfba6c';
+      ctx.font = 'bold 16px serif';
+      ctx.fillText('사신왈 (史臣曰) — 사관 친필 비망 (史官 親筆 備忘)', 158, ucy + 34);
+
+      ctx.fillStyle = '#f5eedd';
+      ctx.font = 'italic 15px serif';
+      ctx.fillText(`"${data.userComment}"`, 158, ucy + 64);
+
+      ctx.fillStyle = '#a89885';
+      ctx.font = '12px serif';
+      ctx.fillText('— 후세 역사의 거울이 될지어다. 춘추관 사관 수결 (手決)', 158, ucy + 92);
+    }
   } else {
     // Chronicle representation when verdicts are not detailed
     const vy = verdictSectionY + 35;

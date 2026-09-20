@@ -40,9 +40,24 @@ export interface MorningBulletin {
   type: string;
 }
 
+export interface RoyalInquisition {
+  day: number;
+  title: string;
+  description: string;
+  instigatorName: string;
+  choices: Array<{
+    id: 'CONFRONT' | 'INFORM' | 'ABDICATE';
+    label: string;
+    desc: string;
+  }>;
+}
+
 export class Engine {
   public seed: number;
   public random: Random;
+  public isDailyChallenge: boolean = false;
+  public currentInquisition: RoyalInquisition | null = null;
+  public familySonInOffice: string | null = null;
   public timeManager: TimeManager;
   public dynastyManager: DynastyManager;
   public agents: Agent[] = [];
@@ -406,7 +421,126 @@ export class Engine {
 
     const nextDay = this.timeManager.advanceToNextDay();
     this.generateDailyOmens();
+
+    // 사화 위기 80% 이상 시 의금부 어전 국문 특별 이벤트 발동
+    if (this.scribeStats.peril >= 80 && !this.currentInquisition) {
+      const hostileAgent = this.agents.find((a) => a.politicalPower >= 60) || this.agents[0];
+      this.currentInquisition = {
+        day: nextDay,
+        title: '의금부 압송 및 어전 국문 (義禁府 鞠問)',
+        description: `사화 위기가 극에 달해 의금부 나졸들이 춘추관을 급습하였습니다! ${hostileAgent ? hostileAgent.name : '훈구 권신'}이 사관을 대역부도한 사초 밀람의 죄로 고발하며 왕 앞에서 친국을 청했습니다.`,
+        instigatorName: hostileAgent ? hostileAgent.name : '권신',
+        choices: [
+          {
+            id: 'CONFRONT',
+            label: '만고직필(萬古直筆)로 어전에서 당당히 항변한다',
+            desc: '직필 신념이 70 이상이면 국왕이 감복하여 사화 위기가 -50% 대폭 진화됩니다.',
+          },
+          {
+            id: 'INFORM',
+            label: '정적의 이름을 대며 역모 모함으로 위기를 모면한다',
+            desc: '사화 위기가 -60% 급감하나, 직필 신념이 -25 깎입니다.',
+          },
+          {
+            id: 'ABDICATE',
+            label: '스스로 붓을 꺾고 자복하여 벌금과 사직으로 목숨을 건진다',
+            desc: '가문 재력 40냥을 몰수당하지만, 사화 위기가 15%로 안정화됩니다.',
+          },
+        ],
+      };
+    }
+
     return nextDay;
+  }
+
+  public static getTodayDateSeed(): string {
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    const d = String(now.getDate()).padStart(2, '0');
+    return `${y}${m}${d}`;
+  }
+
+  public startDailyChallenge(): void {
+    const todaySeed = Engine.getTodayDateSeed();
+    this.initWorld(todaySeed);
+    this.isDailyChallenge = true;
+  }
+
+  public resolveInquisition(choiceId: 'CONFRONT' | 'INFORM' | 'ABDICATE'): { survived: boolean; summary: string } {
+    if (!this.currentInquisition) {
+      return { survived: true, summary: '국문이 종료되었습니다.' };
+    }
+
+    if (choiceId === 'CONFRONT') {
+      if (this.scribeStats.integrity >= 70) {
+        this.scribeStats.peril = Math.max(10, this.scribeStats.peril - 50);
+        this.scribeStats.integrity = Math.min(100, this.scribeStats.integrity + 15);
+        this.currentInquisition = null;
+        return {
+          survived: true,
+          summary: '국왕이 사관의 흔들리지 않는 춘추직필에 감복하여 "과인의 눈과 귀를 흐린 자들을 벌하라" 명하고 국문을 파하였습니다! (사화 위기 -50%, 직필 신념 +15)',
+        };
+      } else {
+        this.scribeStats.peril = 40;
+        this.scribeStats.integrity = Math.max(10, this.scribeStats.integrity - 20);
+        this.scribeStats.wealth = Math.max(0, this.scribeStats.wealth - 30);
+        this.currentInquisition = null;
+        return {
+          survived: true,
+          summary: '직필의 기개가 부족하여 권신들의 맹공을 이기지 못하고 변방으로 좌천될 뻔하였습니다. (가문 재력 -30냥, 신념 -20, 위기 40% 조정)',
+        };
+      }
+    } else if (choiceId === 'INFORM') {
+      this.scribeStats.peril = Math.max(10, this.scribeStats.peril - 60);
+      this.scribeStats.integrity = Math.max(10, this.scribeStats.integrity - 25);
+      this.currentInquisition = null;
+      return {
+        survived: true,
+        summary: '어전에서 특정 정적의 이름을 고변하여 참화를 피했습니다. 대신 한 명이 파직되었으나, 사관의 명예에 씻을 수 없는 흠결을 남겼습니다. (사화 위기 -60%, 신념 -25)',
+      };
+    } else {
+      this.scribeStats.peril = 15;
+      this.scribeStats.wealth = Math.max(0, this.scribeStats.wealth - 40);
+      this.currentInquisition = null;
+      return {
+        survived: true,
+        summary: '소신이 미혹하여 헛소문을 적었다며 스스로 붓을 꺾고 벌금을 바쳤습니다. 목숨은 건졌으나 가문 재산이 몰수되었습니다. (위기 15%로 진화, 재력 -40냥)',
+      };
+    }
+  }
+
+  public sponsorSonForOffice(): { success: boolean; message: string; sonAgentName?: string } {
+    if (this.familySonInOffice) {
+      return { success: false, message: `이미 사관 가문의 자제 [${this.familySonInOffice}]가 입조하여 집무 중입니다.` };
+    }
+    if (this.scribeStats.wealth < 60) {
+      return { success: false, message: '가문 자제를 과거에 천거하고 훈도하려면 최소 60냥의 재력이 필요합니다.' };
+    }
+
+    this.scribeStats.wealth -= 60;
+    const sonName = '김후(사관의 자제)';
+    this.familySonInOffice = sonName;
+
+    const targetAgent = this.agents.find((a) => a.positionId === 'COURT_CLERK' || a.positionId === 'ACADEMY_DRAFTER') || this.agents[this.agents.length - 1];
+    if (targetAgent) {
+      targetAgent.name = `김후(사관의 자제)`;
+      targetAgent.duty = 95;
+      targetAgent.loyalty = 90;
+      targetAgent.honesty = 90;
+      targetAgent.goal = {
+        type: 'MAINTAIN_STABILITY',
+        targetAgentId: 'scribe',
+        priority: 10,
+        description: '사관 아버지를 보필하여 춘추관의 직필을 지키고 가문을 보전함',
+      };
+    }
+
+    return {
+      success: true,
+      message: '사관 가문의 장자 [김후]가 문과에 장원급제하여 승정원 주서로 입조하였습니다! (가문 재력 -60냥)',
+      sonAgentName: sonName,
+    };
   }
 
   /**

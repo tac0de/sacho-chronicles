@@ -31,6 +31,7 @@ export class HeaderView {
       onReseed: (seed: string) => void;
       onCompileSilok: () => void;
       onOpenDynastyArchive?: () => void;
+      onStartDailyChallenge?: () => void;
     }
   ) {
     this.container = container;
@@ -40,8 +41,11 @@ export class HeaderView {
     this.onReseed = callbacks.onReseed;
     this.onCompileSilok = callbacks.onCompileSilok;
     this.onOpenDynastyArchive = callbacks.onOpenDynastyArchive;
+    this.onStartDailyChallenge = callbacks.onStartDailyChallenge;
     this.sound = SoundManager.getInstance();
   }
+
+  private onStartDailyChallenge?: () => void;
 
   public render(isDebugOpen: boolean): void {
     const day = this.engine.timeManager.currentDay;
@@ -91,6 +95,16 @@ export class HeaderView {
             <span class="day-sexagenary">${sexagenary}</span>
           </div>
 
+          ${
+            this.engine.isDailyChallenge
+              ? `
+            <div class="daily-challenge-badge" title="오늘 날짜 기반 전 세계 공통 챌린지 치세 진행 중">
+              ${renderIcon('crown', { size: 12 })} 오늘의 사초
+            </div>
+          `
+              : ''
+          }
+
           <div class="header-scribe-stats" title="사관 가문 위상 및 당대 군주">
             <span class="hud-stat-chip chip-integrity" title="직필 신념">${renderIcon('scale')} ${stats.integrity}</span>
             <span class="hud-stat-chip chip-peril" title="사화 위기">${renderIcon('flame')} ${stats.peril}%</span>
@@ -102,6 +116,7 @@ export class HeaderView {
             <span class="seed-label">${renderIcon('sprout')}</span>
             <input type="text" id="seed-input" value="${this.engine.seed}" title="시드를 변경하고 Enter를 누르면 재시작합니다" />
             <button id="btn-seed-apply" class="btn btn-secondary btn-xs" title="새 시드로 세계 재시작">적용</button>
+            <button id="btn-daily-challenge" class="btn btn-gold btn-xs" title="오늘 날짜 시드로 전 세계 사관과 동일한 30일을 겨루는 '오늘의 사초' 시작">오늘</button>
           </div>
 
           <div class="header-quick-tools">
@@ -183,18 +198,24 @@ export class HeaderView {
 
     const seedInput = this.container.querySelector('#seed-input') as HTMLInputElement;
     const btnSeed = this.container.querySelector('#btn-seed-apply');
-
-    const triggerReseed = () => {
+    const applySeed = () => {
       const val = seedInput?.value.trim();
       if (val) {
         this.sound.playStamp();
         this.onReseed(val);
       }
     };
-
-    btnSeed?.addEventListener('click', triggerReseed);
+    btnSeed?.addEventListener('click', applySeed);
     seedInput?.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') triggerReseed();
+      if (e.key === 'Enter') {
+        applySeed();
+      }
+    });
+
+    const btnDaily = this.container.querySelector('#btn-daily-challenge');
+    btnDaily?.addEventListener('click', () => {
+      this.sound.playChime();
+      this.onStartDailyChallenge?.();
     });
   }
 }

@@ -5,22 +5,31 @@ import { renderIcon } from './icons/Icons.js';
 export interface DynastyArchiveCallbacks {
   onClose: () => void;
   onResetArchive?: () => void;
+  onSponsorSon?: () => { success: boolean; message: string };
+}
+
+export interface DynastyArchiveOptions {
+  currentWealth: number;
+  familySonInOffice: string | null;
 }
 
 export class DynastyArchiveView {
   private container: HTMLElement;
   private dynastyManager: DynastyManager;
   private callbacks: DynastyArchiveCallbacks;
+  private options?: DynastyArchiveOptions;
   private activeTab: 'REIGNS' | 'HEIRLOOMS' = 'REIGNS';
 
   constructor(
     container: HTMLElement,
     dynastyManager: DynastyManager,
-    callbacks: DynastyArchiveCallbacks
+    callbacks: DynastyArchiveCallbacks,
+    options?: DynastyArchiveOptions
   ) {
     this.container = container;
     this.dynastyManager = dynastyManager;
     this.callbacks = callbacks;
+    this.options = options;
   }
 
   public render(): void {
@@ -155,6 +164,46 @@ export class DynastyArchiveView {
   }
 
   private renderHeirloomsContent(heirlooms: HeirloomTrait[]): string {
+    const isSonInOffice = !!this.options?.familySonInOffice;
+    const sonName = this.options?.familySonInOffice || '김후(金詡)';
+    const wealth = this.options?.currentWealth ?? 0;
+    const canAfford = wealth >= 60;
+
+    const sonSponsorshipHtml = `
+      <div class="family-son-card" style="margin-bottom: 20px; padding: 16px; background: rgba(30, 25, 20, 0.7); border: 1px solid var(--border-gold); border-radius: 8px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="color: var(--text-gold); font-size: 20px;">${renderIcon('users', { size: 22 })}</span>
+            <div>
+              <h4 style="margin: 0; color: var(--text-gold); font-size: 15px;">가문 자제 문과 급제 및 입조 천거 (家門 子弟 薦擧)</h4>
+              <span style="font-size: 12px; color: var(--text-muted);">가문의 재력을 털어 차남을 승정원 주서(注書)로 천거하여 사관의 눈과 귀로 삼습니다.</span>
+            </div>
+          </div>
+          ${
+            isSonInOffice
+              ? `<span class="badge badge-gold" style="padding: 4px 10px; font-size: 12px; border-radius: 4px; background: rgba(212,175,55,0.2); border: 1px solid var(--accent-gold); color: var(--accent-gold);">조정 입조 완료 (注書)</span>`
+              : `<span class="badge badge-dim" style="padding: 4px 10px; font-size: 12px; border-radius: 4px; background: rgba(255,255,255,0.05); color: var(--text-muted);">미천거</span>`
+          }
+        </div>
+        <p style="font-size: 13px; color: var(--text-secondary); margin: 6px 0 12px 0; line-height: 1.5;">
+          ${
+            isSonInOffice
+              ? `차남 <strong>${sonName}</strong>이 승정원 주서(注書)로 궐내에 상주하고 있습니다. 궐내 동향을 밀고하여 <strong>사화(士禍) 위협이 15% 영구 경감</strong>되고 있습니다.`
+              : `자제를 문과에 급제시켜 입조시키면 <strong>사화 위기가 즉시 15% 감소</strong>하며, 매일 어전 회의의 비밀 정보를 보좌합니다. (필요 가문 재력: <strong>60냥</strong> / 현재 보유: <strong>${wealth}냥</strong>)`
+          }
+        </p>
+        ${
+          !isSonInOffice
+            ? `
+          <button id="btn-sponsor-son" class="btn ${canAfford ? 'btn-gold' : 'btn-secondary'} btn-sm" ${!canAfford ? 'disabled' : ''} style="display: inline-flex; align-items: center; gap: 6px;">
+            ${renderIcon('brush', { size: 14 })} 가문 자제 입조 천거하기 (60냥 소모)
+          </button>
+        `
+            : ''
+        }
+      </div>
+    `;
+
     const cards = heirlooms
       .map((h) => {
         const isUnlocked = h.isUnlocked;
@@ -182,7 +231,10 @@ export class DynastyArchiveView {
       })
       .join('');
 
-    return `<div class="heirlooms-grid">${cards}</div>`;
+    return `
+      ${sonSponsorshipHtml}
+      <div class="heirlooms-grid">${cards}</div>
+    `;
   }
 
   private attachEventListeners(): void {
@@ -204,6 +256,19 @@ export class DynastyArchiveView {
 
     this.container.querySelector('#btn-archive-close')?.addEventListener('click', closeHandler);
     this.container.querySelector('#btn-archive-confirm')?.addEventListener('click', closeHandler);
+
+    this.container.querySelector('#btn-sponsor-son')?.addEventListener('click', () => {
+      if (this.callbacks.onSponsorSon) {
+        const res = this.callbacks.onSponsorSon();
+        alert(res.message);
+        SoundManager.getInstance().playStamp();
+        if (res.success && this.options) {
+          this.options.familySonInOffice = '김후(金詡)';
+          this.options.currentWealth -= 60;
+        }
+        this.render();
+      }
+    });
 
     this.container.querySelector('#btn-archive-reset')?.addEventListener('click', () => {
       if (confirm('정말로 가문 서고와 계보를 초기화하시겠습니까? 역대 실록 편찬 기록과 해금된 가보가 모두 초기화됩니다.')) {
