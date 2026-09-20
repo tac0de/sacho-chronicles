@@ -39,6 +39,12 @@ test.describe('조선 사관 시뮬레이션: 사초: 춘추필법 E2E 테스트
 
     // 스크린샷 저장
     await page.screenshot({ path: 'screenshots/01-initial-court.png', fullPage: true });
+
+    // 중앙 무대(정무 관찰) 스크롤 검증: 사관 일과 요강 및 지침 카드로 스크롤 이동
+    const lastTipItem = page.locator('.chamber-tip-item').last();
+    await lastTipItem.scrollIntoViewIfNeeded();
+    await expect(lastTipItem).toBeVisible();
+    await page.screenshot({ path: 'screenshots/10-desktop-court-scrolled.png' });
   });
 
   test('2. 사관의 하루 일과: 처소 선택, 정무 관찰, 사초 집필 루프 검증', async ({ page }) => {

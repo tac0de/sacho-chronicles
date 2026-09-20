@@ -764,6 +764,7 @@ body {
 }
 
 .observation-banner {
+  flex-shrink: 0;
   background: linear-gradient(135deg, #261c12 0%, #161009 100%);
   border: 1px solid #4a3420;
   border-left: 4px solid var(--border-gold);
@@ -848,6 +849,7 @@ body {
 /* 춘추관 집무실 로비 */
 .chunchugwan-chamber-card,
 .chamber-lobby {
+  flex-shrink: 0;
   background: linear-gradient(180deg, #1e150d 0%, #130d07 100%);
   border: 1.5px solid #4a3520;
   border-radius: var(--radius-lg);
@@ -1005,6 +1007,7 @@ body {
 }
 
 .info-card-list {
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   gap: 20px;
