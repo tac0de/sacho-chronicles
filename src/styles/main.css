@@ -444,8 +444,8 @@ body {
 /* ================= MAIN LAYOUT ================= */
 .app-body {
   display: flex;
-  flex: 1;
-  height: calc(100vh - 74px);
+  flex: 1 1 auto;
+  height: auto;
   min-height: 0;
   overflow: hidden;
   position: relative;
@@ -1249,13 +1249,30 @@ body {
   margin-left: 2px;
 }
 
-.official-goal-snippet {
-  color: var(--text-muted);
+.official-goal-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
   font-size: 11px;
-  max-width: 175px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  margin: 6px 0;
+  background: rgba(0, 0, 0, 0.28);
+  padding: 4px 8px;
+  border-radius: 3px;
+  border-left: 2.5px solid var(--border-gold);
+}
+
+.official-goal-label {
+  color: var(--text-gold);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.official-goal-text {
+  color: var(--text-paper);
+  word-break: keep-all;
+  line-height: 1.4;
 }
 
 .official-card.selected {
@@ -1755,4 +1772,287 @@ body {
   border-top: 1px solid #4a3e29;
   padding-top: 18px;
 }
+
+/* ================= MOBILE BOTTOM NAVIGATION BAR & RESPONSIVE LAYOUT ================= */
+.mobile-nav-bar {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .mobile-nav-bar {
+    display: flex !important;
+    align-items: stretch;
+    justify-content: space-around;
+    background: linear-gradient(180deg, #1e140c 0%, #100a06 100%);
+    border-top: 1.5px solid #6b4c2a;
+    height: 58px;
+    min-height: 58px;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    z-index: 100;
+    box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.75);
+    flex-shrink: 0;
+  }
+
+  .mobile-nav-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: #a3907c;
+    cursor: pointer;
+    padding: 4px 6px;
+    font-family: var(--font-serif);
+    transition: all 0.15s ease;
+    flex: 1;
+    height: 100%;
+    position: relative;
+    user-select: none;
+  }
+
+  .mobile-nav-btn .m-icon {
+    font-size: 18px;
+    line-height: 1.1;
+    margin-bottom: 2px;
+    transition: transform 0.15s ease;
+  }
+
+  .mobile-nav-btn .m-text {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+    white-space: nowrap;
+  }
+
+  .mobile-nav-btn:hover {
+    color: #e5c178;
+    background: rgba(229, 193, 120, 0.05);
+  }
+
+  .mobile-nav-btn.active {
+    color: #dfba6c;
+    background: linear-gradient(180deg, rgba(223, 186, 108, 0.12) 0%, rgba(223, 186, 108, 0.02) 100%);
+  }
+
+  .mobile-nav-btn.active .m-icon {
+    transform: scale(1.15);
+  }
+
+  .mobile-nav-btn.active::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 20%;
+    right: 20%;
+    height: 2.5px;
+    background: #dfba6c;
+    box-shadow: 0 0 8px #dfba6c;
+    border-radius: 2px;
+  }
+
+  /* Single Full-Width Panel Mobile Layout */
+  #location-root,
+  .main-stage,
+  #roster-root {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 1 1 100% !important;
+    border-left: none !important;
+    border-right: none !important;
+    display: none !important;
+  }
+
+  .app-body[data-mobile-view="LOCATIONS"] #location-root {
+    display: flex !important;
+  }
+
+  .app-body[data-mobile-view="STAGE"] .main-stage,
+  .app-body[data-mobile-view="ARCHIVE"] .main-stage {
+    display: flex !important;
+  }
+
+  .app-body[data-mobile-view="ROSTER"] #roster-root {
+    display: flex !important;
+  }
+
+  /* Header mobile adaptations */
+  .app-header {
+    height: auto !important;
+    min-height: 54px;
+    padding: 6px 10px;
+    flex-wrap: wrap;
+    row-gap: 6px;
+    column-gap: 8px;
+  }
+
+  .header-brand {
+    gap: 6px;
+  }
+
+  .seal-emblem-img {
+    width: 28px;
+    height: 28px;
+  }
+
+  .header-brand .subtitle {
+    display: none;
+  }
+
+  .title-group h1 {
+    font-size: 15px;
+  }
+
+  .title-tag {
+    font-size: 11px;
+  }
+
+  .header-divider {
+    display: none;
+  }
+
+  .seed-box {
+    display: none;
+  }
+
+  .header-status-group {
+    gap: 6px;
+  }
+
+  .day-badge {
+    padding: 3px 8px;
+    font-size: 11px;
+  }
+
+  .phase-indicator {
+    font-size: 11px;
+    gap: 3px;
+  }
+
+  .header-actions {
+    margin-left: auto;
+    gap: 4px;
+  }
+
+  .header-actions .btn {
+    padding: 4px 7px !important;
+    font-size: 11px !important;
+  }
+
+  .btn-audio {
+    min-width: unset !important;
+    padding: 4px 6px !important;
+  }
+
+  /* Stage adjustments */
+  .stage-nav {
+    height: 44px;
+    padding: 0 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .stage-nav::-webkit-scrollbar {
+    display: none;
+  }
+  .nav-tab {
+    padding: 7px 12px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .stage-content {
+    padding: 12px !important;
+  }
+
+  .chamber-image-wrapper,
+  .chamber-hero-wrap {
+    height: 180px;
+  }
+
+  .chamber-briefing {
+    padding: 16px 14px;
+  }
+
+  .observation-banner {
+    padding: 14px 16px;
+  }
+
+  .observation-banner-header {
+    gap: 12px;
+  }
+
+  .banner-location-icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .observation-banner h3 {
+    font-size: 16px;
+  }
+
+  .banner-instruction-callout {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .banner-cta-col {
+    width: 100%;
+  }
+
+  .banner-cta-col .btn {
+    width: 100%;
+  }
+
+  .info-card {
+    padding: 14px 16px;
+  }
+
+  /* Debug Panel mobile view */
+  .debug-panel {
+    height: 85vh;
+    border-top: 2px solid #dfba6c;
+  }
+
+  .debug-header {
+    padding: 0 10px;
+  }
+
+  .debug-title {
+    font-size: 13px;
+  }
+
+  .debug-tabs {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  /* Ending Modal mobile adaptations */
+  .ending-scroll-container {
+    max-height: 94vh;
+    width: 96vw;
+  }
+
+  .scroll-body {
+    padding: 18px 14px;
+  }
+
+  .ending-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .evaluation-banner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 14px 16px;
+  }
+
+  .title-badge-large {
+    min-width: unset;
+    width: 100%;
+  }
+}
+
 

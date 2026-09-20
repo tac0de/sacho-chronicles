@@ -10,6 +10,7 @@ import type { LocationId } from '../data/locations.js';
 import { SoundManager } from '../core/audio/SoundManager.js';
 
 type MainTab = 'OBSERVATION' | 'SACHO_BOOK' | 'EVENT_LOG';
+type MobileView = 'LOCATIONS' | 'STAGE' | 'ROSTER' | 'ARCHIVE';
 
 export class UIManager {
   private root: HTMLElement;
@@ -18,6 +19,7 @@ export class UIManager {
   private isDebugOpen: boolean = false;
   private isEndingOpen: boolean = false;
   private activeMainTab: MainTab = 'OBSERVATION';
+  private activeMobileView: MobileView = 'STAGE';
 
   // Subviews
   private headerView!: HeaderView;
@@ -36,7 +38,7 @@ export class UIManager {
   public init(): void {
     this.root.innerHTML = `
       <div id="header-root"></div>
-      <div class="app-body">
+      <div class="app-body" data-mobile-view="STAGE">
         <div id="location-root"></div>
         <div class="main-stage">
           <div class="stage-nav">
@@ -48,6 +50,24 @@ export class UIManager {
         </div>
         <div id="roster-root"></div>
         <div id="debug-root"></div>
+      </div>
+      <div class="mobile-nav-bar">
+        <button class="mobile-nav-btn" data-mview="LOCATIONS">
+          <span class="m-icon">🏛️</span>
+          <span class="m-text">처소 행차</span>
+        </button>
+        <button class="mobile-nav-btn active" data-mview="STAGE">
+          <span class="m-icon">📜</span>
+          <span class="m-text">정무 관찰</span>
+        </button>
+        <button class="mobile-nav-btn" data-mview="ROSTER">
+          <span class="m-icon">👥</span>
+          <span class="m-text">조정 백관</span>
+        </button>
+        <button class="mobile-nav-btn" data-mview="ARCHIVE">
+          <span class="m-icon">📖</span>
+          <span class="m-text">사초록</span>
+        </button>
       </div>
       <div id="ending-root"></div>
     `;
@@ -68,6 +88,9 @@ export class UIManager {
 
     this.locationView = new LocationView(locationEl, this.engine, (loc: LocationId) => {
       this.engine.setPlayerLocation(loc);
+      if (window.innerWidth <= 900) {
+        this.activeMobileView = 'STAGE';
+      }
       this.render();
     });
 
@@ -78,6 +101,7 @@ export class UIManager {
         this.engine.commitSacho(choices);
         const nextDay = this.engine.proceedToNextDay();
         this.activeMainTab = 'OBSERVATION';
+        this.activeMobileView = 'STAGE';
         if (nextDay > 30) {
           this.openSilokEnding();
           return;
@@ -106,6 +130,27 @@ export class UIManager {
       this.setTab('EVENT_LOG');
     });
 
+    // Mobile nav bar listeners
+    this.root.querySelectorAll('.mobile-nav-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const targetView = btn.getAttribute('data-mview') as MobileView;
+        if (targetView) {
+          this.setMobileView(targetView);
+        }
+      });
+    });
+
+    this.render();
+  }
+
+  private setMobileView(view: MobileView): void {
+    SoundManager.getInstance().playScroll();
+    this.activeMobileView = view;
+    if (view === 'ARCHIVE') {
+      this.activeMainTab = 'SACHO_BOOK';
+    } else if (view === 'STAGE') {
+      this.activeMainTab = 'OBSERVATION';
+    }
     this.render();
   }
 
@@ -196,6 +241,15 @@ export class UIManager {
 
     // 5. Debug panel
     this.debugPanelView.render(this.isDebugOpen);
+
+    // 6. Mobile view state sync
+    const appBody = this.root.querySelector('.app-body');
+    appBody?.setAttribute('data-mobile-view', this.activeMobileView);
+
+    this.root.querySelectorAll('.mobile-nav-btn').forEach((btn) => {
+      const v = btn.getAttribute('data-mview');
+      btn.classList.toggle('active', v === this.activeMobileView);
+    });
   }
 
   private updateTabStyles(): void {

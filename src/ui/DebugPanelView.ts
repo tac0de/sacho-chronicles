@@ -30,11 +30,11 @@ export class DebugPanelView {
     }
 
     const tabs: { id: DebugTab; label: string }[] = [
-      { id: 'FACTS', label: '1. World Facts (실제 진실)' },
-      { id: 'AGENTS', label: '2. NPC 내부 성향치' },
-      { id: 'RELATIONS', label: '3. 12x12 관계 매트릭스' },
-      { id: 'EVENTS', label: '4. 사건 인과 사슬' },
-      { id: 'LOGS', label: '5. 시뮬레이션 로그' },
+      { id: 'FACTS', label: '1. 궐내 실상 (闕內 實相)' },
+      { id: 'AGENTS', label: '2. 백관 심성 (百官 心性)' },
+      { id: 'RELATIONS', label: '3. 붕당 연계표 (朋黨 連繫表)' },
+      { id: 'EVENTS', label: '4. 정쟁 인과록 (政爭 因果錄)' },
+      { id: 'LOGS', label: '5. 감찰 비기 (監察 秘記)' },
     ];
 
     const tabButtons = tabs
@@ -67,8 +67,8 @@ export class DebugPanelView {
       <div class="debug-panel">
         <div class="debug-header">
           <div class="debug-title">
-            <span>⚙️ SIMULATION DEBUG CONSOLE</span>
-            <span style="color:#6b7280; font-size:11px;">[Seed: ${this.engine.seed} | Day: ${this.engine.timeManager.currentDay}]</span>
+            <span>⚖️ 사헌부 은밀 감찰록 (司憲府 隱密 監察錄)</span>
+            <span style="color:#bda688; font-size:11px; font-family:var(--font-serif);">[개벽 시드: ${this.engine.seed} | 재위: ${this.engine.timeManager.currentDay}일차]</span>
           </div>
 
           <div class="debug-tabs">
@@ -76,9 +76,9 @@ export class DebugPanelView {
           </div>
 
           <div style="display:flex; align-items:center; gap:8px;">
-            <button id="btn-ff-5" class="btn btn-secondary btn-sm" title="5일 자동 시뮬레이션">+5일 진행</button>
-            <button id="btn-ff-30" class="btn btn-secondary btn-sm" title="30일 자동 시뮬레이션">+30일 진행</button>
-            <button id="btn-debug-close" class="btn btn-secondary btn-sm">✕ 닫기</button>
+            <button id="btn-ff-5" class="btn btn-secondary btn-sm" title="5일간 궐내 정쟁 속진">5일 속진 (五日)</button>
+            <button id="btn-ff-30" class="btn btn-secondary btn-sm" title="한 달간 궐내 정쟁 속진">한 달 속진 (一月)</button>
+            <button id="btn-debug-close" class="btn btn-secondary btn-sm">비록 봉인 ✕</button>
           </div>
         </div>
 
@@ -120,13 +120,13 @@ export class DebugPanelView {
       .map((f) => {
         const subject = this.engine.agentMap.get(f.subjectId);
         const truthBadge = f.isActuallyGuilty
-          ? `<span class="truth-badge guilty">실제 유책(참)</span>`
-          : `<span class="truth-badge innocent">결백/무고(거짓)</span>`;
+          ? `<span class="truth-badge guilty">유책 혐의 (참·實)</span>`
+          : `<span class="truth-badge innocent">결백 무고 (거짓·僞)</span>`;
 
         return `
           <tr>
-            <td style="color:#e5c178;">Day ${f.day}</td>
-            <td style="color:#9cd0ff;">${f.id}</td>
+            <td style="color:#dfba6c;">Day ${f.day}</td>
+            <td style="color:#bda688; font-family:var(--font-mono); font-size:10px;">${f.id}</td>
             <td><strong>${subject?.name || f.subjectId}</strong> (${subject?.positionTitle || ''})</td>
             <td>${f.type}</td>
             <td>${truthBadge}</td>
@@ -141,13 +141,13 @@ export class DebugPanelView {
       <table class="debug-table">
         <thead>
           <tr>
-            <th>발생일</th>
-            <th>Fact ID</th>
-            <th>대상 인물</th>
-            <th>유형</th>
-            <th>객관적 진실</th>
-            <th>실제 일어난 사실</th>
-            <th>원인 및 맥락</th>
+            <th>발생 일자</th>
+            <th>비록 식별자</th>
+            <th>연루 관원</th>
+            <th>정쟁 유형</th>
+            <th>실제 진위(眞僞)</th>
+            <th>은밀한 실상</th>
+            <th>발단 배경 및 맥락</th>
           </tr>
         </thead>
         <tbody>
@@ -166,16 +166,16 @@ export class DebugPanelView {
 
         return `
           <tr>
-            <td style="color:#e5c178; font-weight:bold;">${a.name}</td>
+            <td style="color:#dfba6c; font-weight:bold;">${a.name}</td>
             <td>${a.positionTitle}</td>
-            <td style="color:#9cd0ff;">${a.politicalPower}</td>
-            <td style="color:${a.ambition >= 75 ? '#ff7b7b' : '#e6e8ed'}">${a.ambition}</td>
+            <td style="color:#c5a059;">${a.politicalPower}</td>
+            <td style="color:${a.ambition >= 75 ? '#ff7b7b' : '#eae0cb'}">${a.ambition}</td>
             <td>${a.duty}</td>
             <td>${a.loyalty}</td>
             <td>${a.riskAversion}</td>
             <td style="color:${a.honesty <= 40 ? '#ff7b7b' : '#8ce6b0'}">${a.honesty}</td>
-            <td><span style="color:#f2c979;">${a.currentStatus}</span></td>
-            <td>${a.knownInfoIds.size}개 알림 / ${a.believedInfoIds.size}개 믿음</td>
+            <td><span style="color:#dfba6c;">${a.currentStatus}</span></td>
+            <td>${a.knownInfoIds.size}건 인지 / ${a.believedInfoIds.size}건 신뢰</td>
             <td style="font-size:11px; color:#ff9999;">${grudgesText}</td>
           </tr>
         `;
@@ -186,17 +186,17 @@ export class DebugPanelView {
       <table class="debug-table">
         <thead>
           <tr>
-            <th>이름</th>
-            <th>관직</th>
-            <th>정치력</th>
-            <th>야심</th>
-            <th>명분</th>
-            <th>충성</th>
-            <th>위험회피</th>
-            <th>정직성</th>
-            <th>현재 상태</th>
-            <th>지식/믿음</th>
-            <th>원한 목록</th>
+            <th>관원 성명</th>
+            <th>품계 관직</th>
+            <th>권세(權勢)</th>
+            <th>야심(野心)</th>
+            <th>대의(大義)</th>
+            <th>충절(忠節)</th>
+            <th>보신(保身)</th>
+            <th>직언(直言)</th>
+            <th>조정 동태</th>
+            <th>지식과 신념</th>
+            <th>사천(私怨) 및 원한</th>
           </tr>
         </thead>
         <tbody>
@@ -227,7 +227,7 @@ export class DebugPanelView {
 
         return `
           <tr>
-            <td style="font-weight:bold; font-size:11px; color:#e5c178; white-space:nowrap;">${rowAgent.name} (${rowAgent.positionTitle.slice(0, 3)})</td>
+            <td style="font-weight:bold; font-size:11px; color:#dfba6c; white-space:nowrap;">${rowAgent.name} (${rowAgent.positionTitle.slice(0, 3)})</td>
             ${cells}
           </tr>
         `;
@@ -235,14 +235,14 @@ export class DebugPanelView {
       .join('');
 
     return `
-      <p style="margin-bottom:8px; color:#8c9cb3; font-size:11px;">
-        * 행(A)에서 열(B)을 바라보는 비대칭 관계 수치입니다 (-100 ~ +100). 마우스를 올리면 대상이 표시됩니다.
+      <p style="margin-bottom:8px; color:#bda688; font-size:11px;">
+        * 궐내 백관 상호 간의 은밀한 친소(親疎) 및 원한 수치입니다 (-100 ~ +100). 마우스를 올리면 대상이 표시됩니다.
       </p>
       <div style="overflow-x:auto;">
         <table class="debug-table" style="font-size:11px;">
           <thead>
             <tr>
-              <th>행(발신) \\ 열(수신)</th>
+              <th>발신 관원 \\ 수신 관원</th>
               ${headers}
             </tr>
           </thead>
@@ -268,8 +268,8 @@ export class DebugPanelView {
 
         return `
           <tr>
-            <td style="color:#e5c178;">Day ${ev.day}</td>
-            <td style="color:#9cd0ff;">${ev.type}</td>
+            <td style="color:#dfba6c;">Day ${ev.day}</td>
+            <td style="color:#bda688;">${ev.type}</td>
             <td><strong>${ev.title}</strong></td>
             <td>${instigator?.name || ev.instigatorId} → ${target ? target.name : '없음'}</td>
             <td style="color:#f6ad55;">${ev.causationReason}</td>
@@ -283,12 +283,12 @@ export class DebugPanelView {
       <table class="debug-table">
         <thead>
           <tr>
-            <th>Day</th>
-            <th>유형</th>
-            <th>사건명</th>
-            <th>주동자 → 대상</th>
-            <th>발동 원인 (Causation Reason)</th>
-            <th>결과 요약</th>
+            <th>발생 일자</th>
+            <th>정쟁 범주</th>
+            <th>사건 표제</th>
+            <th>발의자 → 피탄자</th>
+            <th>발동 원인 및 동기</th>
+            <th>조정 파급 결과</th>
           </tr>
         </thead>
         <tbody>

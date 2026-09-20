@@ -192,4 +192,48 @@ test.describe('조선 사관 시뮬레이션: 사초: 춘추필법 E2E 테스트
     // 4) 스크린샷 저장
     await page.screenshot({ path: 'screenshots/06-seo-assets-sound.png', fullPage: true });
   });
+
+  test('7. 모바일 레이아웃 및 인물 지향(Goal) 무삭제 줄바꿈 검증', async ({ page }) => {
+    // 390x844 모바일 뷰포트 설정
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/?seed=12345');
+
+    // 1) 모바일 하단 네비게이션 바 노출 확인
+    const mobileNav = page.locator('.mobile-nav-bar');
+    await expect(mobileNav).toBeVisible();
+
+    // 2) 백관 탭 클릭 -> 백관 패널 단독 전면 표시 확인
+    const rosterTabBtn = page.locator('.mobile-nav-btn[data-mview="ROSTER"]');
+    await rosterTabBtn.click();
+    await expect(page.locator('.app-body')).toHaveAttribute('data-mobile-view', 'ROSTER');
+    await expect(page.locator('#roster-root')).toBeVisible();
+    await expect(page.locator('#location-root')).not.toBeVisible();
+    await expect(page.locator('.main-stage')).not.toBeVisible();
+    await page.screenshot({ path: 'screenshots/08-mobile-roster.png' });
+
+    // 3) 인물 지향(Goal) 텍스트가 줄임표(...) 없이 온전히 렌더링되는지 검증
+    const firstGoalText = page.locator('.official-goal-text').first();
+    await expect(firstGoalText).toBeVisible();
+    const textContent = await firstGoalText.textContent();
+    expect(textContent).toBeTruthy();
+    expect(textContent?.endsWith('...')).toBe(false);
+
+    // 4) 처소 행차 탭 클릭 -> 처소 선택 시 자동으로 정무 무대로 전환 검증
+    const locTabBtn = page.locator('.mobile-nav-btn[data-mview="LOCATIONS"]');
+    await locTabBtn.click();
+    await expect(page.locator('.app-body')).toHaveAttribute('data-mobile-view', 'LOCATIONS');
+    await expect(page.locator('#location-root')).toBeVisible();
+
+    // 처소 카드 클릭
+    const sajeongjeonCard = page.locator('.location-card[data-id="ROYAL_HALL"]');
+    await sajeongjeonCard.click();
+
+    // 자동으로 STAGE 로 전환되었는지 확인
+    await expect(page.locator('.app-body')).toHaveAttribute('data-mobile-view', 'STAGE');
+    await expect(page.locator('.main-stage')).toBeVisible();
+
+    // 5) 모바일 스크린샷 캡처 저장
+    await page.screenshot({ path: 'screenshots/07-mobile-court.png' });
+  });
 });
+

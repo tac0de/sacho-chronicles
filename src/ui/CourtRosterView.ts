@@ -62,9 +62,12 @@ export class CourtRosterView {
                 <div class="official-pos">${a.positionTitle} (${pos?.hanjaTitle || ''}) · ${pos?.department || a.department}</div>
               </div>
             </div>
-            <div class="official-insignia">복제: ${pos?.insignia || '관복'}</div>
+            <div class="official-goal-row">
+              <span class="official-goal-label">지향:</span>
+              <span class="official-goal-text">${a.goal.description}</span>
+            </div>
             <div class="official-status-row">
-              <span class="official-goal-snippet">지향: ${a.goal.description.slice(0, 16)}...</span>
+              <span class="official-insignia">복제: ${pos?.insignia || '관복'}</span>
               <span class="status-badge ${statusClass}">${a.currentStatus}</span>
             </div>
           </div>
