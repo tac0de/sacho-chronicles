@@ -463,46 +463,52 @@ body {
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8), 0 1px 2px rgba(0, 0, 0, 0.5) !important;
 }
 
-/* 사헌부 먹물 암행패 버튼 */
+/* 사헌부 비취 옥패(Jade Seal) 암행패 버튼 */
 .btn-debug {
-  background: linear-gradient(180deg, #1c2528 0%, #101618 100%);
-  color: #8abcb6;
-  border: 1px solid #2f4547;
+  background: linear-gradient(180deg, #102624 0%, #081715 100%);
+  color: #79d2c6;
+  border: 1px solid #28544e;
+  border-top: 1px solid #3d8076;
+  border-bottom: 1px solid #050d0c;
   font-family: var(--font-mono);
   font-size: 12px;
-  padding: 6px 10px;
+  padding: 6px 11px;
   white-space: nowrap;
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  box-shadow: inset 0 1px 0 rgba(140, 200, 190, 0.15), 0 2px 6px rgba(0, 0, 0, 0.5);
+  border-radius: var(--radius-sm);
+  box-shadow: inset 0 1px 0 rgba(121, 210, 198, 0.2), 0 2px 8px rgba(0, 0, 0, 0.6);
+  transition: all 0.15s ease;
 }
 .btn-debug:hover {
-  background: linear-gradient(180deg, #243438 0%, #162022 100%);
-  border-color: #4a706b;
-  color: #b0ded9;
+  background: linear-gradient(180deg, #163633 0%, #0d2220 100%);
+  border-color: #4ea89d;
+  color: #a8f5eb;
+  box-shadow: 0 0 12px rgba(78, 168, 157, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
   transform: translateY(-1px);
 }
 .btn-debug.active {
-  background: linear-gradient(180deg, #243939 0%, #152424 100%);
-  color: #aae0d8;
-  border-color: #4a7570;
-  box-shadow: 0 0 10px rgba(74, 117, 112, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  background: linear-gradient(180deg, #1c4540 0%, #102e2b 100%);
+  color: #c4fff7;
+  border-color: #5ec5b7;
+  box-shadow: 0 0 14px rgba(94, 197, 183, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 .btn-debug .debug-state-tag {
   font-size: 10px;
-  padding: 1px 4px;
-  border-radius: 2px;
-  background: rgba(0, 0, 0, 0.35);
-  border: 1px solid #2f4547;
-  color: #8abcb6;
-  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid #28544e;
+  color: #79d2c6;
+  font-weight: 800;
+  letter-spacing: 0.5px;
 }
 .btn-debug.active .debug-state-tag {
-  background: rgba(40, 90, 80, 0.5);
-  border-color: #5ea89e;
-  color: #c0f2eb;
+  background: rgba(46, 125, 115, 0.6);
+  border-color: #7ef2e0;
+  color: #ffffff;
 }
 
 .btn-xs {
@@ -810,32 +816,34 @@ body {
 }
 
 .nav-tab {
-  background: #1b120a;
-  border: 1px solid #382618;
+  background: #181008;
+  border: 1px solid #3d2919;
   border-bottom: none;
-  color: var(--text-secondary);
+  color: #a3907c;
   font-family: var(--font-serif);
   font-size: 13.5px;
   font-weight: 700;
-  padding: 9px 18px;
+  padding: 10px 20px;
   cursor: pointer;
-  border-radius: 4px 4px 0 0;
-  transition: all 0.15s;
+  border-radius: 5px 5px 0 0;
+  transition: all 0.15s ease;
+  position: relative;
 }
 
 .nav-tab:hover {
-  color: var(--text-main);
-  background: #25190f;
+  color: #dfba6c;
+  background: #24170d;
   border-color: #5c3e24;
 }
 
 .nav-tab.active {
   color: #f5eedd;
-  background: #261a10;
-  border: 1px solid #bfa15f;
-  border-top: 2px solid #dfba6c;
+  background: linear-gradient(180deg, #2d1e12 0%, #1a1008 100%);
+  border: 1px solid #6b4c2a;
+  border-top: 3px solid #dfba6c;
   border-bottom: none;
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(223, 186, 108, 0.25);
+  font-weight: 800;
 }
 
 #stage-body {
@@ -2194,13 +2202,14 @@ body {
     display: flex !important;
     align-items: stretch;
     justify-content: space-around;
-    background: linear-gradient(180deg, #1e140c 0%, #100a06 100%);
-    border-top: 1.5px solid #6b4c2a;
-    height: 58px;
-    min-height: 58px;
+    background: rgba(14, 9, 5, 0.96) !important;
+    backdrop-filter: blur(16px);
+    border-top: 1.5px solid #634524 !important;
+    height: 60px !important;
+    min-height: 60px !important;
     padding-bottom: env(safe-area-inset-bottom, 0px);
     z-index: 100;
-    box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.75);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(223, 186, 108, 0.2);
     flex-shrink: 0;
   }
 
@@ -2213,7 +2222,7 @@ body {
     border: none;
     color: #a3907c;
     cursor: pointer;
-    padding: 4px 6px;
+    padding: 4px 2px;
     font-family: var(--font-serif);
     transition: all 0.15s ease;
     flex: 1;
@@ -2223,7 +2232,7 @@ body {
   }
 
   .mobile-nav-btn .m-icon {
-    font-size: 22px;
+    font-size: 20px;
     line-height: 1;
     margin-bottom: 3px;
     transition: transform 0.15s ease;
@@ -2233,14 +2242,14 @@ body {
   }
 
   .mobile-nav-btn .m-icon .ui-icon {
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
   }
 
   .mobile-nav-btn .m-text {
-    font-size: 11px;
+    font-size: 10.5px;
     font-weight: 700;
-    letter-spacing: -0.2px;
+    letter-spacing: -0.3px;
     white-space: nowrap;
   }
 
@@ -2251,11 +2260,11 @@ body {
 
   .mobile-nav-btn.active {
     color: #dfba6c;
-    background: linear-gradient(180deg, rgba(223, 186, 108, 0.12) 0%, rgba(223, 186, 108, 0.02) 100%);
+    background: linear-gradient(180deg, rgba(223, 186, 108, 0.14) 0%, rgba(223, 186, 108, 0.02) 100%);
   }
 
   .mobile-nav-btn.active .m-icon {
-    transform: scale(1.15);
+    transform: scale(1.12);
   }
 
   .mobile-nav-btn.active::after {
@@ -2266,8 +2275,24 @@ body {
     right: 20%;
     height: 2.5px;
     background: #dfba6c;
-    box-shadow: 0 0 8px #dfba6c;
+    box-shadow: 0 0 10px #dfba6c;
     border-radius: 2px;
+  }
+
+  /* 5번째 감찰록(사헌부 비취 옥패) 탭 */
+  .mobile-nav-debug {
+    color: #5ea89e !important;
+  }
+  .mobile-nav-debug:hover {
+    color: #8de4d7 !important;
+  }
+  .mobile-nav-debug.active {
+    color: #a8f5eb !important;
+    background: linear-gradient(180deg, rgba(46, 125, 115, 0.22) 0%, rgba(46, 125, 115, 0.03) 100%) !important;
+  }
+  .mobile-nav-debug.active::after {
+    background: #5ec5b7 !important;
+    box-shadow: 0 0 10px #5ec5b7 !important;
   }
 
   /* Single Full-Width Panel Mobile Layout */
@@ -2298,12 +2323,12 @@ body {
   /* Header mobile adaptations (2-row clear layout) */
   .app-header {
     height: auto !important;
-    min-height: 80px;
-    padding: 7px 10px;
+    min-height: 76px;
+    padding: 6px 10px;
     flex-direction: column !important;
     align-items: stretch !important;
     justify-content: flex-start !important;
-    gap: 6px !important;
+    gap: 5px !important;
     overflow: visible !important;
   }
 
@@ -2312,7 +2337,7 @@ body {
     width: 100% !important;
     align-items: center !important;
     justify-content: space-between !important;
-    gap: 6px !important;
+    gap: 4px !important;
   }
 
   .header-sub-row {
@@ -2320,29 +2345,29 @@ body {
     width: 100% !important;
     align-items: center !important;
     justify-content: space-between !important;
-    gap: 8px !important;
+    gap: 6px !important;
   }
 
   .header-brand {
-    gap: 6px;
+    gap: 5px;
     flex-shrink: 0;
   }
 
   .seal-emblem-img {
-    width: 26px;
-    height: 26px;
+    width: 24px;
+    height: 24px;
   }
 
   .header-brand .subtitle {
-    display: none;
+    display: none !important;
+  }
+
+  .header-brand .title-tag {
+    display: none !important;
   }
 
   .title-group h1 {
-    font-size: 14.5px;
-  }
-
-  .title-tag {
-    font-size: 10.5px;
+    font-size: 14px;
   }
 
   .header-divider {
@@ -2353,23 +2378,28 @@ body {
     display: none !important;
   }
 
+  .day-sexagenary {
+    display: none !important;
+  }
+
   .day-badge {
-    padding: 3px 8px;
-    font-size: 11px;
-    flex-shrink: 0;
+    padding: 2px 7px !important;
+    font-size: 11px !important;
+    flex-shrink: 0 !important;
+    gap: 0 !important;
   }
 
   .header-quick-tools {
     display: flex !important;
     align-items: center !important;
-    gap: 4px !important;
+    gap: 3px !important;
     margin-left: auto !important;
     flex-shrink: 0 !important;
   }
 
   .phase-indicator {
     font-size: 11px;
-    padding: 4px 8px;
+    padding: 4px 7px;
     gap: 3px;
     flex-shrink: 0;
   }
@@ -2395,14 +2425,20 @@ body {
   .btn-audio,
   .btn-archive-quick {
     min-width: unset !important;
-    padding: 4px 6px !important;
+    padding: 3px 6px !important;
     font-size: 11px !important;
   }
 
   .btn-debug {
-    padding: 4px 7px !important;
+    padding: 3px 6px !important;
     font-size: 11px !important;
     flex-shrink: 0 !important;
+  }
+
+  @media (max-width: 480px) {
+    .btn-debug .debug-btn-text {
+      display: none !important;
+    }
   }
 
   /* Stage adjustments */

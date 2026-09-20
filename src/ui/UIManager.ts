@@ -15,7 +15,7 @@ import { SoundManager } from '../core/audio/SoundManager.js';
 import { renderIcon } from './icons/Icons.js';
 
 type MainTab = 'OBSERVATION' | 'SACHO_BOOK' | 'EVENT_LOG';
-type MobileView = 'LOCATIONS' | 'STAGE' | 'ROSTER' | 'ARCHIVE';
+type MobileView = 'LOCATIONS' | 'STAGE' | 'ROSTER' | 'ARCHIVE' | 'DEBUG';
 
 export class UIManager {
   private root: HTMLElement;
@@ -77,6 +77,10 @@ export class UIManager {
         <button class="mobile-nav-btn" data-mview="ARCHIVE">
           <span class="m-icon">${renderIcon('book')}</span>
           <span class="m-text">사초록</span>
+        </button>
+        <button class="mobile-nav-btn mobile-nav-debug" data-mview="DEBUG" title="사헌부 은밀 감찰록 열람">
+          <span class="m-icon">${renderIcon('shield')}</span>
+          <span class="m-text">감찰록</span>
         </button>
       </div>
       <div id="ending-root"></div>
@@ -171,6 +175,10 @@ export class UIManager {
 
   private setMobileView(view: MobileView): void {
     SoundManager.getInstance().playScroll();
+    if (view === 'DEBUG') {
+      this.toggleDebug();
+      return;
+    }
     this.activeMobileView = view;
     if (view === 'ARCHIVE') {
       this.activeMainTab = 'SACHO_BOOK';
@@ -398,7 +406,11 @@ export class UIManager {
 
     this.root.querySelectorAll('.mobile-nav-btn').forEach((btn) => {
       const v = btn.getAttribute('data-mview');
-      btn.classList.toggle('active', v === this.activeMobileView);
+      if (v === 'DEBUG') {
+        btn.classList.toggle('active', this.isDebugOpen);
+      } else {
+        btn.classList.toggle('active', v === this.activeMobileView);
+      }
     });
   }
 

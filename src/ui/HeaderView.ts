@@ -115,7 +115,7 @@ export class HeaderView {
               ${renderIcon(isMuted ? 'volume-x' : 'volume')} <span class="btn-text">${isMuted ? '무음' : '음향'}</span>
             </button>
             <button id="btn-debug-toggle" class="btn btn-debug ${isDebugOpen ? 'active' : ''}" title="사헌부 은밀 감찰록 열람">
-              ${renderIcon('shield')} <span>감찰록</span> <span class="debug-state-tag">${isDebugOpen ? 'ON' : 'OFF'}</span>
+              ${renderIcon('shield')} <span class="debug-btn-text">감찰록</span> <span class="debug-state-tag">${isDebugOpen ? 'ON' : 'OFF'}</span>
             </button>
           </div>
         </div>
