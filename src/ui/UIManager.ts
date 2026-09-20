@@ -8,6 +8,7 @@ import { SachoArchiveView } from './SachoArchiveView.js';
 import { DebugPanelView } from './DebugPanelView.js';
 import { SilokEndingView } from './SilokEndingView.js';
 import { SilokBookletView } from './SilokBookletView.js';
+import { DynastyArchiveView } from './DynastyArchiveView.js';
 import { SilokCodec, type SilokShareData } from '../core/sharing/SilokCodec.js';
 import type { LocationId } from '../data/locations.js';
 import { SoundManager } from '../core/audio/SoundManager.js';
@@ -23,6 +24,7 @@ export class UIManager {
   private isDebugOpen: boolean = false;
   private isEndingOpen: boolean = false;
   private isBookletOpen: boolean = false;
+  private isDynastyArchiveOpen: boolean = false;
   private activeMainTab: MainTab = 'OBSERVATION';
   private activeMobileView: MobileView = 'STAGE';
 
@@ -36,6 +38,7 @@ export class UIManager {
   private debugPanelView!: DebugPanelView;
   private endingView: SilokEndingView | null = null;
   private silokBookletView: SilokBookletView | null = null;
+  private dynastyArchiveView: DynastyArchiveView | null = null;
 
   constructor(root: HTMLElement, initialSeed: number | string = 12345) {
     this.root = root;
@@ -77,6 +80,7 @@ export class UIManager {
         </button>
       </div>
       <div id="ending-root"></div>
+      <div id="archive-modal-root"></div>
     `;
 
     const headerEl = this.root.querySelector('#header-root') as HTMLElement;
@@ -91,6 +95,7 @@ export class UIManager {
       onAdvanceDay: () => this.handleAdvanceButton(),
       onReseed: (seed) => this.handleReseed(seed),
       onCompileSilok: () => this.openSilokEnding(),
+      onOpenDynastyArchive: () => this.openDynastyArchive(),
     });
 
     this.locationView = new LocationView(locationEl, this.engine, (loc: LocationId) => {
@@ -267,6 +272,15 @@ export class UIManager {
           });
         }
       },
+    }, {
+      kingName: this.engine.dynastyManager.getCurrentKing().templeName,
+      generation: this.engine.dynastyManager.getGeneration(),
+      day: this.engine.timeManager.currentDay,
+      scribeStats: {
+        integrity: this.engine.scribeStats.integrity,
+        peril: this.engine.scribeStats.peril,
+        wealth: this.engine.scribeStats.wealth,
+      },
     });
     this.endingView.render();
   }
@@ -295,6 +309,21 @@ export class UIManager {
       },
     });
     this.silokBookletView.render();
+  }
+
+  public openDynastyArchive(): void {
+    this.isDynastyArchiveOpen = true;
+    const modalRoot = this.root.querySelector('#archive-modal-root') as HTMLElement;
+    this.dynastyArchiveView = new DynastyArchiveView(modalRoot, this.engine.dynastyManager, {
+      onClose: () => {
+        this.isDynastyArchiveOpen = false;
+        modalRoot.innerHTML = '';
+      },
+      onResetArchive: () => {
+        this.render();
+      },
+    });
+    this.dynastyArchiveView.render();
   }
 
   private openSilokBookletFromCurrent(): void {

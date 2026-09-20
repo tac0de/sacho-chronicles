@@ -328,5 +328,45 @@ test.describe('조선 사관 시뮬레이션: 사초: 춘추필법 E2E 테스트
     await expect(page.locator('.chamber-dynasty-badge')).toContainText('조선 2대 사관');
     await page.screenshot({ path: 'screenshots/14-dynasty-generation-2.png' });
   });
+
+  test('9. 헤더 콘솔 버튼 가시성 및 가문 서고(歷代 實錄 書庫) & SNS 바이럴 버튼 검증', async ({ page }) => {
+    await page.goto('/?seed=12345');
+
+    // 1) 데스크탑 헤더 감찰록(콘솔) 버튼 및 가문 서고 버튼 가시성 확인
+    const debugToggle = page.locator('#btn-debug-toggle');
+    const archiveBtn = page.locator('#btn-dynasty-archive');
+    await expect(debugToggle).toBeVisible();
+    await expect(archiveBtn).toBeVisible();
+
+    // 2) 가문 서고 모달 열기
+    await archiveBtn.click();
+    const archiveModal = page.locator('.dynasty-archive-modal');
+    await expect(archiveModal).toBeVisible();
+
+    // 3) 가문 서고 탭 전환 (역대 봉안 실록 <-> 가문 가보 및 전승 업적)
+    const heirloomsTab = page.locator('.archive-tab[data-tab="HEIRLOOMS"]');
+    await heirloomsTab.click();
+    await expect(page.locator('.heirlooms-grid')).toBeVisible();
+
+    // 4) 가문 서고 닫기
+    await page.locator('#btn-archive-close').click();
+    await expect(archiveModal).not.toBeVisible();
+
+    // 5) 모바일 뷰포트(390x844)로 전환하여 콘솔(감찰록) 버튼 가시성 보장 확인
+    await page.setViewportSize({ width: 390, height: 844 });
+    await expect(debugToggle).toBeVisible();
+    await expect(debugToggle).toContainText('감찰록');
+
+    // 6) 모바일에서 감찰록 클릭 시 디버그 패널 정상 오픈 확인
+    await debugToggle.click();
+    await expect(page.locator('.debug-panel:not(.hidden)')).toBeVisible();
+    await page.locator('#btn-debug-close').click();
+
+    // 7) 실록 편찬 화면에서 SNS 바이럴 버튼(X 공유, 족자 이미지 저장) 가시성 확인
+    await page.locator('#btn-compile-silok').click();
+    await expect(page.locator('#btn-share-twitter')).toBeVisible();
+    await expect(page.locator('#btn-download-scroll')).toBeVisible();
+    await page.screenshot({ path: 'screenshots/16-sns-viral-buttons.png' });
+  });
 });
 

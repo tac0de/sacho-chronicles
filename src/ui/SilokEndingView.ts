@@ -1,9 +1,22 @@
 import type { SilokEvaluationResult } from '../core/records/SilokEvaluator.js';
 import { renderIcon } from './icons/Icons.js';
+import { exportScrollCanvas } from './ScrollCanvasExporter.js';
+
+export interface SilokEndingMeta {
+  kingName: string;
+  generation: number;
+  day: number;
+  scribeStats: {
+    integrity: number;
+    peril: number;
+    wealth: number;
+  };
+}
 
 export class SilokEndingView {
   private container: HTMLElement;
   private result: SilokEvaluationResult;
+  private meta?: SilokEndingMeta;
   private onRestart: (newSeed?: string) => void;
   private onClose: () => void;
   private onStartDynasty?: () => void;
@@ -19,10 +32,12 @@ export class SilokEndingView {
       onStartDynasty?: () => void;
       onOpenBooklet?: () => void;
       onCopyShareUrl?: () => void;
-    }
+    },
+    meta?: SilokEndingMeta
   ) {
     this.container = container;
     this.result = result;
+    this.meta = meta;
     this.onRestart = callbacks.onRestart;
     this.onClose = callbacks.onClose;
     this.onStartDynasty = callbacks.onStartDynasty;
@@ -136,10 +151,13 @@ export class SilokEndingView {
               <button id="btn-open-booklet" class="btn btn-secondary">
                 ${renderIcon('book')} 비단 실록 서책으로 열람
               </button>
+              <button id="btn-share-twitter" class="btn btn-secondary" title="트위터(X)에 이 실록 총평을 바로 공유합니다">
+                ${renderIcon('zap')} X (트위터) 공유
+              </button>
               <button id="btn-copy-share-url" class="btn btn-secondary">
                 ${renderIcon('copy')} 사초 영구 링크 복사
               </button>
-              <button id="btn-download-scroll" class="btn btn-secondary">
+              <button id="btn-download-scroll" class="btn btn-secondary" title="고화질 조선왕조실록 족자 이미지를 다운로드합니다">
                 ${renderIcon('image')} 실록 족자 이미지 저장 (PNG)
               </button>
               <button id="btn-copy-silok" class="btn btn-secondary">
@@ -180,6 +198,13 @@ export class SilokEndingView {
       this.onCopyShareUrl?.();
     });
 
+    this.container.querySelector('#btn-share-twitter')?.addEventListener('click', () => {
+      const shareText = `📜 [조선왕조실록 사관 총평]\n칭호: ${r.title} (${r.titleHanja})\n직필률: ${r.truthRate}% | 곡필률: ${r.distortionRate}%\n"${r.evaluationSummary}"\n\n나만의 조선왕조실록을 편찬하고 역사의 심판을 받아보세요! #사초춘추필법 #SachoChronicles`;
+      const url = window.location.href.split('#')[0];
+      const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(url)}`;
+      window.open(twitterUrl, '_blank');
+    });
+
     this.container.querySelector('#btn-new-era')?.addEventListener('click', () => {
       const nextSeed = Math.floor(Math.random() * 900000 + 100000).toString();
       this.onRestart(nextSeed);
@@ -199,139 +224,28 @@ export class SilokEndingView {
 
   private exportScrollAsImage(): void {
     const r = this.result;
-    const canvas = document.createElement('canvas');
-    canvas.width = 900;
-    canvas.height = 1200;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    // 1. Background
-    ctx.fillStyle = '#16140f';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // 2. Decorative borders
-    ctx.strokeStyle = '#c5a059';
-    ctx.lineWidth = 4;
-    ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
-
-    ctx.strokeStyle = '#4a3d24';
-    ctx.lineWidth = 1;
-    ctx.strokeRect(26, 26, canvas.width - 52, canvas.height - 52);
-
-    // 3. Red Seal (實錄之寶)
-    ctx.fillStyle = '#b83232';
-    ctx.fillRect(60, 50, 64, 64);
-    ctx.strokeStyle = '#ff9999';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(60, 50, 64, 64);
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 26px serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('實錄', 92, 92);
-
-    // 4. Title
-    ctx.fillStyle = '#e5c178';
-    ctx.font = 'bold 30px serif';
-    ctx.textAlign = 'left';
-    ctx.fillText('조선왕조실록 사관 총평 (朝鮮王朝實錄)', 140, 80);
-    ctx.fillStyle = '#9ea6b8';
-    ctx.font = '16px serif';
-    ctx.fillText('사관의 붓끝이 멈추고 역사의 엄정한 심판이 내려지다', 140, 106);
-
-    // 5. Title Badge Box
-    ctx.fillStyle = '#261f14';
-    ctx.fillRect(60, 140, canvas.width - 120, 100);
-    ctx.strokeStyle = '#c5a059';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(60, 140, canvas.width - 120, 100);
-
-    ctx.fillStyle = '#e5c178';
-    ctx.font = 'bold 22px serif';
-    ctx.fillText(`사관 칭호: [${r.titleHanja}] ${r.title}`, 80, 180);
-
-    ctx.fillStyle = '#dfc999';
-    ctx.font = 'italic 15px serif';
-    ctx.fillText(`"${r.evaluationSummary}"`, 80, 215);
-
-    // 6. Stats Boxes
-    const statBoxWidth = 180;
-    const statsData = [
-      { label: '직필 적중률 (直筆)', val: `${r.truthRate}%`, color: '#79d2a6' },
-      { label: '곡필 왜곡률 (曲筆)', val: `${r.distortionRate}%`, color: '#ff8a8a' },
-      { label: '궐문 묵살률 (闕文)', val: `${r.omissionRate}%`, color: '#e5c178' },
-      { label: '총 봉안 사초', val: `${r.totalRecordsCount}편`, color: '#edeae2' },
-    ];
-
-    statsData.forEach((s, idx) => {
-      const x = 60 + idx * 200;
-      ctx.fillStyle = '#201e18';
-      ctx.fillRect(x, 260, statBoxWidth, 90);
-      ctx.strokeStyle = '#4a3e29';
-      ctx.lineWidth = 1;
-      ctx.strokeRect(x, 260, statBoxWidth, 90);
-
-      ctx.fillStyle = '#9ea6b8';
-      ctx.font = '13px serif';
-      ctx.textAlign = 'center';
-      ctx.fillText(s.label, x + statBoxWidth / 2, 290);
-
-      ctx.fillStyle = s.color;
-      ctx.font = 'bold 28px sans-serif';
-      ctx.fillText(s.val, x + statBoxWidth / 2, 330);
+    const m = this.meta;
+    exportScrollCanvas({
+      kingName: m?.kingName || '성종 (成宗)',
+      generation: m?.generation || 1,
+      day: m?.day || 30,
+      evalGrade: r.grade,
+      evalTitle: r.title,
+      evalSummary: r.evaluationSummary,
+      truthRate: r.truthRate,
+      distortionRate: r.distortionRate,
+      omissionRate: r.omissionRate,
+      recordsCount: r.totalRecordsCount,
+      integrity: m?.scribeStats?.integrity ?? 85,
+      peril: m?.scribeStats?.peril ?? 15,
+      wealth: m?.scribeStats?.wealth ?? 50,
+      verdicts: r.officialVerdicts.map((v) => ({
+        name: v.name,
+        positionTitle: v.positionTitle,
+        rank: v.rank,
+        accuracyScore: v.accuracyScore,
+        verdictText: v.verdictText,
+      })),
     });
-
-    // 7. Verdicts Section
-    ctx.textAlign = 'left';
-    ctx.fillStyle = '#e5c178';
-    ctx.font = 'bold 20px serif';
-    ctx.fillText('백관 12인의 묘비명 및 사신왈 (史臣曰) 총평', 60, 395);
-
-    ctx.strokeStyle = '#5a492b';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(60, 410);
-    ctx.lineTo(canvas.width - 60, 410);
-    ctx.stroke();
-
-    // Draw top 5 official verdicts
-    const sampleVerdicts = r.officialVerdicts.slice(0, 5);
-    sampleVerdicts.forEach((v, idx) => {
-      const y = 445 + idx * 130;
-      ctx.fillStyle = '#1e1c16';
-      ctx.fillRect(60, y - 25, canvas.width - 120, 115);
-      ctx.strokeStyle = '#3d3525';
-      ctx.strokeRect(60, y - 25, canvas.width - 120, 115);
-
-      ctx.fillStyle = '#f5eedb';
-      ctx.font = 'bold 16px serif';
-      ctx.fillText(`${v.name} (${v.positionTitle} · ${v.rank})`, 80, y);
-
-      ctx.fillStyle = '#79d2a6';
-      ctx.font = '13px monospace';
-      ctx.textAlign = 'right';
-      ctx.fillText(`사초 부합도: ${v.accuracyScore}%`, canvas.width - 80, y);
-
-      ctx.textAlign = 'left';
-      ctx.fillStyle = '#a3abbd';
-      ctx.font = '13px serif';
-      ctx.fillText(`실제 진실: ${v.actualTruthSummary}`, 80, y + 26);
-      ctx.fillText(`사초 묘사: ${v.sachoDepiction}`, 80, y + 50);
-
-      ctx.fillStyle = '#dfc999';
-      ctx.font = 'italic 13px serif';
-      ctx.fillText(`"${v.verdictText}"`, 80, y + 76);
-    });
-
-    // 8. Footer Seal & Date
-    ctx.textAlign = 'right';
-    ctx.fillStyle = '#9ea6b8';
-    ctx.font = '14px serif';
-    ctx.fillText('춘추관 편수관 봉안 (春秋館 奉安之印)', canvas.width - 80, canvas.height - 55);
-
-    // Download trigger
-    const link = document.createElement('a');
-    link.download = `sacho_silok_verdict_${Date.now()}.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
   }
 }

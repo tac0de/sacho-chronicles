@@ -1,6 +1,7 @@
 import type { SilokShareData } from '../core/sharing/SilokCodec.js';
 import { SoundManager } from '../core/audio/SoundManager.js';
 import { renderIcon } from './icons/Icons.js';
+import { exportScrollCanvas } from './ScrollCanvasExporter.js';
 
 export interface SilokBookletCallbacks {
   onClose: () => void;
@@ -44,8 +45,14 @@ export class SilokBookletView {
               </div>
             </div>
             <div class="booklet-header-actions">
+              <button id="btn-booklet-share-twitter" class="btn btn-secondary btn-sm" title="트위터(X)에 이 실록 공유">
+                ${renderIcon('zap')} X 공유
+              </button>
+              <button id="btn-booklet-download-scroll" class="btn btn-secondary btn-sm" title="조선왕조실록 고화질 족자 이미지 저장">
+                ${renderIcon('image')} 족자 저장
+              </button>
               <button id="btn-booklet-copy-url" class="btn btn-secondary btn-sm" title="이 실록 서책을 누구에게나 열람 가능한 URL로 복사">
-                ${renderIcon('copy')} 실록 링크 복사
+                ${renderIcon('copy')} 링크 복사
               </button>
               <button id="btn-booklet-close" class="modal-close-btn" title="닫기" style="display:inline-flex; align-items:center; justify-content:center;">${renderIcon('close', { size: 16 })}</button>
             </div>
@@ -252,6 +259,36 @@ export class SilokBookletView {
       this.callbacks.onClose();
     });
 
+    // Twitter (X) share
+    this.container.querySelector('#btn-booklet-share-twitter')?.addEventListener('click', () => {
+      SoundManager.getInstance().playStamp();
+      const d = this.data;
+      const evalTitle = d.evaluation?.title || '만고직필의 사관';
+      const evalGrade = d.evaluation?.grade || 'A';
+      const shareText = `📜 [조선왕조실록 사관 총평]\n국왕 묘호: ${d.kingName}\n사관 칭호: ${evalTitle} (${evalGrade}등급)\n재위 일수: ${d.day}일 | 봉안 사초: ${d.records.length}편\n\n나만의 조선왕조실록을 편찬하고 영구 보존해보세요! #조선사관 #사초춘추필법 #SachoChronicles`;
+      const url = window.location.href;
+      const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(url)}`;
+      window.open(twitterUrl, '_blank');
+    });
+
+    // Scroll image download
+    this.container.querySelector('#btn-booklet-download-scroll')?.addEventListener('click', () => {
+      SoundManager.getInstance().playStamp();
+      const d = this.data;
+      exportScrollCanvas({
+        kingName: d.kingName,
+        generation: d.generation,
+        day: d.day,
+        evalGrade: d.evaluation?.grade || 'A',
+        evalTitle: d.evaluation?.title || '만고직필의 사관',
+        evalSummary: d.evaluation?.summary || '치세의 굴곡 속에서도 붓을 꺾지 않고 사관의 직필을 남겼다.',
+        recordsCount: d.records.length,
+        integrity: d.scribeStats.integrity,
+        peril: d.scribeStats.peril,
+        wealth: d.scribeStats.wealth,
+      });
+    });
+
     // Copy URL permalink button
     this.container.querySelector('#btn-booklet-copy-url')?.addEventListener('click', () => {
       SoundManager.getInstance().playStamp();
@@ -261,7 +298,7 @@ export class SilokBookletView {
           if (btn) {
             btn.innerHTML = `${renderIcon('check')} 복사 완료!`;
             setTimeout(() => {
-              btn.innerHTML = `${renderIcon('copy')} 실록 링크 복사`;
+              btn.innerHTML = `${renderIcon('copy')} 링크 복사`;
             }, 2500);
           }
         });
