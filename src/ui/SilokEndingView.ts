@@ -1,4 +1,5 @@
 import type { SilokEvaluationResult } from '../core/records/SilokEvaluator.js';
+import { renderIcon } from './icons/Icons.js';
 
 export class SilokEndingView {
   private container: HTMLElement;
@@ -73,7 +74,7 @@ export class SilokEndingView {
                 <h2>조선왕조실록 편찬 완결 (實錄 編纂 完結)</h2>
                 <div class="ending-subtitle">사관의 붓끝이 멈추고, 역사의 엄정한 심판이 내려지다</div>
               </div>
-              <button id="btn-ending-close-x" class="ending-close-btn" title="닫고 사초 열람">✕</button>
+              <button id="btn-ending-close-x" class="ending-close-btn" title="닫고 사초 열람" style="display:inline-flex; align-items:center; justify-content:center;">${renderIcon('close', { size: 16 })}</button>
             </div>
 
             <!-- Title and Evaluation Banner -->
@@ -114,7 +115,7 @@ export class SilokEndingView {
             <!-- Officials Verdict Section -->
             <div class="verdicts-section">
               <div class="verdicts-title">
-                <span>📜 백관 12인의 묘비명 및 사신왈 (史臣曰) 총평</span>
+                <span>${renderIcon('scroll')} 백관 12인의 묘비명 및 사신왈 (史臣曰) 총평</span>
               </div>
               <div class="verdicts-list">
                 ${verdictsHtml}
@@ -127,28 +128,28 @@ export class SilokEndingView {
                 this.onStartDynasty
                   ? `
                 <button id="btn-dynasty-next" class="btn btn-gold btn-lg" style="grid-column: 1 / -1; font-size: 15px; font-weight: bold; background: linear-gradient(135deg, #c59b27 0%, #8b6508 100%);">
-                  👑 차대 계승: 신왕 즉위 및 가문 사필록 잇기 (500년 루프) ➔
+                  ${renderIcon('crown')} 차대 계승: 신왕 즉위 및 가문 사필록 잇기 (500년 루프) ${renderIcon('arrow-right')}
                 </button>
               `
                   : ''
               }
               <button id="btn-open-booklet" class="btn btn-secondary">
-                📖 비단 실록 서책으로 열람
+                ${renderIcon('book')} 비단 실록 서책으로 열람
               </button>
               <button id="btn-copy-share-url" class="btn btn-secondary">
-                🔗 사초 영구 링크 복사
+                ${renderIcon('copy')} 사초 영구 링크 복사
               </button>
               <button id="btn-download-scroll" class="btn btn-secondary">
-                🖼️ 실록 족자 이미지 저장 (PNG)
+                ${renderIcon('image')} 실록 족자 이미지 저장 (PNG)
               </button>
               <button id="btn-copy-silok" class="btn btn-secondary">
-                📋 총평 복사
+                ${renderIcon('copy')} 총평 복사
               </button>
               <button id="btn-new-era" class="btn btn-gold">
-                🔄 새 치세로 다시 시작
+                ${renderIcon('refresh')} 새 치세로 다시 시작
               </button>
               <button id="btn-inspect-sacho" class="btn btn-primary">
-                📖 사초 전권 열람
+                ${renderIcon('book')} 사초 전권 열람
               </button>
             </div>
           </div>

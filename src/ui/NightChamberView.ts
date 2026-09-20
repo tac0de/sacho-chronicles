@@ -1,6 +1,7 @@
 import type { Engine } from '../core/simulation/Engine.js';
 import type { NightDilemma, NightChoice } from '../core/dilemma/NightDilemmaEngine.js';
 import { SoundManager } from '../core/audio/SoundManager.js';
+import { renderIcon } from './icons/Icons.js';
 
 export class NightChamberView {
   private container: HTMLElement;
@@ -28,7 +29,7 @@ export class NightChamberView {
             <h3>심야의 춘추관 침소 (深夜 春秋館 寢所)</h3>
             <p>밤이 깊었으나 찾아온 객이 없습니다. 조용히 내일 아침을 맞이합니다.</p>
           </div>
-          <button id="btn-night-skip" class="btn btn-gold btn-lg">여명 맞이하기 ➔</button>
+          <button id="btn-night-skip" class="btn btn-gold btn-lg">여명 맞이하기 ${renderIcon('arrow-right')}</button>
         </div>
       `;
       this.container.querySelector('#btn-night-skip')?.addEventListener('click', () => {
@@ -39,40 +40,40 @@ export class NightChamberView {
 
     const typeBadge =
       dilemma.dilemmaType === 'BRIBERY'
-        ? '<span class="night-badge-bribe">💰 뇌물 회유 (賂賂)</span>'
+        ? `<span class="night-badge-bribe">${renderIcon('coins')} 뇌물 회유 (賂賂)</span>`
         : dilemma.dilemmaType === 'THREAT'
-        ? '<span class="night-badge-threat">🗡️ 멸문 협박 (脅迫)</span>'
+        ? `<span class="night-badge-threat">${renderIcon('sword')} 멸문 협박 (脅迫)</span>`
         : dilemma.dilemmaType === 'ROYAL_INQUEST'
-        ? '<span class="night-badge-royal">👑 어전 밀명 (密命)</span>'
-        : '<span class="night-badge-petition">📜 신진 밀소 (密疏)</span>';
+        ? `<span class="night-badge-royal">${renderIcon('crown')} 어전 밀명 (密命)</span>`
+        : `<span class="night-badge-petition">${renderIcon('scroll')} 신진 밀소 (密疏)</span>`;
 
     const choicesHtml = dilemma.choices
       .map((choice) => {
         const integrityBadge =
           choice.integrityDelta > 0
-            ? `<span class="delta-badge plus">⚖️ 직필 +${choice.integrityDelta}</span>`
+            ? `<span class="delta-badge plus">${renderIcon('scale')} 직필 +${choice.integrityDelta}</span>`
             : choice.integrityDelta < 0
-            ? `<span class="delta-badge minus">⚖️ 직필 ${choice.integrityDelta}</span>`
+            ? `<span class="delta-badge minus">${renderIcon('scale')} 직필 ${choice.integrityDelta}</span>`
             : '';
 
         const perilBadge =
           choice.perilDelta > 0
-            ? `<span class="delta-badge danger">🔥 사화 위기 +${choice.perilDelta}</span>`
+            ? `<span class="delta-badge danger">${renderIcon('flame')} 사화 위기 +${choice.perilDelta}</span>`
             : choice.perilDelta < 0
-            ? `<span class="delta-badge safe">🔥 사화 위기 ${choice.perilDelta}</span>`
+            ? `<span class="delta-badge safe">${renderIcon('flame')} 사화 위기 ${choice.perilDelta}</span>`
             : '';
 
         const wealthBadge =
           choice.wealthDelta > 0
-            ? `<span class="delta-badge gold">💰 재력 +${choice.wealthDelta}냥</span>`
+            ? `<span class="delta-badge gold">${renderIcon('coins')} 재력 +${choice.wealthDelta}냥</span>`
             : '';
 
         const archiveBadge = choice.secretArchiveEntry
-          ? `<span class="delta-badge secret">🗝️ 사가비밀사초 은닉</span>`
+          ? `<span class="delta-badge secret">${renderIcon('key')} 사가비밀사초 은닉</span>`
           : '';
 
         const butterflyBadge = choice.butterflyTrigger
-          ? `<span class="delta-badge butterfly">⚡ 나비효과: ${choice.butterflyTrigger.newsHeadline.slice(0, 24)}...</span>`
+          ? `<span class="delta-badge butterfly">${renderIcon('zap')} 나비효과: ${choice.butterflyTrigger.newsHeadline.slice(0, 24)}...</span>`
           : '';
 
         return `
@@ -98,7 +99,7 @@ export class NightChamberView {
             </div>
 
             <button class="btn btn-gold btn-choice-action" data-action-id="${choice.id}">
-              이 결단을 단행한다 (決斷) ➔
+              이 결단을 단행한다 (決斷) ${renderIcon('arrow-right')}
             </button>
           </div>
         `;
@@ -109,7 +110,7 @@ export class NightChamberView {
       <div class="stage-content night-chamber-stage">
         <div class="night-moon-banner">
           <div class="night-banner-left">
-            <span class="night-moon-icon">🌙</span>
+            <span class="night-moon-icon">${renderIcon('moon')}</span>
             <div>
               <div class="night-banner-title">
                 <h3>심야의 침소 (深夜 史官 寢所) · 삼경(三更, 자정)</h3>
@@ -148,7 +149,7 @@ export class NightChamberView {
           </div>
 
           <div class="visitor-atmosphere">
-            <span class="candle-icon">🕯️</span>
+            <span class="candle-icon">${renderIcon('candle')}</span>
             <span>${dilemma.atmosphere}</span>
           </div>
 
@@ -160,7 +161,7 @@ export class NightChamberView {
 
         <div class="night-choices-wrapper">
           <div class="choices-instruction">
-            <span>⚖️ <strong>사관의 양심과 붓끝의 갈림길:</strong> 어떤 선택을 내리시겠습니까? 이 결단은 내일 아침 조정에 돌이킬 수 없는 파장을 부릅니다.</span>
+            <span>${renderIcon('scale')} <strong>사관의 양심과 붓끝의 갈림길:</strong> 어떤 선택을 내리시겠습니까? 이 결단은 내일 아침 조정에 돌이킬 수 없는 파장을 부릅니다.</span>
           </div>
           <div class="night-choices-grid">
             ${choicesHtml}

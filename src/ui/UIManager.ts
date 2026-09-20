@@ -11,6 +11,7 @@ import { SilokBookletView } from './SilokBookletView.js';
 import { SilokCodec, type SilokShareData } from '../core/sharing/SilokCodec.js';
 import type { LocationId } from '../data/locations.js';
 import { SoundManager } from '../core/audio/SoundManager.js';
+import { renderIcon } from './icons/Icons.js';
 
 type MainTab = 'OBSERVATION' | 'SACHO_BOOK' | 'EVENT_LOG';
 type MobileView = 'LOCATIONS' | 'STAGE' | 'ROSTER' | 'ARCHIVE';
@@ -59,19 +60,19 @@ export class UIManager {
       </div>
       <div class="mobile-nav-bar">
         <button class="mobile-nav-btn" data-mview="LOCATIONS">
-          <span class="m-icon">🏛️</span>
+          <span class="m-icon">${renderIcon('palace')}</span>
           <span class="m-text">처소 행차</span>
         </button>
         <button class="mobile-nav-btn active" data-mview="STAGE">
-          <span class="m-icon">📜</span>
+          <span class="m-icon">${renderIcon('scroll')}</span>
           <span class="m-text">정무 관찰</span>
         </button>
         <button class="mobile-nav-btn" data-mview="ROSTER">
-          <span class="m-icon">👥</span>
+          <span class="m-icon">${renderIcon('users')}</span>
           <span class="m-text">조정 백관</span>
         </button>
         <button class="mobile-nav-btn" data-mview="ARCHIVE">
-          <span class="m-icon">📖</span>
+          <span class="m-icon">${renderIcon('book')}</span>
           <span class="m-text">사초록</span>
         </button>
       </div>

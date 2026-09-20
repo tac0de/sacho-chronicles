@@ -1,5 +1,6 @@
 import type { SilokShareData } from '../core/sharing/SilokCodec.js';
 import { SoundManager } from '../core/audio/SoundManager.js';
+import { renderIcon } from './icons/Icons.js';
 
 export interface SilokBookletCallbacks {
   onClose: () => void;
@@ -44,25 +45,25 @@ export class SilokBookletView {
             </div>
             <div class="booklet-header-actions">
               <button id="btn-booklet-copy-url" class="btn btn-secondary btn-sm" title="이 실록 서책을 누구에게나 열람 가능한 URL로 복사">
-                📋 실록 링크 복사
+                ${renderIcon('copy')} 실록 링크 복사
               </button>
-              <button id="btn-booklet-close" class="modal-close-btn" title="닫기">&times;</button>
+              <button id="btn-booklet-close" class="modal-close-btn" title="닫기" style="display:inline-flex; align-items:center; justify-content:center;">${renderIcon('close', { size: 16 })}</button>
             </div>
           </div>
 
           <!-- Booklet Navigation Tabs -->
           <div class="booklet-tabs">
             <button class="booklet-tab ${this.activePage === 'SUMMARY' ? 'active' : ''}" data-page="SUMMARY">
-              📜 묘호 및 어제 총평
+              ${renderIcon('scroll')} 묘호 및 어제 총평
             </button>
             <button class="booklet-tab ${this.activePage === 'CHRONICLE' ? 'active' : ''}" data-page="CHRONICLE">
-              📖 사초 편년기 (${d.records.length}건)
+              ${renderIcon('book')} 사초 편년기 (${d.records.length}건)
             </button>
             <button class="booklet-tab ${this.activePage === 'SECRET' ? 'active' : ''}" data-page="SECRET">
-              🗝️ 사가 비밀 사초록 (${d.secretArchive.length}편)
+              ${renderIcon('key')} 사가 비밀 사초록 (${d.secretArchive.length}편)
             </button>
             <button class="booklet-tab ${this.activePage === 'FACTIONS' ? 'active' : ''}" data-page="FACTIONS">
-              ⚡ 붕당 환국과 나비효과 (${d.butterflies.length}건)
+              ${renderIcon('zap')} 붕당 환국과 나비효과 (${d.butterflies.length}건)
             </button>
           </div>
 
@@ -85,12 +86,12 @@ export class SilokBookletView {
                 this.callbacks.onStartNewDynasty
                   ? `
                 <button id="btn-booklet-next-reign" class="btn btn-gold btn-lg">
-                  👑 신왕 즉위 및 가문 사필록 계승 ➔
+                  ${renderIcon('crown')} 신왕 즉위 및 가문 사필록 계승 ${renderIcon('arrow-right')}
                 </button>
               `
                   : `
                 <button id="btn-booklet-new-game" class="btn btn-gold btn-lg">
-                  🌱 새로운 역사 시작하기 (신규 게임)
+                  ${renderIcon('sprout')} 새로운 역사 시작하기 (신규 게임)
                 </button>
               `
               }
@@ -127,14 +128,14 @@ export class SilokBookletView {
 
           <div class="booklet-summary-grid">
             <div class="summary-col-card">
-              <h4>🏛️ 국왕 묘호 및 치세</h4>
+              <h4>${renderIcon('palace')} 국왕 묘호 및 치세</h4>
               <p><strong>묘호:</strong> ${d.kingName}</p>
               <p><strong>재위 일수:</strong> ${d.day}일간의 편년</p>
               <p><strong>기록된 사초 총수:</strong> ${d.records.length}건</p>
               <p><strong>궁중 변혁 나비효과:</strong> ${d.butterflies.length}회</p>
             </div>
             <div class="summary-col-card">
-              <h4>📜 사관 가문 가풍(家風)</h4>
+              <h4>${renderIcon('scroll')} 사관 가문 가풍(家風)</h4>
               <p><strong>가문 대수:</strong> 조선 ${d.generation}대 사관</p>
               <p><strong>최종 직필 신념:</strong> ${d.scribeStats.integrity} / 100</p>
               <p><strong>최종 사화 위기:</strong> ${d.scribeStats.peril}%</p>
@@ -150,7 +151,7 @@ export class SilokBookletView {
         return `
           <div class="booklet-page-content page-chronicle">
             <div class="empty-booklet-msg">
-              <span class="empty-icon">📖</span>
+              <span class="empty-icon">${renderIcon('book', { size: '2em' })}</span>
               <h4>아직 봉안된 사초가 없습니다</h4>
               <p>날이 흐르고 일과를 거치며 사초가 기록되면 이곳에 30일 편년기가 펼쳐집니다.</p>
             </div>
@@ -180,7 +181,7 @@ export class SilokBookletView {
       if (d.secretArchive.length === 0) {
         return `
           <div class="empty-booklet-msg">
-            <span class="empty-icon">🗝️</span>
+            <span class="empty-icon">${renderIcon('key', { size: '2em' })}</span>
             <h4>은닉된 사가 비밀사초가 없습니다</h4>
             <p>심야의 내방자 회유나 협박 시 비밀 사가사초를 숨기는 결단을 내리면 이곳에 비망록이 봉인 해제됩니다.</p>
           </div>
@@ -208,7 +209,7 @@ export class SilokBookletView {
       if (d.butterflies.length === 0) {
         return `
           <div class="empty-booklet-msg">
-            <span class="empty-icon">⚡</span>
+            <span class="empty-icon">${renderIcon('zap', { size: '2em' })}</span>
             <h4>발생한 정치적 나비효과가 없습니다</h4>
             <p>사관의 심야 결단이나 강경한 직필이 조정 탄핵과 옥사로 이어지면 이곳에 조정 변혁록이 남겨집니다.</p>
           </div>
@@ -258,9 +259,9 @@ export class SilokBookletView {
         navigator.clipboard.writeText(window.location.href).then(() => {
           const btn = this.container.querySelector('#btn-booklet-copy-url');
           if (btn) {
-            btn.textContent = '✅ 복사 완료!';
+            btn.innerHTML = `${renderIcon('check')} 복사 완료!`;
             setTimeout(() => {
-              btn.textContent = '📋 실록 링크 복사';
+              btn.innerHTML = `${renderIcon('copy')} 실록 링크 복사`;
             }, 2500);
           }
         });

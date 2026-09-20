@@ -1,4 +1,5 @@
 import type { Engine } from '../core/simulation/Engine.js';
+import { renderIcon } from './icons/Icons.js';
 
 type DebugTab = 'FACTS' | 'AGENTS' | 'RELATIONS' | 'EVENTS' | 'LOGS';
 
@@ -32,7 +33,7 @@ export class DebugPanelView {
     const tabs: { id: DebugTab; label: string }[] = [
       { id: 'FACTS', label: '1. 궐내 실상 (闕內 實相)' },
       { id: 'AGENTS', label: '2. 백관 심성 (百官 心性)' },
-      { id: 'RELATIONS', label: '3. 붕당 연계표 (朋黨 連繫表)' },
+      { id: 'RELATIONS', label: '3. 붕당 연계표 (朋黨 連繫表)' },
       { id: 'EVENTS', label: '4. 정쟁 인과록 (政爭 因果錄)' },
       { id: 'LOGS', label: '5. 감찰 비기 (監察 秘記)' },
     ];
@@ -68,10 +69,10 @@ export class DebugPanelView {
         <div class="debug-header">
           <div class="debug-header-top">
             <div class="debug-title">
-              <span class="debug-title-text">⚖️ 사헌부 은밀 감찰록 (司憲府 隱密 監察錄)</span>
+              <span class="debug-title-text">${renderIcon('shield')} 사헌부 은밀 감찰록 (司憲府 隱密 監察錄)</span>
               <span class="debug-seed-info">[개벽 시드: ${this.engine.seed} · 재위: ${this.engine.timeManager.currentDay}일차]</span>
             </div>
-            <button id="btn-debug-close" class="btn btn-secondary btn-sm debug-close-btn" title="감찰록 닫기">비록 봉인 ✕</button>
+            <button id="btn-debug-close" class="btn btn-secondary btn-sm debug-close-btn" title="감찰록 닫기" style="display:inline-flex; align-items:center; gap:4px;">비록 봉인 ${renderIcon('close', { size: 12 })}</button>
           </div>
 
           <div class="debug-toolbar">
@@ -79,8 +80,8 @@ export class DebugPanelView {
               ${tabButtons}
             </div>
             <div class="debug-actions">
-              <button id="btn-ff-5" class="btn btn-secondary btn-xs" title="5일간 궐내 정쟁 속진">⚡ 5일 속진 (五日)</button>
-              <button id="btn-ff-30" class="btn btn-secondary btn-xs" title="한 달간 궐내 정쟁 속진">⚡ 한 달 속진 (一月)</button>
+              <button id="btn-ff-5" class="btn btn-secondary btn-xs" title="5일간 궐내 정쟁 속진">${renderIcon('zap')} 5일 속진 (五日)</button>
+              <button id="btn-ff-30" class="btn btn-secondary btn-xs" title="한 달간 궐내 정쟁 속진">${renderIcon('zap')} 한 달 속진 (一月)</button>
             </div>
           </div>
         </div>
@@ -308,7 +309,7 @@ export class DebugPanelView {
             <td class="col-nowrap"><strong>${ev.title}</strong></td>
             <td class="col-nowrap">
               <span style="color:#e5dac5;">${instigator?.name || ev.instigatorId}</span>
-              <span style="color:#dfba6c; margin:0 4px;">➔</span>
+              <span style="color:#dfba6c; margin:0 4px; display:inline-flex; align-items:center;">${renderIcon('arrow-right', { size: 12 })}</span>
               <span style="color:#f5b08c;">${targetText}</span>
             </td>
             <td class="col-causation">${ev.causationReason}</td>
@@ -326,7 +327,7 @@ export class DebugPanelView {
               <th>발생 일자</th>
               <th>정쟁 범주</th>
               <th>사건 표제</th>
-              <th>발의자 ➔ 피탄자</th>
+              <th>발의자 → 피탄자</th>
               <th>발동 원인 및 은밀한 동기</th>
               <th>조정 파급 결과 요약</th>
             </tr>
@@ -356,7 +357,7 @@ export class DebugPanelView {
         const isHighlight = l.includes('탄핵') || l.includes('질책') || l.includes('모함') || l.includes('뇌물') || l.includes('사화');
         return `
           <div class="debug-log-line ${isHighlight ? 'highlight' : ''}">
-            <span class="log-bullet">${isHighlight ? '⚡' : '•'}</span>
+            <span class="log-bullet">${isHighlight ? renderIcon('zap') : '•'}</span>
             <span class="log-text">${l}</span>
           </div>
         `;
@@ -366,7 +367,7 @@ export class DebugPanelView {
     return `
       <div class="debug-logs-wrapper">
         <div class="debug-logs-header">
-          <span>📜 사헌부 실록청 실시간 정쟁 시뮬레이션 로그 (최근 60건)</span>
+          <span>${renderIcon('scroll')} 사헌부 실록청 실시간 정쟁 시뮬레이션 로그 (최근 60건)</span>
         </div>
         <div class="debug-logs-content">
           ${lines}

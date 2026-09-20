@@ -2,6 +2,7 @@ import type { Engine } from '../core/simulation/Engine.js';
 import type { Agent } from '../core/agents/Agent.js';
 import { POSITIONS } from '../data/positions.js';
 import { SoundManager } from '../core/audio/SoundManager.js';
+import { renderIcon } from './icons/Icons.js';
 
 function getInsigniaIcon(posId: string): string {
   switch (posId) {
@@ -86,7 +87,7 @@ export class CourtRosterView {
             <div style="font-weight:800; color:var(--text-gold); font-size:14px;">
               ${selectedAgent.name} <span style="font-size:12px; font-weight:normal; color:var(--text-paper);">[${pos?.hanjaTitle || selectedAgent.positionTitle}]</span>
             </div>
-            <button id="btn-close-official-detail" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:12px;">✕</button>
+            <button id="btn-close-official-detail" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:12px; display:inline-flex; align-items:center;">${renderIcon('close', { size: 14 })}</button>
           </div>
           <div style="color:var(--text-secondary); margin-bottom:4px; font-size:11px;">
             품계: <span style="color:var(--text-main); font-weight:600;">${pos?.officialRankName || selectedAgent.rank}</span>

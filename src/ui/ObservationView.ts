@@ -3,6 +3,7 @@ import { LOCATIONS } from '../data/locations.js';
 import type { RecordCertainty } from '../core/records/SachoRecord.js';
 import { SoundManager } from '../core/audio/SoundManager.js';
 import { LOCATION_IMAGES } from './LocationView.js';
+import { renderIcon } from './icons/Icons.js';
 
 export class ObservationView {
   private container: HTMLElement;
@@ -25,27 +26,28 @@ export class ObservationView {
 
   public render(): void {
     const phase = this.engine.timeManager.currentPhase;
-    const loc = LOCATIONS[this.engine.playerLocation];
-    const locImg = LOCATION_IMAGES[loc.id] || './assets/locations/sajeongjeon.jpg';
+    const locId = this.engine.playerLocation;
+    const loc = LOCATIONS[locId] || LOCATIONS.ROYAL_HALL;
+    const locImg = LOCATION_IMAGES[locId] || './assets/locations/sajeongjeon.jpg';
 
     if (phase === 'LOCATION_SELECTION') {
-      const bulletin = this.engine.latestMorningBulletin;
       const stats = this.engine.scribeStats;
-      const gen = this.engine.dynastyManager.getGeneration();
       const king = this.engine.dynastyManager.getCurrentKing();
+      const gen = this.engine.dynastyManager.getGeneration();
 
-      const bulletinHtml = bulletin
-        ? `
-        <div class="morning-bulletin-banner">
-          <div class="bulletin-header">
-            <span class="bulletin-seal">黎明 朝報</span>
-            <span class="bulletin-title">【여명 조보 · 黎明 朝報】 Day ${bulletin.day} 어전 및 궐내 긴급 공론</span>
+      // Recent butterflies bulletin
+      const recentButterflies = this.engine.butterflyHistory.slice(-2);
+      let bulletinHtml = '';
+      if (recentButterflies.length > 0) {
+        bulletinHtml = `
+          <div class="butterfly-alert-banner">
+            <div class="butterfly-alert-badge">${renderIcon('zap')} 대궐 파문 (波紋)</div>
+            <div class="butterfly-alert-content">
+              ${recentButterflies.map((b) => `<div class="butterfly-alert-item"><strong>[환국 징후]</strong> ${b.newsHeadline}: ${b.newsDetail}</div>`).join('')}
+            </div>
           </div>
-          <h4 class="bulletin-headline">${bulletin.headline}</h4>
-          <p class="bulletin-detail">${bulletin.detail}</p>
-        </div>
-      `
-        : '';
+        `;
+      }
 
       this.container.innerHTML = `
         <div class="stage-content chamber-stage">
@@ -61,7 +63,7 @@ export class ObservationView {
             <div class="banner-instruction-callout">
               <span class="callout-text">좌측 궁궐 5대 전각 중 행차할 곳을 선택하신 후, 입조 버튼을 누르십시오.</span>
               <button id="btn-enter-chamber" class="btn btn-gold btn-chamber-action">
-                🏛️ ${loc.name} 입조 관찰 시작 ➔
+                ${renderIcon('palace')} ${loc.name} 입조 관찰 시작 ${renderIcon('arrow-right')}
               </button>
             </div>
           </div>
@@ -78,10 +80,10 @@ export class ObservationView {
               <div class="chamber-dynasty-badge">
                 <span class="badge-gen">조선 ${gen}대 사관</span>
                 <span class="badge-king">재위 군주: ${king.templeName} [${king.personality}]</span>
-                <span class="badge-stats">⚖️ 직필 ${stats.integrity} · 🔥 위기 ${stats.peril}% · 💰 재력 ${stats.wealth}냥 · 🗝️ 밀록 ${stats.secretArchive.length}편</span>
+                <span class="badge-stats">${renderIcon('scale')} 직필 ${stats.integrity} · ${renderIcon('flame')} 위기 ${stats.peril}% · ${renderIcon('coins')} 재력 ${stats.wealth}냥 · ${renderIcon('key')} 밀록 ${stats.secretArchive.length}편</span>
               </div>
               <div class="chamber-briefing-title">
-                <span>📜 사관 일과 요강 (史官 日課 要綱)</span>
+                <span>${renderIcon('scroll')} 사관 일과 요강 (史官 日課 要綱)</span>
                 <span class="omen-tag">궁중 기류 감지 중</span>
               </div>
               <p class="chamber-text">
@@ -90,14 +92,14 @@ export class ObservationView {
               </p>
               <div class="chamber-tips-grid">
                 <div class="chamber-tip-item">
-                  <span class="tip-icon">⚖️</span>
+                  <span class="tip-icon">${renderIcon('scale')}</span>
                   <div>
                     <strong>직필(直筆)과 곡필(曲筆)의 갈림길</strong>
                     <p>사실에 충실할수록 만고직필(萬古直筆)의 명예를 얻으나, 편파적으로 기록하면 곡필의 오명을 씁니다.</p>
                   </div>
                 </div>
                 <div class="chamber-tip-item">
-                  <span class="tip-icon">🔍</span>
+                  <span class="tip-icon">${renderIcon('search')}</span>
                   <div>
                     <strong>소문과 진실의 괴리</strong>
                     <p>전언(傳聞)과 풍문(風聞)은 과장되거나 조작될 수 있으니 첩보 신빙도를 주의 깊게 살피십시오.</p>
@@ -126,11 +128,11 @@ export class ObservationView {
             <p>사관의 결단이 역사의 물줄기를 바꾸었습니다. 촛불을 끄고 여명을 맞이할 준비를 마쳤습니다.</p>
           </div>
           <div class="night-completed-card">
-            <div class="night-completed-icon">🌅</div>
+            <div class="night-completed-icon">${renderIcon('sunrise', { size: 48 })}</div>
             <h4>대궐에 새로운 여명이 밝아옵니다</h4>
             <p>사관의 붓끝과 어젯밤의 결단에 따른 정치적 파장이 오늘 아침 어전 조참에 서슬 퍼렇게 드러날 것입니다.</p>
             <button id="btn-next-day-dawn" class="btn btn-gold btn-lg" style="margin-top: 20px;">
-              ☀️ 여명을 맞이하여 익일(Day ${nextDayNum})로 나아가기 ➔
+              ${renderIcon('sunrise')} 여명을 맞이하여 익일(Day ${nextDayNum})로 나아가기 ${renderIcon('arrow-right')}
             </button>
           </div>
         </div>
@@ -274,7 +276,7 @@ export class ObservationView {
             ? `
           <div class="observation-bottom-actions">
             <button id="btn-save-sacho" class="btn btn-primary btn-lg">
-              🖋️ 오늘의 사초(史草) 봉인 및 심야 처소 이동 ➔
+              ${renderIcon('brush')} 오늘의 사초(史草) 봉인 및 심야 처소 이동 ${renderIcon('arrow-right')}
             </button>
           </div>
         `

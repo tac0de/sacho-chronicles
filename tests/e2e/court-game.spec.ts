@@ -191,15 +191,15 @@ test.describe('조선 사관 시뮬레이션: 사초: 춘추필법 E2E 테스트
     // 2) 효과음(사운드) 토글 버튼 검증
     const soundToggle = page.locator('#btn-sound-toggle');
     await expect(soundToggle).toBeVisible();
-    await expect(soundToggle).toContainText('🔊 음향');
+    await expect(soundToggle).toContainText('음향');
 
     // 클릭 시 무음으로 전환
     await soundToggle.click();
-    await expect(soundToggle).toContainText('🔇 무음');
+    await expect(soundToggle).toContainText('무음');
 
     // 다시 클릭 시 음향 복원
     await soundToggle.click();
-    await expect(soundToggle).toContainText('🔊 음향');
+    await expect(soundToggle).toContainText('음향');
 
     // 3) 처소 썸네일 이미지 및 관원 흉배 아이콘 렌더링 검증
     const locationThumbs = page.locator('.location-thumbnail');
