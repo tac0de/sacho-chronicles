@@ -234,6 +234,28 @@ test.describe('조선 사관 시뮬레이션: 사초: 춘추필법 E2E 테스트
 
     // 5) 모바일 스크린샷 캡처 저장
     await page.screenshot({ path: 'screenshots/07-mobile-court.png' });
+
+    // 6) 오늘의 관찰 및 사초 화면에서 하단 스크롤 가능 여부 및 팁 그리드 노출 검증
+    const stageContent = page.locator('.stage-content');
+    await expect(stageContent).toBeVisible();
+
+    // 최하단 팁 아이템으로 스크롤 이동 검증
+    const lastTipItem = page.locator('.chamber-tip-item').last();
+    await lastTipItem.scrollIntoViewIfNeeded();
+    await expect(lastTipItem).toBeVisible();
+    await page.screenshot({ path: 'screenshots/09-mobile-court-scrolled.png' });
+
+    // 7) 탭 전환 동기화 검증: 상단 사초 기록부 클릭 시 하단 바 [📖 사초록] 활성화
+    const sachoTopTab = page.locator('#tab-sacho');
+    await sachoTopTab.click();
+    await expect(page.locator('.mobile-nav-btn[data-mview="ARCHIVE"]')).toHaveClass(/active/);
+    await expect(page.locator('.mobile-nav-btn[data-mview="STAGE"]')).not.toHaveClass(/active/);
+
+    // 다시 오늘의 관찰 및 사초 클릭 시 하단 바 [📜 정무 관찰] 활성화
+    const obsTopTab = page.locator('#tab-obs');
+    await obsTopTab.click();
+    await expect(page.locator('.mobile-nav-btn[data-mview="STAGE"]')).toHaveClass(/active/);
+    await expect(page.locator('.mobile-nav-btn[data-mview="ARCHIVE"]')).not.toHaveClass(/active/);
   });
 });
 

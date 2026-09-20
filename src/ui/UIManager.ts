@@ -88,9 +88,8 @@ export class UIManager {
 
     this.locationView = new LocationView(locationEl, this.engine, (loc: LocationId) => {
       this.engine.setPlayerLocation(loc);
-      if (window.innerWidth <= 900) {
-        this.activeMobileView = 'STAGE';
-      }
+      this.activeMobileView = 'STAGE';
+      this.activeMainTab = 'OBSERVATION';
       this.render();
     });
 
@@ -159,6 +158,11 @@ export class UIManager {
       SoundManager.getInstance().playScroll();
     }
     this.activeMainTab = tab;
+    if (tab === 'OBSERVATION' || tab === 'EVENT_LOG') {
+      this.activeMobileView = 'STAGE';
+    } else if (tab === 'SACHO_BOOK') {
+      this.activeMobileView = 'ARCHIVE';
+    }
     this.render();
   }
 
